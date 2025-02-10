@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 android {
@@ -49,6 +50,40 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // CameraX
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.compose)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.accompanist.permissions)
+
+    // TensorFlow Lite
+    implementation(libs.tensorflowlite)
+
+    // Room Database
+    implementation(libs.androidx.room.ktx)
+
+    // Navigation
+    implementation(libs.navigation.compose)
+
+    // KTOR
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.negotiation)
+    implementation(libs.ktor.serialization)
+
+    // DI
+    implementation(libs.koin.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose.viewmodel)
+
+    // ViewModel
+    implementation(libs.viewmodel.compose)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.ktor)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
