@@ -1,37 +1,39 @@
 package com.example.tensoscan
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.tensoscan.di.dataModule
-import com.example.tensoscan.di.domainModule
-import com.example.tensoscan.di.initKoin
-import com.example.tensoscan.di.uiModule
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.tensoscan.ui.common.navigation.NavigationWrapper
 import com.example.tensoscan.ui.theme.TensoScanTheme
-import org.koin.core.context.startKoin
+import com.example.tensoscan.ui.utils.Constants.CAMERA_PERMISSION
+import com.example.tensoscan.ui.utils.PermissionUtils
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!PermissionUtils.arePermissionsGranted(this, CAMERA_PERMISSION)) {
+            ActivityCompat.requestPermissions(this, CAMERA_PERMISSION, 100)
+        }
+
         enableEdgeToEdge()
-
-        initKoin()
-
         setContent {
             TensoScanTheme {
                 NavigationWrapper()
             }
+        }
+    }
+
+    fun arePermissionsGranted(): Boolean {
+        return CAMERA_PERMISSION.all { perssion ->
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                perssion
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 }

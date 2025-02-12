@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.tensoscan.ui.feature.camera.CameraScreenView
 import com.example.tensoscan.ui.feature.home.HomeScreenView
-import com.example.tensoscan.ui.feature.user.UserView
+import com.example.tensoscan.ui.feature.user.UserScreenView
 
 @Composable
 fun NavigationWrapper() {
@@ -17,7 +18,11 @@ fun NavigationWrapper() {
         }
 
         composable(route = Routes.User.route) {
-            UserView()
+            UserScreenView()
+        }
+
+        composable(route = Routes.Camera.route) {
+            CameraScreenView()
         }
     }
 }

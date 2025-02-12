@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlinxSerialization)
+    id("kotlin-kapt")
 }
 
 android {
@@ -51,12 +52,16 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    // Icons
+    implementation(libs.androidx.material.icons.extended)
+
     // CameraX
     implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.compose)
-    implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.camera2)
-    implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.video)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.extensions)
 
     // TensorFlow Lite
     implementation(libs.tensorflowlite)
@@ -76,6 +81,7 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.android)
 
     // ViewModel
     implementation(libs.viewmodel.compose)
