@@ -7,5 +7,4 @@ object Constants {
         Manifest.permission.CAMERA,
         Manifest.permission.RECORD_AUDIO
     )
-
 }

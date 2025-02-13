@@ -10,4 +10,3 @@ object PermissionUtils {
             ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
         }
 }
-

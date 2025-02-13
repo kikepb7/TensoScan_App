@@ -1,5 +1,6 @@
 package com.example.tensoscan.ui.feature.camera
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.camera.core.CameraSelector.*
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,9 +37,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.example.tensoscan.MainActivity
 import com.example.tensoscan.R.string as RString
 import com.example.tensoscan.ui.common.components.IconOptionCameraComponent
+import com.example.tensoscan.ui.feature.permissions.PermissionsViewModel
+import com.example.tensoscan.ui.utils.Constants
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -45,15 +48,18 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 fun CameraScreenView() {
 
-    val activity = LocalContext.current
+    val activity = LocalContext.current as Activity
     val uri = Uri.parse("content://media/internal/images/media")
     val cameraViewModel = koinViewModel<CameraViewModel>()
+    val permissionsViewModel = koinViewModel<PermissionsViewModel>()
     val isRecording by cameraViewModel.state.collectAsState()
     val controller = remember {
         LifecycleCameraController(activity.applicationContext).apply {
             setEnabledUseCases(IMAGE_CAPTURE or VIDEO_CAPTURE)
         }
     }
+
+    LaunchedEffect(Unit) { permissionsViewModel.checkPermissions(Constants.CAMERA_PERMISSION) }
 
     Box(
         modifier = Modifier
@@ -93,10 +99,7 @@ fun CameraScreenView() {
                 shape = CircleShape,
                 size = 60.dp,
                 onClick = {
-//                    if (isRecording) cameraViewModel.onRecordVideo(controller)
-                    if ((activity as MainActivity).arePermissionsGranted()) {
-                        cameraViewModel.onRecordVideo(controller)
-                    }
+                    permissionsViewModel.requestPermissions(activity, Constants.CAMERA_PERMISSION)
                 }
             )
             IconOptionCameraComponent(
@@ -105,10 +108,7 @@ fun CameraScreenView() {
                 shape = CircleShape,
                 size = 60.dp,
                 onClick = {
-//                    if (isRecording) cameraViewModel.onTakePhoto(controller)
-                    if ((activity as MainActivity).arePermissionsGranted()) {
-                        cameraViewModel.onTakePhoto(controller)
-                    }
+                    permissionsViewModel.requestPermissions(activity, Constants.CAMERA_PERMISSION)
                 }
             )
             Spacer(modifier = Modifier.width(1.dp))
