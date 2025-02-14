@@ -100,6 +100,7 @@ fun CameraScreenView() {
                 size = 60.dp,
                 onClick = {
                     permissionsViewModel.requestPermissions(activity, Constants.CAMERA_PERMISSION)
+                    cameraViewModel.onRecordVideo(controller)
                 }
             )
             IconOptionCameraComponent(
@@ -109,6 +110,7 @@ fun CameraScreenView() {
                 size = 60.dp,
                 onClick = {
                     permissionsViewModel.requestPermissions(activity, Constants.CAMERA_PERMISSION)
+                    cameraViewModel.onTakePhoto(controller)
                 }
             )
             Spacer(modifier = Modifier.width(1.dp))
