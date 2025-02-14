@@ -2,11 +2,9 @@ package com.example.tensoscan.di
 
 import android.app.Application
 import android.content.Context
-import com.example.tensoscan.data.common.PermissionManager
+import com.example.tensoscan.ui.utils.PermissionManager
 import com.example.tensoscan.data.datasource.feature.camera.repository.CameraRepositoryImpl
-import com.example.tensoscan.data.datasource.feature.permissions.repository.PermissionsRepositoryImpl
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
-import com.example.tensoscan.domain.feature.permissions.repository.PermissionsRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -33,6 +31,5 @@ val dataModule = module {
 
 //    factoryOf(::ApiService)
     factory<CameraRepository> { CameraRepositoryImpl(application = get<Context>() as Application) }
-    single { PermissionManager(get()) }
-    single<PermissionsRepository> { PermissionsRepositoryImpl(get()) }
+    single { PermissionManager() }
 }

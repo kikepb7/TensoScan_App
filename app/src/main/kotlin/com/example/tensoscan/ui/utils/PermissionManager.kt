@@ -1,4 +1,4 @@
-package com.example.tensoscan.data.common
+package com.example.tensoscan.ui.utils
 
 import android.app.Activity
 import android.content.Context
@@ -6,9 +6,9 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-class PermissionManager(private val context: Context) {
+class PermissionManager() {
 
-    fun arePermissionsGranted(permissions: Array<String>): Boolean {
+    fun arePermissionsGranted(context: Context, permissions: Array<String>): Boolean {
         return permissions.all { permission ->
             ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
         }

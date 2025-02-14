@@ -39,8 +39,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.tensoscan.R.string as RString
 import com.example.tensoscan.ui.common.components.IconOptionCameraComponent
-import com.example.tensoscan.ui.feature.permissions.PermissionsViewModel
-import com.example.tensoscan.ui.utils.Constants
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -51,7 +49,6 @@ fun CameraScreenView() {
     val activity = LocalContext.current as Activity
     val uri = Uri.parse("content://media/internal/images/media")
     val cameraViewModel = koinViewModel<CameraViewModel>()
-    val permissionsViewModel = koinViewModel<PermissionsViewModel>()
     val isRecording by cameraViewModel.state.collectAsState()
     val controller = remember {
         LifecycleCameraController(activity.applicationContext).apply {
@@ -59,7 +56,7 @@ fun CameraScreenView() {
         }
     }
 
-    LaunchedEffect(Unit) { permissionsViewModel.checkPermissions(Constants.CAMERA_PERMISSION) }
+    LaunchedEffect(Unit) { cameraViewModel.checkPermissions(activity) }
 
     Box(
         modifier = Modifier
@@ -94,12 +91,13 @@ fun CameraScreenView() {
 
             Spacer(modifier = Modifier.width(1.dp))
             IconOptionCameraComponent(
-                icon = if (isRecording) Icons.Default.Stop else Icons.Default.Videocam,
+                icon = if (isRecording.hasPermissions) Icons.Default.Stop else Icons.Default.Videocam,
                 contentDescription = RString.record_video_icon_content_description,
                 shape = CircleShape,
                 size = 60.dp,
                 onClick = {
-                    permissionsViewModel.requestPermissions(activity, Constants.CAMERA_PERMISSION)
+                    cameraViewModel.requestPermissions(activity)
+                    cameraViewModel.onRecordVideo(controller = controller)
                 }
             )
             IconOptionCameraComponent(
@@ -108,7 +106,8 @@ fun CameraScreenView() {
                 shape = CircleShape,
                 size = 60.dp,
                 onClick = {
-                    permissionsViewModel.requestPermissions(activity, Constants.CAMERA_PERMISSION)
+                    cameraViewModel.requestPermissions(activity)
+                    cameraViewModel.onTakePhoto(controller = controller)
                 }
             )
             Spacer(modifier = Modifier.width(1.dp))
