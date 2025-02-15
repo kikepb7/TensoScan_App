@@ -20,7 +20,7 @@ fun HomeScreenView(
     mainNavController: NavHostController,
 ) {
     val navController = rememberNavController()
-    val items = listOf(User(), Camera())
+    val items = listOf(User(), Camera(), Summary())
 
     Scaffold(
         topBar = {},

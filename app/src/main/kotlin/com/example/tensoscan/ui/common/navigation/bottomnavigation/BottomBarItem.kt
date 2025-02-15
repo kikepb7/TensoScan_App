@@ -3,6 +3,7 @@ package com.example.tensoscan.ui.common.navigation.bottomnavigation
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -35,6 +36,18 @@ sealed class BottomBarItem {
             Icon(
                 painter = rememberVectorPainter(Icons.Default.CameraAlt),
                 contentDescription = "User icon",
+                modifier = Modifier.size(32.dp)
+            )
+        }
+    ): BottomBarItem()
+
+    data class Summary(
+        override val route: String = Routes.Summary.route,
+        override val title: String = "HISTORIAL",
+        override val icon: @Composable () -> Unit = {
+            Icon(
+                painter = rememberVectorPainter(Icons.Default.History),
+                contentDescription = "Historical icon",
                 modifier = Modifier.size(32.dp)
             )
         }
