@@ -22,17 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.theme.Fontalues
 import com.example.tensoscan.ui.theme.SummaryTrackerButtonColor
-
-data class BodyDataModel(
-    val date: String,
-    val bloodPressure: String,
-    val heartRate: String,
-    val status: String,
-    val statusColor: Color
-)
+import com.example.tensoscan.ui.theme.SpacerValues
+import com.example.tensoscan.ui.theme.SizeValues
 
 @Composable
 fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
@@ -43,20 +37,20 @@ fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 32.dp),
+                .padding(vertical = SpacerValues.Spacer16, horizontal = SpacerValues.Spacer32),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = bodyDataModel.date,
                     color = White,
-                    fontSize = 16.sp
+                    fontSize = Fontalues.Font16
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(SizeValues.Size16))
                 Text(
                     text = bodyDataModel.bloodPressure + " mmHg",
                     color = White,
-                    fontSize = 16.sp
+                    fontSize = Fontalues.Font16
                 )
             }
 
@@ -66,7 +60,7 @@ fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
                 verticalArrangement = Arrangement.Center
             ) {
                 StatusChipView(status = bodyDataModel.status, bodyDataModel.statusColor)
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(SizeValues.Size16))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -74,13 +68,13 @@ fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
                         imageVector = Icons.Default.Favorite,
                         contentDescription = "Estado",
                         tint = Color(0xFF9C27B0),
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(SizeValues.Size16)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(SizeValues.Size04))
                     Text(
                         text = bodyDataModel.heartRate + " BPM",
                         color = White,
-                        fontSize = 14.sp
+                        fontSize = Fontalues.Font14
                     )
                 }
             }

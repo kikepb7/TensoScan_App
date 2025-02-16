@@ -9,8 +9,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.unit.dp
 import com.example.tensoscan.ui.common.navigation.Routes
+import com.example.tensoscan.ui.theme.SizeValues
 
 sealed class BottomBarItem {
     abstract val route: String
@@ -24,7 +24,7 @@ sealed class BottomBarItem {
             Icon(
                 painter = rememberVectorPainter(Icons.Default.Person),
                 contentDescription = "User icon",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(SizeValues.Size32)
             )
         }
     ): BottomBarItem()
@@ -36,7 +36,7 @@ sealed class BottomBarItem {
             Icon(
                 painter = rememberVectorPainter(Icons.Default.CameraAlt),
                 contentDescription = "User icon",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(SizeValues.Size32)
             )
         }
     ): BottomBarItem()
@@ -48,7 +48,7 @@ sealed class BottomBarItem {
             Icon(
                 painter = rememberVectorPainter(Icons.Default.History),
                 contentDescription = "Historical icon",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(SizeValues.Size32)
             )
         }
     ): BottomBarItem()

@@ -18,8 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.tensoscan.ui.theme.SizeValues
+import com.example.tensoscan.ui.theme.SpacerValues
+import com.example.tensoscan.ui.theme.Fontalues
 
 @Composable
 fun SummaryReadingView(
@@ -35,16 +36,16 @@ fun SummaryReadingView(
             Text(
                 text = bloodPressure,
                 color = Blue,
-                fontSize = 28.sp,
+                fontSize = Fontalues.Font18,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(SizeValues.Size04))
             Text(
                 text = "mmHg",
                 color = White,
-                fontSize = 16.sp,
+                fontSize = Fontalues.Font16,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = SpacerValues.Spacer08)
             )
         }
 
@@ -53,13 +54,13 @@ fun SummaryReadingView(
                 imageVector = Icons.Default.Favorite,
                 contentDescription = "Frecuencia Cardíaca",
                 tint = Color(0xFF9C27B0),
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(SizeValues.Size24)
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(SizeValues.Size04))
             Text(
                 text = "$heartRate BPM",
                 color = White,
-                fontSize = 14.sp
+                fontSize = Fontalues.Font14
             )
         }
     }

@@ -34,12 +34,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.tensoscan.R.string as RString
 import com.example.tensoscan.ui.common.components.IconOptionCameraComponent
 import org.koin.compose.viewmodel.koinViewModel
+import com.example.tensoscan.ui.theme.SpacerValues
+import com.example.tensoscan.ui.theme.SizeValues
+import com.example.tensoscan.ui.theme.RoundedValues
 import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
@@ -76,7 +78,7 @@ fun CameraScreenView() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 80.dp)
+                .padding(bottom = SpacerValues.Spacer80)
                 .align(Alignment.BottomCenter),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
@@ -84,17 +86,17 @@ fun CameraScreenView() {
             IconOptionCameraComponent(
                 icon = Icons.Default.PhotoLibrary,
                 contentDescription = RString.photo_library_icon_content_description,
-                shape = RoundedCornerShape(14.dp),
-                size = 45.dp,
+                shape = RoundedCornerShape(RoundedValues.Rounded14),
+                size = SizeValues.Size45,
                 onClick = { Intent(Intent.ACTION_VIEW, uri).also { activity.startActivity(it) } }
             )
 
-            Spacer(modifier = Modifier.width(1.dp))
+            Spacer(modifier = Modifier.width(SizeValues.Size01))
             IconOptionCameraComponent(
                 icon = if (isRecording.hasPermissions) Icons.Default.Stop else Icons.Default.Videocam,
                 contentDescription = RString.record_video_icon_content_description,
                 shape = CircleShape,
-                size = 60.dp,
+                size = SizeValues.Size60,
                 onClick = {
                     cameraViewModel.requestPermissions(activity)
                     cameraViewModel.onRecordVideo(controller = controller)
@@ -104,18 +106,18 @@ fun CameraScreenView() {
                 icon = Icons.Default.CameraAlt,
                 contentDescription = RString.take_photo_icon_content_description,
                 shape = CircleShape,
-                size = 60.dp,
+                size = SizeValues.Size60,
                 onClick = {
                     cameraViewModel.requestPermissions(activity)
                     cameraViewModel.onTakePhoto(controller = controller)
                 }
             )
-            Spacer(modifier = Modifier.width(1.dp))
+            Spacer(modifier = Modifier.width(SizeValues.Size01))
             IconOptionCameraComponent(
                 icon = Icons.Default.Cameraswitch,
                 contentDescription = RString.switch_camera_preview_icon_content_description,
-                shape = RoundedCornerShape(14.dp),
-                size = 45.dp,
+                shape = RoundedCornerShape(RoundedValues.Rounded14),
+                size = SizeValues.Size45,
                 onClick = {
                     controller.cameraSelector =
                         if (controller.cameraSelector == DEFAULT_BACK_CAMERA) DEFAULT_FRONT_CAMERA

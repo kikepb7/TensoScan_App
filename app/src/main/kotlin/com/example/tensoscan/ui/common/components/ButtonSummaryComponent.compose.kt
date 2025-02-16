@@ -17,8 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.tensoscan.ui.theme.Fontalues
+import com.example.tensoscan.ui.theme.SpacerValues
+import com.example.tensoscan.ui.theme.SizeValues
 
 @Composable
 fun ButtonSummaryView(
@@ -33,7 +34,7 @@ fun ButtonSummaryView(
         onClick = onClick
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(SpacerValues.Spacer16),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -41,13 +42,13 @@ fun ButtonSummaryView(
                 imageVector = icon,
                 contentDescription = contentDescription,
                 tint = White,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(SizeValues.Size24)
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(SizeValues.Size04))
             Text(
                 text = text,
                 color = White,
-                fontSize = 12.sp,
+                fontSize = Fontalues.Font12,
                 fontWeight = Bold
             )
         }

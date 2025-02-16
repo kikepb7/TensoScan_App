@@ -25,15 +25,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.tensoscan.R
-import com.example.tensoscan.ui.common.components.BodyDataModel
 import com.example.tensoscan.ui.common.components.ButtonSummaryView
 import com.example.tensoscan.ui.common.components.CardSummaryListItemView
 import com.example.tensoscan.ui.common.components.SummaryReadingView
+import com.example.tensoscan.ui.model.BodyDataModel
 import com.example.tensoscan.ui.theme.BackgroundTrackerViewColor
+import com.example.tensoscan.ui.theme.Fontalues
 import com.example.tensoscan.ui.theme.ScanDeviceButtonTrackerColor
+import com.example.tensoscan.ui.theme.SpacerValues
+import com.example.tensoscan.ui.theme.SizeValues
 import com.example.tensoscan.ui.theme.SummaryTrackerButtonColor
 import com.example.tensoscan.ui.theme.WriteManuallyButtonTrackerColor
 
@@ -47,12 +48,16 @@ fun SummaryScreenView(
         modifier = Modifier
             .fillMaxSize()
             .background(color = BackgroundTrackerViewColor)
-            .padding(16.dp)
+            .padding(SpacerValues.Spacer16)
     ) {
-        SummaryScreenHeader(onScanDevice = onScanDevice, onWriteManually = onWriteManually)
-        Spacer(modifier = Modifier.height(32.dp))
+        SummaryScreenHeader(
+            bodyDataModel = listBodyDataModel.lastOrNull(),
+            onScanDevice = onScanDevice,
+            onWriteManually = onWriteManually
+        )
+        Spacer(modifier = Modifier.height(SizeValues.Size32))
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(SpacerValues.Spacer08)
         ) {
             items(listBodyDataModel.size) { position ->
                 CardSummaryListItemView(listBodyDataModel[position])
@@ -63,6 +68,7 @@ fun SummaryScreenView(
 
 @Composable
 fun SummaryScreenHeader(
+    bodyDataModel: BodyDataModel? = null,
     onScanDevice: () -> Unit,
     onWriteManually: () -> Unit
 ) {
@@ -77,21 +83,22 @@ fun SummaryScreenHeader(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(SpacerValues.Spacer16)
             ) {
                 Text(
                     text = "Última lectura",
                     modifier = Modifier,
                     color = White,
-                    fontSize = 18.sp,
+                    fontSize = Fontalues.Font18,
                     fontWeight = Bold,
                     fontFamily = FontFamily.SansSerif
                 )
-                Spacer(modifier = Modifier.height(12.dp))
-                SummaryReadingView(bloodPressure = "120/80", heartRate = "72")
+                Spacer(modifier = Modifier.height(SizeValues.Size12))
+                // TODO --> Show this SummaryReadingView just if there is a value to show
+                SummaryReadingView(bloodPressure = bodyDataModel?.bloodPressure ?: "Empty", heartRate = bodyDataModel?.heartRate ?: "Empty")
             }
         }
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(SizeValues.Size32))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

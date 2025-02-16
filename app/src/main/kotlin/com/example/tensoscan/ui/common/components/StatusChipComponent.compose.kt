@@ -9,17 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.unit.dp
+import com.example.tensoscan.ui.theme.RoundedValues
+import com.example.tensoscan.ui.theme.SizeValues
 
 @Composable
 fun StatusChipView(status: String, color: Color) {
     ElevatedAssistChip(
-        modifier = Modifier.height(20.dp),
+        modifier = Modifier.height(SizeValues.Size20),
         onClick = {},
         label = { Text(text = status, color = White) },
         colors = AssistChipDefaults.elevatedAssistChipColors(
             containerColor = color
         ),
-        shape = RoundedCornerShape(24.dp)
+        shape = RoundedCornerShape(RoundedValues.Rounded24)
     )
 }

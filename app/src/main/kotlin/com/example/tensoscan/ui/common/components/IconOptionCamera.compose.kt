@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.example.tensoscan.ui.theme.SizeValues
 
 @Composable
 fun IconOptionCameraComponent(
@@ -36,7 +36,7 @@ fun IconOptionCameraComponent(
             imageVector = icon,
             contentDescription = stringResource(contentDescription),
             tint = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier.size(26.dp)
+            modifier = Modifier.size(SizeValues.Size26)
         )
     }
 }

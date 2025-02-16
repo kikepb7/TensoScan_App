@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.tensoscan.ui.common.components.BodyDataModel
 import com.example.tensoscan.ui.common.navigation.Routes.*
 import com.example.tensoscan.ui.feature.camera.CameraScreenView
 import com.example.tensoscan.ui.feature.home.HomeScreenView
 import com.example.tensoscan.ui.feature.summary.SummaryScreenView
 import com.example.tensoscan.ui.feature.user.UserScreenView
+import com.example.tensoscan.ui.model.BodyDataModel
 import kotlinx.serialization.json.Json
 
 @Composable
