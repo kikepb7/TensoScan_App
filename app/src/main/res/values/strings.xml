@@ -4,4 +4,9 @@
     <string name="record_video_icon_content_description">Record Video</string>
     <string name="take_photo_icon_content_description">Take Photo</string>
     <string name="switch_camera_preview_icon_content_description">Switch Camera Preview</string>
+    <string name="scan_display_text_button">Escanear dispositivo</string>
+    <string name="write_manually_text_button">Escribir manualmente</string>
+    <string name="button_scan_display_content_description">Botón para escanear dispositivo de meedida</string>
+    <string name="button_write_manually_content_description">Botón para escanear dispositivo de meedida</string>
+
 </resources>

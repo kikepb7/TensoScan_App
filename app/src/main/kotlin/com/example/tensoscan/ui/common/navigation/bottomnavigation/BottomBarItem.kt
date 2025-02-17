@@ -3,13 +3,14 @@ package com.example.tensoscan.ui.common.navigation.bottomnavigation
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.unit.dp
 import com.example.tensoscan.ui.common.navigation.Routes
+import com.example.tensoscan.ui.theme.SizeValues
 
 sealed class BottomBarItem {
     abstract val route: String
@@ -23,7 +24,7 @@ sealed class BottomBarItem {
             Icon(
                 painter = rememberVectorPainter(Icons.Default.Person),
                 contentDescription = "User icon",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(SizeValues.Size32)
             )
         }
     ): BottomBarItem()
@@ -35,7 +36,19 @@ sealed class BottomBarItem {
             Icon(
                 painter = rememberVectorPainter(Icons.Default.CameraAlt),
                 contentDescription = "User icon",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(SizeValues.Size32)
+            )
+        }
+    ): BottomBarItem()
+
+    data class Summary(
+        override val route: String = Routes.Summary.route,
+        override val title: String = "HISTORIAL",
+        override val icon: @Composable () -> Unit = {
+            Icon(
+                painter = rememberVectorPainter(Icons.Default.History),
+                contentDescription = "Historical icon",
+                modifier = Modifier.size(SizeValues.Size32)
             )
         }
     ): BottomBarItem()
