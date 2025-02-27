@@ -21,6 +21,7 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.content.ContextCompat
 import com.example.tensoscan.R
+import com.example.tensoscan.data.datasource.service.ImageApiService
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,8 @@ import java.io.File
 import java.io.OutputStream
 
 class CameraRepositoryImpl(
-    private val application: Application
+    private val application: Application,
+    private val apiService: ImageApiService
 ) : CameraRepository {
 
     private var recording: Recording? = null
