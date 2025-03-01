@@ -37,7 +37,11 @@ fun NavigationWrapper() {
                 Json.decodeFromString<List<BodyDataModel>>(it)
             } ?: emptyList()
 
-            SummaryScreenView(listBodyDataModel = listBodyDataModel, onScanDevice = { mainNavController.navigate(Camera.route) }, onWriteManually = {})
+            SummaryScreenView(
+                listBodyDataModel = listBodyDataModel,
+                onScanDevice = { mainNavController.navigate(Camera.route) },
+                onWriteManually = {}
+            )
         }
     }
 }

@@ -75,6 +75,7 @@ dependencies {
     // KTOR
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.negotiation)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.serialization)
 
     // DI
@@ -92,6 +93,7 @@ dependencies {
 
     // Retrofit
     implementation(libs.retrofit)
+    implementation(libs.gsonConverter)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

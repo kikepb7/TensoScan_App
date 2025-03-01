@@ -7,6 +7,9 @@
     <string name="scan_display_text_button">Escanear dispositivo</string>
     <string name="write_manually_text_button">Escribir manualmente</string>
     <string name="button_scan_display_content_description">Botón para escanear dispositivo de meedida</string>
+    <string name="button_upload_image_content_description">Botón para subir imagen al servidor</string>
     <string name="button_write_manually_content_description">Botón para escanear dispositivo de meedida</string>
+    <string name="upload_image_text_button">Subir imagen</string>
+    <string name="remove_card_icon_content_description">Remove card icon</string>
 
 </resources>

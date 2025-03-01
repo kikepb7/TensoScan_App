@@ -1,4 +1,4 @@
-package com.example.tensoscan.data.datasource.feature.camera.repository
+package com.example.tensoscan.data.feature.camera.repository
 
 import android.app.Application
 import android.content.ContentResolver
@@ -21,12 +21,17 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.content.ContextCompat
 import com.example.tensoscan.R
-import com.example.tensoscan.data.datasource.service.ImageApiService
+import com.example.tensoscan.data.feature.camera.dto.RecognitionResponseDto
+import com.example.tensoscan.data.feature.camera.service.ImageApiService
+import com.example.tensoscan.domain.common.Either
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.OutputStream
 
@@ -45,7 +50,9 @@ class CameraRepositoryImpl(
                 override fun onCaptureSuccess(image: ImageProxy) {
                     super.onCaptureSuccess(image)
 
-                    val matrix = Matrix().apply { postRotate(image.imageInfo.rotationDegrees.toFloat()) }
+                    val matrix = Matrix().apply {
+                        postRotate(image.imageInfo.rotationDegrees.toFloat())
+                    }
 
                     val imageBitmap = Bitmap.createBitmap(
                         image.toBitmap(),
@@ -79,13 +86,24 @@ class CameraRepositoryImpl(
             if (event is VideoRecordEvent.Finalize) {
                 if (event.hasError())
                     recording?.close()
-                    recording = null
+                recording = null
             } else {
                 CoroutineScope(Dispatchers.IO).launch { saveVideo(file) }
             }
         }
     }
 
+    override suspend fun uploadImage(file: File): Either<String, RecognitionResponseDto> {
+        return try {
+            val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+            val response = apiService.uploadImage(body)
+            Either.Success(response)
+        } catch (e: Exception) {
+            Either.Error("Error uploading the image: ${e.message}")
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private suspend fun saveMedia(
@@ -106,7 +124,7 @@ class CameraRepositoryImpl(
                 put(DATE_TAKEN, timeInMillis)
                 put(IS_PENDING, 1)
             }
-            val mediaUri: Uri? = resolver.insert(mediaCollection, contentValues)
+            val mediaUri = resolver.insert(mediaCollection, contentValues)
 
             mediaUri?.let { uri ->
                 try {
@@ -129,7 +147,7 @@ class CameraRepositoryImpl(
         saveMedia(
             fileName = "${System.currentTimeMillis()}_image.jpg",
             directory = DIRECTORY_DCIM,
-            mimeType = "image/jpg"
+            mimeType = "image/jpg",
         ) { outputStream ->
             bitmap.compress(JPEG, 100, outputStream)
         }

@@ -2,7 +2,6 @@ package com.example.tensoscan.ui.feature.camera
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.camera.core.CameraSelector.*
 import androidx.camera.view.CameraController.*
 import androidx.camera.view.LifecycleCameraController
@@ -49,7 +48,6 @@ import org.koin.core.annotation.KoinExperimentalAPI
 fun CameraScreenView() {
 
     val activity = LocalContext.current as Activity
-    val uri = Uri.parse("content://media/internal/images/media")
     val cameraViewModel = koinViewModel<CameraViewModel>()
     val isRecording by cameraViewModel.state.collectAsState()
     val controller = remember {
@@ -88,7 +86,12 @@ fun CameraScreenView() {
                 contentDescription = RString.photo_library_icon_content_description,
                 shape = RoundedCornerShape(RoundedValues.Rounded14),
                 size = SizeValues.Size45,
-                onClick = { Intent(Intent.ACTION_VIEW, uri).also { activity.startActivity(it) } }
+                onClick = {
+                    val galleryIntent = Intent(Intent.ACTION_VIEW).apply {
+                        type = "image/*"
+                    }
+                    activity.startActivity(galleryIntent)
+                }
             )
 
             Spacer(modifier = Modifier.width(SizeValues.Size01))
