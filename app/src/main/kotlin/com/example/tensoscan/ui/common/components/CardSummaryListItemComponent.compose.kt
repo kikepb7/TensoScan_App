@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,15 +23,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.tensoscan.R
 import com.example.tensoscan.ui.model.BodyDataModel
 import com.example.tensoscan.ui.theme.Fontalues
 import com.example.tensoscan.ui.theme.SummaryTrackerButtonColor
 import com.example.tensoscan.ui.theme.SpacerValues
 import com.example.tensoscan.ui.theme.SizeValues
+import com.example.tensoscan.ui.theme.SizeValues.Size16
+import com.example.tensoscan.ui.theme.SizeValues.Size24
 
 @Composable
-fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
+fun CardSummaryListItemView(
+    bodyDataModel: BodyDataModel,
+    onDelete: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = SummaryTrackerButtonColor)
@@ -42,13 +51,13 @@ fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = bodyDataModel.date,
+                    text = "Presión arterial",
                     color = White,
                     fontSize = Fontalues.Font16
                 )
-                Spacer(modifier = Modifier.height(SizeValues.Size16))
+                Spacer(modifier = Modifier.height(Size16))
                 Text(
-                    text = bodyDataModel.bloodPressure + " mmHg",
+                    text = bodyDataModel.digit.toString() + " mmHg",
                     color = White,
                     fontSize = Fontalues.Font16
                 )
@@ -59,8 +68,8 @@ fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center
             ) {
-                StatusChipView(status = bodyDataModel.status, bodyDataModel.statusColor)
-                Spacer(modifier = Modifier.height(SizeValues.Size16))
+                StatusChipView(status = bodyDataModel.digit, bodyDataModel.statusColor)
+                Spacer(modifier = Modifier.height(Size16))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -68,15 +77,26 @@ fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
                         imageVector = Icons.Default.Favorite,
                         contentDescription = "Estado",
                         tint = Color(0xFF9C27B0),
-                        modifier = Modifier.size(SizeValues.Size16)
+                        modifier = Modifier.size(Size16)
                     )
                     Spacer(modifier = Modifier.width(SizeValues.Size04))
                     Text(
-                        text = bodyDataModel.heartRate + " BPM",
+                        text = bodyDataModel.confidence.toString() + " BPM",
                         color = White,
                         fontSize = Fontalues.Font14
                     )
                 }
+            }
+
+            IconButton(
+                modifier = Modifier.padding(start = Size24),
+                onClick = onDelete
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.remove_card_icon_content_description),
+                    tint = Color.Red
+                )
             }
         }
     }
@@ -87,11 +107,10 @@ fun CardSummaryListItemView(bodyDataModel: BodyDataModel) {
 fun CardSummaryListItemPreview() {
     CardSummaryListItemView(
         bodyDataModel = BodyDataModel(
-            date = "2024-02-14",
-            bloodPressure = "120/80",
-            heartRate = "72",
-            status = "BIEN",
+            digit = "168",
+            confidence = "0.95",
             statusColor = Green
-        )
+        ),
+        onDelete = {}
     )
 }

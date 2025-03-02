@@ -1,35 +1,37 @@
 package com.example.tensoscan.di
 
-import android.app.Application
-import android.content.Context
 import com.example.tensoscan.ui.utils.PermissionManager
-import com.example.tensoscan.data.datasource.feature.camera.repository.CameraRepositoryImpl
+import com.example.tensoscan.data.feature.camera.repository.CameraRepositoryImpl
+import com.example.tensoscan.data.feature.camera.service.ImageApiService
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.http.URLProtocol
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 val dataModule = module {
+
     single {
-        HttpClient {
-            install(plugin = ContentNegotiation){
-                json(json = Json { ignoreUnknownKeys = true }, contentType = ContentType.Any)
-            }
-            install(plugin = DefaultRequest) {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    host = ""
-                }
-            }
-        }
+        OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
     }
 
-//    factoryOf(::ApiService)
-    factory<CameraRepository> { CameraRepositoryImpl(application = get<Context>() as Application) }
+    single {
+        Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8000/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(get())
+            .build()
+    }
+
+    single { get<Retrofit>().create(ImageApiService::class.java)}
+
+    factory<CameraRepository> { CameraRepositoryImpl(androidApplication(), get()) }
+
     single { PermissionManager() }
 }
