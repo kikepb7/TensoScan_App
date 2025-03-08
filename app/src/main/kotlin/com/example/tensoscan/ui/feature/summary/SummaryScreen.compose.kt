@@ -28,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,13 +35,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tensoscan.R
+import com.example.tensoscan.domain.feature.camera.model.PredictionModel
 import com.example.tensoscan.ui.common.components.ButtonSummaryView
 import com.example.tensoscan.ui.common.components.CardSummaryListItemView
 import com.example.tensoscan.ui.common.components.PulseLoadingView
 import com.example.tensoscan.ui.common.components.SummaryReadingView
 import com.example.tensoscan.ui.feature.camera.CameraState
 import com.example.tensoscan.ui.feature.camera.CameraViewModel
-import com.example.tensoscan.ui.model.BodyDataModel
 import com.example.tensoscan.ui.theme.BackgroundTrackerViewColor
 import com.example.tensoscan.ui.theme.Fontalues
 import com.example.tensoscan.ui.theme.ScanDeviceButtonTrackerColor
@@ -56,22 +55,25 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SummaryScreenView(
-    listBodyDataModel: List<BodyDataModel>,
+    listPredictionModel: List<PredictionModel>,
     onScanDevice: () -> Unit,
     onWriteManually: () -> Unit
 ) {
     val context = LocalContext.current
     val cameraViewModel = koinViewModel<CameraViewModel>()
     val cameraState by cameraViewModel.state.collectAsState()
-    var newListBodyDataModel by remember { mutableStateOf(listBodyDataModel) }
+    var newListBodyDataModel by remember { mutableStateOf(listPredictionModel) }
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { cameraViewModel.uploadImage(it, context) }
     }
 
     LaunchedEffect(cameraState) {
-        if (cameraState.cameraState is CameraState.UploadSuccess) {
-            val newBodyDataModel = (cameraState.cameraState as CameraState.UploadSuccess).bodyDataModel
-            newListBodyDataModel = newListBodyDataModel + newBodyDataModel
+        when (cameraState.cameraState) {
+            is CameraState.UploadSuccess -> {
+                val newBodyDataModel = (cameraState.cameraState as CameraState.UploadSuccess).predictionModel
+                newListBodyDataModel = newListBodyDataModel + newBodyDataModel
+            }
+            else -> {}
         }
     }
 
@@ -82,25 +84,35 @@ fun SummaryScreenView(
             .padding(SpacerValues.Spacer16)
     ) {
         SummaryScreenHeader(
-            bodyDataModel = newListBodyDataModel.lastOrNull(),
+            predictionModel = newListBodyDataModel.lastOrNull(),
             onScanDevice = onScanDevice,
             onWriteManually = onWriteManually,
             onUploadImage = { galleryLauncher.launch("image/*") }
         )
         Spacer(modifier = Modifier.height(SizeValues.Size32))
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(SpacerValues.Spacer08)
-        ) {
-            items(newListBodyDataModel.size) { position ->
-                CardSummaryListItemView(newListBodyDataModel[position], onDelete = {})
+
+        when (cameraState.cameraState) {
+            is CameraState.Uploading -> {
+                PulseLoadingView()
             }
+            is CameraState.UploadSuccess -> {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(SpacerValues.Spacer08)
+                ) {
+                    items(newListBodyDataModel.size) { position ->
+                        CardSummaryListItemView(newListBodyDataModel[position], onDelete = {})
+                    }
+                }
+            }
+            is CameraState.Error -> {}
+            else -> {}
         }
     }
 }
 
 @Composable
 fun SummaryScreenHeader(
-    bodyDataModel: BodyDataModel? = null,
+    predictionModel: PredictionModel? = null,
     onScanDevice: () -> Unit,
     onWriteManually: () -> Unit,
     onUploadImage: () -> Unit
@@ -128,7 +140,7 @@ fun SummaryScreenHeader(
                 )
                 Spacer(modifier = Modifier.height(SizeValues.Size12))
                 // TODO --> Show this SummaryReadingView just if there is a value to show
-                SummaryReadingView(bloodPressure = bodyDataModel?.digit.toString(), heartRate = bodyDataModel?.confidence.toString())
+                SummaryReadingView(bloodPressure = predictionModel?.digit.toString(), heartRate = predictionModel?.confidence.toString())
             }
         }
         Spacer(modifier = Modifier.height(SizeValues.Size32))
@@ -168,21 +180,18 @@ fun SummaryScreenHeader(
 @Preview(showBackground = true)
 fun SummaryScreenPreview() {
     SummaryScreenView(
-        listBodyDataModel = listOf(
-            BodyDataModel(
+        listPredictionModel = listOf(
+            PredictionModel(
                 digit = "150",
-                confidence = "0.45",
-                statusColor = Color.Green
+                confidence = "0.45"
             ),
-            BodyDataModel(
+            PredictionModel(
                 digit = "150",
-                confidence = "0.45",
-                statusColor = Color.Red
+                confidence = "0.45"
             ),
-            BodyDataModel(
+            PredictionModel(
                 digit = "150",
-                confidence = "0.45",
-                statusColor = Color.Green
+                confidence = "0.45"
             ),
         ),
         onScanDevice = {},

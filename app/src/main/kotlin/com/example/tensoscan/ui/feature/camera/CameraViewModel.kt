@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import androidx.camera.view.LifecycleCameraController
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tensoscan.domain.common.Either
+import com.example.tensoscan.domain.feature.camera.model.PredictionModel
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
 import com.example.tensoscan.domain.feature.camera.usecase.UploadImageUseCase
-import com.example.tensoscan.ui.model.BodyDataModel
 import com.example.tensoscan.ui.utils.Constants.CAMERA_PERMISSION
 import com.example.tensoscan.ui.utils.PermissionManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,10 +71,9 @@ class CameraViewModel(
                     is Either.Success -> _state.update {
                         it.copy(
                             cameraState = CameraState.UploadSuccess(
-                                bodyDataModel = BodyDataModel(
-                                    digit = result.data.prediction.digit.toString(),
-                                    confidence = result.data.prediction.confidence.toString(),
-                                    statusColor = Color.Green   // TODO --> manage between red, orange and green
+                                predictionModel = PredictionModel(
+                                    digit = result.data.digit,
+                                    confidence = result.data.confidence
                                 )
                             )
                         )
@@ -99,7 +97,7 @@ sealed class CameraState {
     data object Recording : CameraState()
     data object PhotoTaken : CameraState()
     data object Uploading : CameraState()
-    data class UploadSuccess(val bodyDataModel: BodyDataModel) : CameraState()
+    data class UploadSuccess(val predictionModel: PredictionModel) : CameraState()
     data class Error(val message: String) : CameraState()
 }
 

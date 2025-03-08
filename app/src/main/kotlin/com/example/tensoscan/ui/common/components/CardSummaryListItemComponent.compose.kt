@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tensoscan.R
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.domain.feature.camera.model.PredictionModel
 import com.example.tensoscan.ui.theme.Fontalues
 import com.example.tensoscan.ui.theme.SummaryTrackerButtonColor
 import com.example.tensoscan.ui.theme.SpacerValues
@@ -36,7 +36,7 @@ import com.example.tensoscan.ui.theme.SizeValues.Size24
 
 @Composable
 fun CardSummaryListItemView(
-    bodyDataModel: BodyDataModel,
+    predictionModel: PredictionModel,
     onDelete: () -> Unit
 ) {
     Card(
@@ -57,7 +57,7 @@ fun CardSummaryListItemView(
                 )
                 Spacer(modifier = Modifier.height(Size16))
                 Text(
-                    text = bodyDataModel.digit.toString() + " mmHg",
+                    text = predictionModel.digit.toString() + " mmHg",
                     color = White,
                     fontSize = Fontalues.Font16
                 )
@@ -68,7 +68,7 @@ fun CardSummaryListItemView(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Center
             ) {
-                StatusChipView(status = bodyDataModel.digit, bodyDataModel.statusColor)
+                StatusChipView(status = predictionModel.digit, Green)
                 Spacer(modifier = Modifier.height(Size16))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -81,7 +81,7 @@ fun CardSummaryListItemView(
                     )
                     Spacer(modifier = Modifier.width(SizeValues.Size04))
                     Text(
-                        text = bodyDataModel.confidence.toString() + " BPM",
+                        text = predictionModel.confidence.toString() + " BPM",
                         color = White,
                         fontSize = Fontalues.Font14
                     )
@@ -106,10 +106,9 @@ fun CardSummaryListItemView(
 @Preview(showBackground = true)
 fun CardSummaryListItemPreview() {
     CardSummaryListItemView(
-        bodyDataModel = BodyDataModel(
+        predictionModel = PredictionModel(
             digit = "168",
-            confidence = "0.95",
-            statusColor = Green
+            confidence = "0.95"
         ),
         onDelete = {}
     )
