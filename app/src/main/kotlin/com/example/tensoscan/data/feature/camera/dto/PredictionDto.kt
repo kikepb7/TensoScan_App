@@ -1,5 +1,7 @@
 package com.example.tensoscan.data.feature.camera.dto
 
+import com.example.tensoscan.domain.feature.camera.model.PredictionModel
+
 data class RecognitionResponseDto(
     val prediction: PredictionDto
 )
@@ -7,12 +9,11 @@ data class RecognitionResponseDto(
 data class PredictionDto(
     val digit: Int,
     val confidence: Float
-)
-
-//data class PredictionDto(
-//    val highBloodPressure: Int,
-//    val lowBloodPressure: Int,
-//    val pulse: Int,
-//    val confidence: Float,
-//    val measureDate: Date
-//)
+) {
+    fun dtoToPredictionModel(): PredictionModel {
+        return PredictionModel(
+            digit = digit.toString(),
+            confidence = confidence.toString()
+        )
+    }
+}

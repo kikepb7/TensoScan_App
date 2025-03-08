@@ -21,9 +21,9 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.content.ContextCompat
 import com.example.tensoscan.R
-import com.example.tensoscan.data.feature.camera.dto.RecognitionResponseDto
 import com.example.tensoscan.data.feature.camera.service.ImageApiService
 import com.example.tensoscan.domain.common.Either
+import com.example.tensoscan.domain.feature.camera.model.PredictionModel
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -93,12 +93,12 @@ class CameraRepositoryImpl(
         }
     }
 
-    override suspend fun uploadImage(file: File): Either<String, RecognitionResponseDto> {
+    override suspend fun uploadImage(file: File): Either<String, PredictionModel> {
         return try {
             val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-            val response = apiService.uploadImage(body)
+            val response = apiService.uploadImage(body).prediction.dtoToPredictionModel()
             Either.Success(response)
         } catch (e: Exception) {
             Either.Error("Error uploading the image: ${e.message}")

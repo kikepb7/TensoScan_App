@@ -1,4 +1,4 @@
-package com.example.tensoscan.domain.feature.camera.model
+package com.example.tensoscan.domain.common
 
 sealed class FailureDomain {
     data object ApiError : FailureDomain()
