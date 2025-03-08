@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.tensoscan.ui.common.components.BottomBarNavigation
+import com.example.tensoscan.ui.common.navigation.Routes
 import com.example.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.*
 
 @Composable
@@ -20,7 +21,7 @@ fun HomeScreenView(
     mainNavController: NavHostController,
 ) {
     val navController = rememberNavController()
-    val items = listOf(User(), Camera(), Summary())
+    val items = listOf(User(), Camera(), Summary(), Chatbot())
 
     Scaffold(
         topBar = {},

@@ -8,4 +8,5 @@ sealed class Routes(val route: String) {
     data object User: Routes("user")
     data object Camera: Routes("camera")
     data object Summary: Routes("summary")
+    data object Chatbot: Routes("chatbot")
 }

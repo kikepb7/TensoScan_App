@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.MarkUnreadChatAlt
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -48,6 +49,18 @@ sealed class BottomBarItem {
             Icon(
                 painter = rememberVectorPainter(Icons.Default.History),
                 contentDescription = "Historical icon",
+                modifier = Modifier.size(SizeValues.Size32)
+            )
+        }
+    ): BottomBarItem()
+
+    data class Chatbot(
+        override val route: String = Routes.Chatbot.route,
+        override val title: String = "CHATBOT",
+        override val icon: @Composable () -> Unit = {
+            Icon(
+                painter = rememberVectorPainter(Icons.Default.MarkUnreadChatAlt),
+                contentDescription = "Chatbot icon",
                 modifier = Modifier.size(SizeValues.Size32)
             )
         }
