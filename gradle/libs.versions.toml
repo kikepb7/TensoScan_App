@@ -20,6 +20,7 @@ viewmodel = "2.8.2"
 coil = "3.0.0-alpha08"
 materialIconsExtended = "1.6.3"
 retrofit = "2.10.0"
+gemini = "0.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -80,6 +81,9 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 # Retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 gsonConverter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+# Gemini
+gemini = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "gemini"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

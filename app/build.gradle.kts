@@ -95,6 +95,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.gsonConverter)
 
+    // Gemini
+    implementation(libs.gemini)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,5 +1,6 @@
 package com.example.tensoscan.di
 
+import com.example.tensoscan.data.common.Constants.GEMINI_API_KEY
 import com.example.tensoscan.ui.utils.PermissionManager
 import com.example.tensoscan.data.feature.camera.repository.CameraRepositoryImpl
 import com.example.tensoscan.data.feature.camera.service.ImageApiService
@@ -34,4 +35,5 @@ val dataModule = module {
     factory<CameraRepository> { CameraRepositoryImpl(androidApplication(), get()) }
 
     single { PermissionManager() }
+
 }
