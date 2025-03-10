@@ -95,6 +95,12 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.gsonConverter)
 
+    // Pager
+    implementation(libs.pager)
+
+    // Lottie
+    implementation(libs.lottie)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

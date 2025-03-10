@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.tensoscan.R
 import com.example.tensoscan.ui.common.components.ButtonSummaryView
 import com.example.tensoscan.ui.common.components.CardSummaryListItemView
-import com.example.tensoscan.ui.common.components.PulseLoadingView
 import com.example.tensoscan.ui.common.components.SummaryReadingView
 import com.example.tensoscan.ui.feature.camera.CameraState
 import com.example.tensoscan.ui.feature.camera.CameraViewModel

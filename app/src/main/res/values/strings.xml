@@ -11,5 +11,11 @@
     <string name="button_write_manually_content_description">Botón para escanear dispositivo de meedida</string>
     <string name="upload_image_text_button">Subir imagen</string>
     <string name="remove_card_icon_content_description">Remove card icon</string>
+    <string name="tenso_scan_welcome_onboarding_first_title">Bienvenido a TensoScan</string>
+    <string name="tenso_scan_ia_monitoring_onboarding_second_title">Monitoreo de tensión con IA</string>
+    <string name="tenso_scan_manage_historical_onboarding_third_title">Gestión completa de Historial de Registros</string>
+    <string name="tenso_scan_onboarding_first_description">Una solución avanzada para el monitoreo y seguimiento de tus constantes vitales</string>
+    <string name="tenso_scan_onboarding_second_description">Gracias a la integración de Inteligencia Artificial, simplifica la captura y análisis de tus datos</string>
+    <string name="tenso_scan_onboarding_third_description">Gestiona de manera eficiente tu historial de registros y analiza las tendencias de tus mediciones</string>
 
 </resources>

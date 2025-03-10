@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.tensoscan.ui.common.navigation.Routes.*
 import com.example.tensoscan.ui.feature.camera.CameraScreenView
 import com.example.tensoscan.ui.feature.home.HomeScreenView
+import com.example.tensoscan.ui.feature.onboarding.OnboardingScreenView
 import com.example.tensoscan.ui.feature.summary.SummaryScreenView
 import com.example.tensoscan.ui.feature.user.UserScreenView
 import com.example.tensoscan.ui.model.BodyDataModel
@@ -16,7 +17,10 @@ import kotlinx.serialization.json.Json
 fun NavigationWrapper() {
     val mainNavController = rememberNavController()
 
-    NavHost(navController = mainNavController, startDestination = Home.route) {
+    NavHost(navController = mainNavController, startDestination = Onboarding.route) {
+        composable(route = Onboarding.route) {
+            OnboardingScreenView(navController = mainNavController)
+        }
         composable(route = Home.route) {
             HomeScreenView(mainNavController = mainNavController)
         }

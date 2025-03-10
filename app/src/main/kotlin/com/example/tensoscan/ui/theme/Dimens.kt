@@ -1,5 +1,6 @@
 package com.example.tensoscan.ui.theme
 
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -33,4 +34,6 @@ object Fontalues {
     val Font14 = 14.sp
     val Font16 = 16.sp
     val Font18 = 18.sp
+    val Font20 = 20.sp
+    val Font44 = 44.sp
 }
