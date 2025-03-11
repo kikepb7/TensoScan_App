@@ -39,8 +39,6 @@ import com.example.tensoscan.R
 import com.example.tensoscan.ui.common.components.ButtonSummaryView
 import com.example.tensoscan.ui.common.components.CardSummaryListItemView
 import com.example.tensoscan.ui.common.components.SummaryReadingView
-import com.example.tensoscan.ui.feature.camera.CameraState
-import com.example.tensoscan.ui.feature.camera.CameraViewModel
 import com.example.tensoscan.ui.model.BodyDataModel
 import com.example.tensoscan.ui.theme.BackgroundTrackerViewColor
 import com.example.tensoscan.ui.theme.Fontalues
@@ -60,16 +58,16 @@ fun SummaryScreenView(
     onWriteManually: () -> Unit
 ) {
     val context = LocalContext.current
-    val cameraViewModel = koinViewModel<CameraViewModel>()
-    val cameraState by cameraViewModel.state.collectAsState()
+    val summaryViewModel = koinViewModel<SummaryViewModel>()
+    val summaryState by summaryViewModel.state.collectAsState()
     var newListBodyDataModel by remember { mutableStateOf(listBodyDataModel) }
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let { cameraViewModel.uploadImage(it, context) }
+        uri?.let { summaryViewModel.uploadImage(it, context) }
     }
 
-    LaunchedEffect(cameraState) {
-        if (cameraState.cameraState is CameraState.UploadSuccess) {
-            val newBodyDataModel = (cameraState.cameraState as CameraState.UploadSuccess).bodyDataModel
+    LaunchedEffect(summaryState) {
+        if (summaryState.uploadState is UploadState.Success) {
+            val newBodyDataModel = (summaryState.uploadState as UploadState.Success).bodyDataModel
             newListBodyDataModel = newListBodyDataModel + newBodyDataModel
         }
     }
