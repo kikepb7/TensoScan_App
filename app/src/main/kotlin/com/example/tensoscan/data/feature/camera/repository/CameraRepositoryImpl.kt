@@ -1,5 +1,6 @@
 package com.example.tensoscan.data.feature.camera.repository
 
+import android.Manifest
 import android.app.Application
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -9,9 +10,9 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.os.Environment.*
-import android.provider.MediaStore.*
 import android.provider.MediaStore.Images.Media.*
 import androidx.annotation.RequiresApi
+import androidx.annotation.RequiresPermission
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
 import androidx.camera.video.FileOutputOptions
@@ -20,7 +21,6 @@ import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.content.ContextCompat
-import com.example.tensoscan.R
 import com.example.tensoscan.data.feature.camera.dto.RecognitionResponseDto
 import com.example.tensoscan.data.feature.camera.service.ImageApiService
 import com.example.tensoscan.domain.common.Either
@@ -67,6 +67,7 @@ class CameraRepositoryImpl(
         )
     }
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     @RequiresApi(Build.VERSION_CODES.Q)
     override suspend fun recordVideo(controller: LifecycleCameraController) {
         recording?.let {
@@ -114,12 +115,11 @@ class CameraRepositoryImpl(
     ) {
         withContext(Dispatchers.IO) {
             val resolver: ContentResolver = application.contentResolver
-            val mediaCollection = getContentUri(VOLUME_EXTERNAL_PRIMARY)
-            val appName = application.getString(R.string.app_name)
+            val mediaCollection = EXTERNAL_CONTENT_URI
             val timeInMillis = System.currentTimeMillis()
             val contentValues = ContentValues().apply {
                 put(DISPLAY_NAME, fileName)
-                put(RELATIVE_PATH, "$directory/$appName")
+                put(RELATIVE_PATH, directory)
                 put(MIME_TYPE, mimeType)
                 put(DATE_TAKEN, timeInMillis)
                 put(IS_PENDING, 1)
