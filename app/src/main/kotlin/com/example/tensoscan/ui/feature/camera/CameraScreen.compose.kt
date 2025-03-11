@@ -57,14 +57,15 @@ fun CameraScreenView() {
 
     val activity = LocalContext.current as Activity
     val cameraViewModel = koinViewModel<CameraViewModel>()
-    val isRecording by cameraViewModel.state.collectAsState()
+    val permissionViewModel = koinViewModel<PermissionViewModel>()
+    val isRecording by permissionViewModel.state.collectAsState()
     val isPhotoTaken = remember { mutableStateOf(false) }
     val controller = remember {
         LifecycleCameraController(activity.applicationContext).apply {
             setEnabledUseCases(IMAGE_CAPTURE or VIDEO_CAPTURE)
         }
     }
-    LaunchedEffect(Unit) { cameraViewModel.checkPermissions(activity) }
+    LaunchedEffect(Unit) { permissionViewModel.checkPermissions(activity) }
     LaunchedEffect(isPhotoTaken.value) {
         if (isPhotoTaken.value) {
             delay(5)
@@ -118,7 +119,7 @@ fun CameraScreenView() {
                 shape = CircleShape,
                 size = SizeValues.Size60,
                 onClick = {
-                    cameraViewModel.requestPermissions(activity)
+                    permissionViewModel.requestPermissions(activity)
                     cameraViewModel.onRecordVideo(controller = controller)
                 }
             )
@@ -128,7 +129,7 @@ fun CameraScreenView() {
                 shape = CircleShape,
                 size = SizeValues.Size60,
                 onClick = {
-                    cameraViewModel.requestPermissions(activity)
+                    permissionViewModel.requestPermissions(activity)
                     cameraViewModel.onTakePhoto(controller = controller)
 
                     isPhotoTaken.value = true
