@@ -39,8 +39,7 @@ fun NavigationWrapper() {
 
             SummaryScreenView(
                 listBodyDataModel = listBodyDataModel,
-                onScanDevice = { mainNavController.navigate(Camera.route) },
-                onWriteManually = {}
+                onSetManually = {}
             )
         }
     }

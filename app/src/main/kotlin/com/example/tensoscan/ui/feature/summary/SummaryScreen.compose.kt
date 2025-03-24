@@ -3,50 +3,40 @@ package com.example.tensoscan.ui.feature.summary
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.CloudUpload
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.tensoscan.R
-import com.example.tensoscan.ui.common.components.ButtonSummaryView
-import com.example.tensoscan.ui.common.components.CardSummaryListItemView
-import com.example.tensoscan.ui.common.components.SummaryReadingView
+import androidx.compose.ui.zIndex
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.tensoscan.ui.common.components.PulseLoadingView
+import com.example.tensoscan.ui.common.components.SummaryActionBar
+import com.example.tensoscan.R.drawable as RDrawable
+import com.example.tensoscan.R.string as RString
+import com.example.tensoscan.ui.common.components.SummaryCardListItemView
+import com.example.tensoscan.ui.common.components.SummaryErrorBottomSheet
+import com.example.tensoscan.ui.common.components.TopBarView
 import com.example.tensoscan.ui.model.BodyDataModel
-import com.example.tensoscan.ui.theme.BackgroundTrackerViewColor
-import com.example.tensoscan.ui.theme.Fontalues
-import com.example.tensoscan.ui.theme.ScanDeviceButtonTrackerColor
-import com.example.tensoscan.ui.theme.SpacerValues
-import com.example.tensoscan.ui.theme.SizeValues
-import com.example.tensoscan.ui.theme.SummaryTrackerButtonColor
-import com.example.tensoscan.ui.theme.WriteManuallyButtonTrackerColor
+import com.example.tensoscan.ui.model.TopBarModel
+import com.example.tensoscan.ui.model.UploadErrorModel.*
+import com.example.tensoscan.ui.theme.BackgroundScreenColor
+import com.example.tensoscan.ui.theme.SizeValues.Size16
+import com.example.tensoscan.ui.theme.SizeValues.Size76
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -54,110 +44,94 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 fun SummaryScreenView(
     listBodyDataModel: List<BodyDataModel>,
-    onScanDevice: () -> Unit,
-    onWriteManually: () -> Unit
+    onSetManually: () -> Unit
 ) {
     val context = LocalContext.current
     val summaryViewModel = koinViewModel<SummaryViewModel>()
-    val summaryState by summaryViewModel.state.collectAsState()
-    var newListBodyDataModel by remember { mutableStateOf(listBodyDataModel) }
-    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+    val summaryState by summaryViewModel.state.collectAsStateWithLifecycle()
+
+    val bodyDataModels = remember { mutableStateListOf<BodyDataModel>().apply { addAll(listBodyDataModel) } }
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
         uri?.let { summaryViewModel.uploadImage(it, context) }
     }
 
-    LaunchedEffect(summaryState) {
-        if (summaryState.uploadState is UploadState.Success) {
-            val newBodyDataModel = (summaryState.uploadState as UploadState.Success).bodyDataModel
-            newListBodyDataModel = newListBodyDataModel + newBodyDataModel
+    LaunchedEffect(summaryState.uploadState) {
+        when (val state = summaryState.uploadState) {
+            is UploadState.Success -> {
+                bodyDataModels.add(state.bodyDataModel)
+                summaryViewModel.resetUploadState()
+            }
+            else -> Unit
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = BackgroundTrackerViewColor)
-            .padding(SpacerValues.Spacer16)
-    ) {
-        SummaryScreenHeader(
-            bodyDataModel = newListBodyDataModel.lastOrNull(),
-            onScanDevice = onScanDevice,
-            onWriteManually = onWriteManually,
-            onUploadImage = { galleryLauncher.launch("image/*") }
-        )
-        Spacer(modifier = Modifier.height(SizeValues.Size32))
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(SpacerValues.Spacer08)
-        ) {
-            items(newListBodyDataModel.size) { position ->
-                CardSummaryListItemView(newListBodyDataModel[position], onDelete = {})
+    summaryState.uploadState.let { state ->
+        when (state) {
+            is UploadState.Uploading -> UploadingOverlay()
+            is UploadState.Error -> {
+                val message = when (state.error) {
+                    is UploadError.Server -> state.error.message
+                    UploadError.Timeout -> stringResource(Timeout.message)
+                    UploadError.Unknown -> stringResource(Unknown.message)
+                }
+                SummaryErrorBottomSheet(message = message, onDismiss = summaryViewModel::resetUploadState)
             }
+            else -> Unit
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopBarView(
+                topAppBarModel = TopBarModel(
+                    title = RString.app_name,
+                    image = RDrawable.ic_default_user,
+                    icon = Icons.Default.Settings
+                )
+            )
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(BackgroundScreenColor)
+                .padding(Size16)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(bottom = Size76)
+            ) {
+                items(bodyDataModels.size) { index ->
+                    SummaryCardListItemView(bodyDataModels[index], onDelete = {})
+                }
+            }
+
+            SummaryActionBar(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(),
+                onUploadPhotoClicked = { galleryLauncher.launch("image/*") },
+                onSetManuallyData = onSetManually
+            )
         }
     }
 }
 
 @Composable
-fun SummaryScreenHeader(
-    bodyDataModel: BodyDataModel? = null,
-    onScanDevice: () -> Unit,
-    onWriteManually: () -> Unit,
-    onUploadImage: () -> Unit
-) {
-    Column(
+private fun UploadingOverlay() {
+    Box(
         modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.4f))
+            .zIndex(1f),
+        contentAlignment = Alignment.Center
     ) {
-        Card(
-            colors = CardDefaults.cardColors(containerColor = SummaryTrackerButtonColor)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(SpacerValues.Spacer16)
-            ) {
-                Text(
-                    text = "Última lectura",
-                    modifier = Modifier,
-                    color = White,
-                    fontSize = Fontalues.Font18,
-                    fontWeight = Bold,
-                    fontFamily = FontFamily.SansSerif
-                )
-                Spacer(modifier = Modifier.height(SizeValues.Size12))
-                // TODO --> Show this SummaryReadingView just if there is a value to show
-                SummaryReadingView(bloodPressure = bodyDataModel?.digit.toString(), heartRate = bodyDataModel?.confidence.toString())
-            }
-        }
-        Spacer(modifier = Modifier.height(SizeValues.Size32))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            ButtonSummaryView(
-                text = stringResource(R.string.scan_display_text_button),
-                icon = Icons.Default.CameraAlt,
-                color = ScanDeviceButtonTrackerColor,
-                contentDescription = stringResource(R.string.button_scan_display_content_description),
-                onClick = onScanDevice
-            )
-            ButtonSummaryView(
-                text = stringResource(R.string.write_manually_text_button),
-                icon = Icons.Default.Create,
-                color = WriteManuallyButtonTrackerColor,
-                contentDescription = stringResource(R.string.button_write_manually_content_description),
-                onClick = onWriteManually
-            )
-        }
-
-        Spacer(modifier = Modifier.height(SizeValues.Size16))
-
-        ButtonSummaryView(
-            text = stringResource(R.string.upload_image_text_button),
-            icon = Icons.Default.CloudUpload,
-            color = ScanDeviceButtonTrackerColor,
-            contentDescription = stringResource(R.string.button_upload_image_content_description),
-            onClick = onUploadImage
-        )
+        PulseLoadingView()
     }
 }
 
@@ -167,22 +141,24 @@ fun SummaryScreenPreview() {
     SummaryScreenView(
         listBodyDataModel = listOf(
             BodyDataModel(
-                digit = "150",
+                highPressure = "150",
+                lowPressure = "80",
+                pulse = "60",
                 confidence = "0.45",
-                statusColor = Color.Green
             ),
             BodyDataModel(
-                digit = "150",
+                highPressure = "150",
+                lowPressure = "80",
+                pulse = "60",
                 confidence = "0.45",
-                statusColor = Color.Red
             ),
             BodyDataModel(
-                digit = "150",
+                highPressure = "150",
+                lowPressure = "80",
+                pulse = "60",
                 confidence = "0.45",
-                statusColor = Color.Green
             ),
         ),
-        onScanDevice = {},
-        onWriteManually = {}
+        onSetManually = {}
     )
 }
