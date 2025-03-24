@@ -21,10 +21,11 @@ import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.content.ContextCompat
-import com.example.tensoscan.data.feature.camera.dto.RecognitionResponseDto
 import com.example.tensoscan.data.feature.camera.service.ImageApiService
+import com.example.tensoscan.data.feature.camera.utils.dtoToDomainModel
 import com.example.tensoscan.domain.common.Either
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
+import com.example.tensoscan.ui.model.BodyDataModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,20 +49,22 @@ class CameraRepositoryImpl(
             object : ImageCapture.OnImageCapturedCallback() {
                 @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onCaptureSuccess(image: ImageProxy) {
-                    super.onCaptureSuccess(image)
+                    image.use {
+                        val matrix = Matrix().apply {
+                            postRotate(it.imageInfo.rotationDegrees.toFloat())
+                        }
 
-                    val matrix = Matrix().apply {
-                        postRotate(image.imageInfo.rotationDegrees.toFloat())
+                        val imageBitmap = Bitmap.createBitmap(
+                            it.toBitmap(),
+                            0, 0,
+                            it.width, it.height,
+                            matrix, true
+                        )
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            savePhoto(imageBitmap)
+                        }
                     }
-
-                    val imageBitmap = Bitmap.createBitmap(
-                        image.toBitmap(),
-                        0, 0,
-                        image.width, image.height,
-                        matrix, true
-                    )
-
-                    CoroutineScope(Dispatchers.IO).launch { savePhoto(imageBitmap) }
                 }
             }
         )
@@ -94,12 +97,12 @@ class CameraRepositoryImpl(
         }
     }
 
-    override suspend fun uploadImage(file: File): Either<String, RecognitionResponseDto> {
+    override suspend fun uploadImage(file: File): Either<String, BodyDataModel> {
         return try {
             val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-            val response = apiService.uploadImage(body)
+            val response = apiService.uploadImage(body).dtoToDomainModel()
             Either.Success(response)
         } catch (e: Exception) {
             Either.Error("Error uploading the image: ${e.message}")
