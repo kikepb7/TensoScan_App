@@ -1,7 +1,6 @@
 package com.example.tensoscan.domain.feature.camera.repository
 
 import androidx.camera.view.LifecycleCameraController
-import com.example.tensoscan.data.feature.camera.dto.RecognitionResponseDto
 import com.example.tensoscan.domain.common.Either
 import com.example.tensoscan.ui.model.BodyDataModel
 import java.io.File
