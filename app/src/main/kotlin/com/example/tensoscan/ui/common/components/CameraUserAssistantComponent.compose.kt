@@ -22,17 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CameraUserAssistantView(
-    screenWidth: Dp,
-    screenHeight: Dp
-) {
+fun CameraUserAssistantView() {
     Box(modifier = Modifier.fillMaxSize()) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val overlayColor = Color.Green.copy(alpha = 0.5f)
             val backgroundOverlayColor = Color.Black.copy(alpha = 0.7f)
             val strokeWidth = 8f
-            val rectWidth = screenWidth.value + 90
-            val rectHeight = screenHeight.value - 140
+            val rectWidth = 390f
+            val rectHeight = 490f
 
             val centerX = size.width / 2
             val centerY = size.height / 2
@@ -54,7 +51,7 @@ fun CameraUserAssistantView(
                 topLeft = Offset(topLeftX, topLeftY),
                 size = Size(rectWidth, rectHeight),
                 style = Stroke(width = strokeWidth),
-                cornerRadius = CornerRadius(20f, 20f)
+                cornerRadius = CornerRadius(0f, 0f)
             )
         }
 

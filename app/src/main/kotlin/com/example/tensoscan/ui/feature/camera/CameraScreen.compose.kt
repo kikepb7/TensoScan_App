@@ -35,10 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.tensoscan.ui.common.components.CameraUserAssistantView
@@ -57,11 +55,7 @@ import com.example.tensoscan.R.string as RString
 @OptIn(KoinExperimentalAPI::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreenView() {
-
     val activity = LocalContext.current as Activity
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
-    val screenHeight = configuration.screenHeightDp.dp
     val cameraViewModel = koinViewModel<CameraViewModel>()
     val permissionViewModel = koinViewModel<PermissionViewModel>()
     val isRecording by permissionViewModel.state.collectAsState()
@@ -79,11 +73,7 @@ fun CameraScreenView() {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         val lifecycleOwner = LocalLifecycleOwner.current
         AndroidView(
             modifier = Modifier.fillMaxSize(),
@@ -97,7 +87,7 @@ fun CameraScreenView() {
 
         if (isPhotoTaken.value) Box(modifier = Modifier.fillMaxSize().background(Color.Black))
 
-        CameraUserAssistantView(screenWidth, screenHeight)
+        CameraUserAssistantView()
 
         Row(
             modifier = Modifier
