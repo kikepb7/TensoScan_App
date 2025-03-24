@@ -8,6 +8,6 @@ import retrofit2.http.Part
 
 interface ImageApiService {
     @Multipart
-    @POST("/ocr/recognize")
+    @POST("/ocr/display-recognize")
     suspend fun uploadImage(@Part image: MultipartBody.Part): RecognitionResponseDto
 }

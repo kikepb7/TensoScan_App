@@ -1,18 +1,12 @@
 package com.example.tensoscan.data.feature.camera.dto
 
+import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class RecognitionResponseDto(
-    val prediction: PredictionDto
+    @SerializedName("high_pressure") val highPressure: String,
+    @SerializedName("low_pressure") val lowPressure: String,
+    @SerializedName("pulse") val pulse: String,
+    @SerializedName("confidence") val confidence: Float
 )
-
-data class PredictionDto(
-    val digit: Int,
-    val confidence: Float
-)
-
-//data class PredictionDto(
-//    val highBloodPressure: Int,
-//    val lowBloodPressure: Int,
-//    val pulse: Int,
-//    val confidence: Float,
-//    val measureDate: Date
-//)

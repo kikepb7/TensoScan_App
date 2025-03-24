@@ -3,6 +3,7 @@ package com.example.tensoscan.domain.feature.camera.repository
 import androidx.camera.view.LifecycleCameraController
 import com.example.tensoscan.data.feature.camera.dto.RecognitionResponseDto
 import com.example.tensoscan.domain.common.Either
+import com.example.tensoscan.ui.model.BodyDataModel
 import java.io.File
 
 interface CameraRepository {
@@ -11,5 +12,5 @@ interface CameraRepository {
 
     suspend fun recordVideo(controller: LifecycleCameraController)
 
-    suspend fun uploadImage(file: File): Either<String, RecognitionResponseDto>
+    suspend fun uploadImage(file: File): Either<String, BodyDataModel>
 }

@@ -1,17 +1,8 @@
 package com.example.tensoscan.ui.model
 
-import androidx.compose.ui.graphics.Color
-
 data class BodyDataModel(
-    val digit: String,
-    val confidence: String,
-    val statusColor: Color
+    val highPressure: String,
+    val lowPressure: String,
+    val pulse: String,
+    val confidence: String
 )
-
-//data class BodyDataModel(
-//    val date: String,
-//    val bloodPressure: String,
-//    val heartRate: String,
-//    val status: String,
-//    val statusColor: Color
-//)
