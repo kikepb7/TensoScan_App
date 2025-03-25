@@ -31,7 +31,7 @@ import com.example.tensoscan.R.string as RString
 import com.example.tensoscan.ui.common.components.SummaryCardListItemView
 import com.example.tensoscan.ui.common.components.SummaryErrorBottomSheet
 import com.example.tensoscan.ui.common.components.TopBarView
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.model.PredictionModel
 import com.example.tensoscan.ui.model.TopBarModel
 import com.example.tensoscan.ui.model.UploadErrorModel.*
 import com.example.tensoscan.ui.theme.BackgroundScreenColor
@@ -43,14 +43,14 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SummaryScreenView(
-    listBodyDataModel: List<BodyDataModel>,
+    listPredictionModel: List<PredictionModel>,
     onSetManually: () -> Unit
 ) {
     val context = LocalContext.current
     val summaryViewModel = koinViewModel<SummaryViewModel>()
     val summaryState by summaryViewModel.state.collectAsStateWithLifecycle()
 
-    val bodyDataModels = remember { mutableStateListOf<BodyDataModel>().apply { addAll(listBodyDataModel) } }
+    val predictionModels = remember { mutableStateListOf<PredictionModel>().apply { addAll(listPredictionModel) } }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -61,7 +61,7 @@ fun SummaryScreenView(
     LaunchedEffect(summaryState.uploadState) {
         when (val state = summaryState.uploadState) {
             is UploadState.Success -> {
-                bodyDataModels.add(state.bodyDataModel)
+                predictionModels.add(state.predictionModel)
                 summaryViewModel.resetUploadState()
             }
             else -> Unit
@@ -106,8 +106,8 @@ fun SummaryScreenView(
                     .padding(padding)
                     .padding(bottom = Size76)
             ) {
-                items(bodyDataModels.size) { index ->
-                    SummaryCardListItemView(bodyDataModels[index], onDelete = {})
+                items(predictionModels.size) { index ->
+                    SummaryCardListItemView(predictionModels[index], onDelete = {})
                 }
             }
 
@@ -139,20 +139,20 @@ private fun UploadingOverlay() {
 @Preview(showBackground = true)
 fun SummaryScreenPreview() {
     SummaryScreenView(
-        listBodyDataModel = listOf(
-            BodyDataModel(
+        listPredictionModel = listOf(
+            PredictionModel(
                 highPressure = "150",
                 lowPressure = "80",
                 pulse = "60",
                 confidence = "0.45",
             ),
-            BodyDataModel(
+            PredictionModel(
                 highPressure = "150",
                 lowPressure = "80",
                 pulse = "60",
                 confidence = "0.45",
             ),
-            BodyDataModel(
+            PredictionModel(
                 highPressure = "150",
                 lowPressure = "80",
                 pulse = "60",

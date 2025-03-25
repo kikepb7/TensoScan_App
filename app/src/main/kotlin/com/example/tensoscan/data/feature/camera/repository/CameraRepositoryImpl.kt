@@ -22,10 +22,10 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.content.ContextCompat
 import com.example.tensoscan.data.feature.camera.service.ImageApiService
-import com.example.tensoscan.data.feature.camera.utils.dtoToDomainModel
+import com.example.tensoscan.data.utils.dtoToDomainModel
 import com.example.tensoscan.domain.common.Either
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.model.PredictionModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -97,7 +97,7 @@ class CameraRepositoryImpl(
         }
     }
 
-    override suspend fun uploadImage(file: File): Either<String, BodyDataModel> {
+    override suspend fun uploadImage(file: File): Either<String, PredictionModel> {
         return try {
             val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("image", file.name, requestFile)

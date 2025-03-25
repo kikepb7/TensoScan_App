@@ -9,7 +9,7 @@ import com.example.tensoscan.ui.feature.camera.CameraScreenView
 import com.example.tensoscan.ui.feature.home.HomeScreenView
 import com.example.tensoscan.ui.feature.summary.SummaryScreenView
 import com.example.tensoscan.ui.feature.user.UserScreenView
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.model.PredictionModel
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -33,12 +33,12 @@ fun NavigationWrapper() {
             route = Summary.route
         ) { backStackEntry ->
             val jsonBodyDataModel = backStackEntry.arguments?.getString("bodyDataModel")
-            val listBodyDataModel = jsonBodyDataModel?.let {
-                Json.decodeFromString<List<BodyDataModel>>(it)
+            val listPredictionModel = jsonBodyDataModel?.let {
+                Json.decodeFromString<List<PredictionModel>>(it)
             } ?: emptyList()
 
             SummaryScreenView(
-                listBodyDataModel = listBodyDataModel,
+                listPredictionModel = listPredictionModel,
                 onSetManually = {}
             )
         }
