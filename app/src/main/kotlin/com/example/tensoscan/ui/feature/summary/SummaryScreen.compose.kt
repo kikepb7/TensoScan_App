@@ -24,6 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.tensoscan.ui.common.components.BottomBarNavigation
 import com.example.tensoscan.ui.common.components.PulseLoadingView
 import com.example.tensoscan.ui.common.components.SummaryActionBar
 import com.example.tensoscan.R.drawable as RDrawable
@@ -31,26 +34,30 @@ import com.example.tensoscan.R.string as RString
 import com.example.tensoscan.ui.common.components.SummaryCardListItemView
 import com.example.tensoscan.ui.common.components.SummaryErrorBottomSheet
 import com.example.tensoscan.ui.common.components.TopBarView
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
+import com.example.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
+import com.example.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.User
+import com.example.tensoscan.ui.model.PredictionModel
 import com.example.tensoscan.ui.model.TopBarModel
 import com.example.tensoscan.ui.model.UploadErrorModel.*
 import com.example.tensoscan.ui.theme.BackgroundScreenColor
 import com.example.tensoscan.ui.theme.SizeValues.Size16
-import com.example.tensoscan.ui.theme.SizeValues.Size76
+import com.example.tensoscan.ui.theme.SizeValues.Size84
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun SummaryScreenView(
-    listBodyDataModel: List<BodyDataModel>,
+    mainNavController: NavHostController,
+    listPredictionModel: List<PredictionModel>,
     onSetManually: () -> Unit
 ) {
     val context = LocalContext.current
     val summaryViewModel = koinViewModel<SummaryViewModel>()
     val summaryState by summaryViewModel.state.collectAsStateWithLifecycle()
 
-    val bodyDataModels = remember { mutableStateListOf<BodyDataModel>().apply { addAll(listBodyDataModel) } }
+    val predictionModels = remember { mutableStateListOf<PredictionModel>().apply { addAll(listPredictionModel) } }
 
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -61,7 +68,7 @@ fun SummaryScreenView(
     LaunchedEffect(summaryState.uploadState) {
         when (val state = summaryState.uploadState) {
             is UploadState.Success -> {
-                bodyDataModels.add(state.bodyDataModel)
+                predictionModels.add(state.predictionModel)
                 summaryViewModel.resetUploadState()
             }
             else -> Unit
@@ -92,32 +99,33 @@ fun SummaryScreenView(
                     icon = Icons.Default.Settings
                 )
             )
+        },
+        bottomBar = {
+            val items = listOf(User(), Camera(), Summary())
+            BottomBarNavigation(items = items, navController = mainNavController)
         }
     ) { padding ->
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(BackgroundScreenColor)
-                .padding(Size16)
+                .padding(padding)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(bottom = Size76)
-            ) {
-                items(bodyDataModels.size) { index ->
-                    SummaryCardListItemView(bodyDataModels[index], onDelete = {})
-                }
-            }
-
             SummaryActionBar(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(horizontal = Size16),
                 onUploadPhotoClicked = { galleryLauncher.launch("image/*") },
                 onSetManuallyData = onSetManually
             )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(horizontal = Size16).padding(top = Size84)
+            ) {
+                items(predictionModels.size) { index ->
+                    SummaryCardListItemView(predictionModels[index], onDelete = {})
+                }
+            }
         }
     }
 }
@@ -139,20 +147,21 @@ private fun UploadingOverlay() {
 @Preview(showBackground = true)
 fun SummaryScreenPreview() {
     SummaryScreenView(
-        listBodyDataModel = listOf(
-            BodyDataModel(
+        mainNavController = rememberNavController(),
+        listPredictionModel = listOf(
+            PredictionModel(
                 highPressure = "150",
                 lowPressure = "80",
                 pulse = "60",
                 confidence = "0.45",
             ),
-            BodyDataModel(
+            PredictionModel(
                 highPressure = "150",
                 lowPressure = "80",
                 pulse = "60",
                 confidence = "0.45",
             ),
-            BodyDataModel(
+            PredictionModel(
                 highPressure = "150",
                 lowPressure = "80",
                 pulse = "60",

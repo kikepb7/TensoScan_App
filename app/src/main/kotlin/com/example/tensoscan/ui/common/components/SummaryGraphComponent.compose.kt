@@ -15,10 +15,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.dp
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.model.PredictionModel
 
 @Composable
-fun SummaryGraphView(data: List<BodyDataModel>) {
+fun SummaryGraphView(data: List<PredictionModel>) {
     val maxPressure = 250f
     val barWidth = 30f
     val barSpacing = 80f

@@ -32,30 +32,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.tensoscan.R.string as RString
 import com.example.tensoscan.ui.common.extensions.getStatusColor
 import com.example.tensoscan.ui.common.extensions.getStatusLabel
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.model.PredictionModel
 import com.example.tensoscan.ui.theme.ElevationValues.Elevation04
 import com.example.tensoscan.ui.theme.Fontalues
 import com.example.tensoscan.ui.theme.SummaryTrackerButtonColor
 import com.example.tensoscan.ui.theme.SizeValues.Size02
 import com.example.tensoscan.ui.theme.SizeValues.Size04
-import com.example.tensoscan.ui.theme.SizeValues.Size08
+import com.example.tensoscan.ui.theme.SizeValues.Size07
 import com.example.tensoscan.ui.theme.SizeValues.Size12
 import com.example.tensoscan.ui.theme.SizeValues.Size16
 import com.example.tensoscan.ui.theme.SizeValues.Size18
 
 @Composable
 fun SummaryCardListItemView(
-    bodyDataModel: BodyDataModel,
+    predictionModel: PredictionModel,
     onDelete: () -> Unit
 ) {
-    val highPressureValue = bodyDataModel.highPressure.toIntOrNull() ?: 0
+    val highPressureValue = predictionModel.highPressure.toIntOrNull() ?: 0
     val statusColor = getStatusColor(highPressureValue)
     val statusText = getStatusLabel(highPressureValue)
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Size08),
+            .padding(vertical = Size07),
         shape = RoundedCornerShape(Size16),
         colors = CardDefaults.cardColors(containerColor = SummaryTrackerButtonColor),
         elevation = CardDefaults.cardElevation(defaultElevation = Elevation04)
@@ -76,8 +76,8 @@ fun SummaryCardListItemView(
                     Text(
                         text = stringResource(
                             RString.high_tension_low_tension_text,
-                            bodyDataModel.highPressure,
-                            bodyDataModel.lowPressure
+                            predictionModel.highPressure,
+                            predictionModel.lowPressure
                         ),
                         color = White,
                         fontSize = Fontalues.Font20,
@@ -95,13 +95,13 @@ fun SummaryCardListItemView(
             ) {
                 InfoItem(
                     label = stringResource(RString.pulse_text),
-                    value = stringResource(RString.pulse_bpm_text, bodyDataModel.pulse),
+                    value = stringResource(RString.pulse_bpm_text, predictionModel.pulse),
                     icon = Icons.Default.Favorite,
                     iconTint = Color.Red
                 )
                 InfoItem(
                     label = stringResource(RString.accuracy_text),
-                    value = bodyDataModel.confidence + "%",
+                    value = predictionModel.confidence + "%",
                     icon = Icons.Default.CheckCircle,
                     iconTint = Green
                 )
@@ -153,7 +153,7 @@ private fun InfoItem(
 @Preview(showBackground = true)
 fun CardSummaryListItemPreview() {
     SummaryCardListItemView(
-        bodyDataModel = BodyDataModel(
+        predictionModel = PredictionModel(
             highPressure = "160",
             lowPressure = "70",
             pulse = "168",

@@ -11,6 +11,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem
+import com.example.tensoscan.ui.theme.primaryBackgroundSummarySetManuallyButtonSelector
 
 @Composable
 fun BottomBarNavigation(
@@ -20,16 +21,13 @@ fun BottomBarNavigation(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar(
-        containerColor = Color.Black,
-        contentColor = Color.Yellow
-    ) {
+    NavigationBar(containerColor = Color.White) {
         items.forEach { item ->
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Green,
+                    indicatorColor = primaryBackgroundSummarySetManuallyButtonSelector,
                     selectedIconColor = Color.Black,
-                    unselectedIconColor = Color.White
+                    unselectedIconColor = Color.Black
                 ),
                 icon = item.icon,
                 label = {

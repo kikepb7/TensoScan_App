@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 object SpacerValues {
+    val Spacer04 = 4.dp
     val Spacer08 = 8.dp
     val Spacer16 = 16.dp
     val Spacer32 = 32.dp
@@ -29,6 +30,7 @@ object SizeValues {
     val Size48 = 48.dp
     val Size60 = 60.dp
     val Size76 = 76.dp
+    val Size84 = 84.dp
     val Size96 = 96.dp
 }
 
@@ -37,6 +39,7 @@ object ElevationValues {
     val Elevation02 = 2.dp
     val Elevation03 = 3.dp
     val Elevation04 = 4.dp
+    val Elevation06 = 6.dp
     val Elevation08 = 8.dp
 }
 

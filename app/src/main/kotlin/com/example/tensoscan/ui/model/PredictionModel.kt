@@ -1,6 +1,6 @@
 package com.example.tensoscan.ui.model
 
-data class BodyDataModel(
+data class PredictionModel(
     val highPressure: String,
     val lowPressure: String,
     val pulse: String,

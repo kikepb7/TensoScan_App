@@ -12,7 +12,7 @@ fun BottomNavigationWrapper(
     navController: NavHostController,
     mainNavController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = Routes.Home.route) {
+    NavHost(navController = navController, startDestination = Routes.Summary.route) {
         composable(route = Routes.User.route) {
             UserScreenView()
         }

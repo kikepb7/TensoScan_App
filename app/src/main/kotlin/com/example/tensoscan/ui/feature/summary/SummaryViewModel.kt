@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tensoscan.domain.common.Either
 import com.example.tensoscan.domain.feature.camera.usecase.UploadImageUseCase
-import com.example.tensoscan.ui.model.BodyDataModel
+import com.example.tensoscan.ui.model.PredictionModel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,7 +37,7 @@ class SummaryViewModel(
                     is Either.Success -> _state.update {
                         it.copy(
                             uploadState = UploadState.Success(
-                                bodyDataModel = BodyDataModel(
+                                predictionModel = PredictionModel(
                                     highPressure = result.data.highPressure,
                                     lowPressure = result.data.lowPressure,
                                     pulse = result.data.pulse,
@@ -81,7 +81,7 @@ data class UploadImageUiState(
 sealed class UploadState {
     data object Idle : UploadState()
     data object Uploading : UploadState()
-    data class Success(val bodyDataModel: BodyDataModel) : UploadState()
+    data class Success(val predictionModel: PredictionModel) : UploadState()
     data class Error(val error: UploadError) : UploadState()
 }
 
