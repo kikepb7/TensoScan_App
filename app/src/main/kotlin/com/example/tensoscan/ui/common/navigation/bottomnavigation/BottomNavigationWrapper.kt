@@ -14,7 +14,7 @@ fun BottomNavigationWrapper(
 ) {
     NavHost(navController = navController, startDestination = Routes.Summary.route) {
         composable(route = Routes.User.route) {
-            UserScreenView()
+//            UserScreenView()
         }
     }
 }

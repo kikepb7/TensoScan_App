@@ -10,9 +10,9 @@ fun initKoin(appContext: Context, config: KoinAppDeclaration? = null) {
         androidContext(appContext)
         config?.invoke(this)
         modules(
-            uiModule,
+            dataModule,
             domainModule,
-            dataModule
+            uiModule
         )
     }
 }
