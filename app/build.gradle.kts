@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlinxSerialization)
-    id("kotlin-kapt")
+    kotlin("kapt")
 }
 
 android {
@@ -41,6 +41,10 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -67,7 +71,9 @@ dependencies {
     implementation(libs.tensorflowlite)
 
     // Room Database
-    implementation(libs.androidx.room.ktx)
+    implementation(libs.room.runtime)
+    implementation(libs.room.runtime.android)
+    kapt(libs.room.compiler)
 
     // Navigation
     implementation(libs.navigation.compose)
@@ -94,6 +100,9 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.gsonConverter)
+
+    // Datastore-Preferences
+    implementation(libs.androidx.datastore)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

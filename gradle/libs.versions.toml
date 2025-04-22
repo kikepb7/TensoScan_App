@@ -10,7 +10,8 @@ activityCompose = "1.9.3"
 composeBom = "2024.09.00"
 cameraxVersion = "1.5.0-alpha03"
 tensorflowLite = "2.16.1"
-roomKtx = "2.6.1"
+roomCommon = "2.7.0"
+ksp = "2.0.20"
 navigation = "2.8.0-alpha10"
 koin = "3.5.6"
 koinCompose = "1.1.5"
@@ -20,6 +21,7 @@ viewmodel = "2.8.2"
 coil = "3.0.0-alpha08"
 materialIconsExtended = "1.6.3"
 retrofit = "2.10.0"
+datastorePreferences = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -75,15 +77,22 @@ androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", versi
 tensorflowlite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite"}
 
 # Room Database
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomCommon" }
+room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomCommon" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCommon" }
 
 # Retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 gsonConverter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+
+# Datastore-Preferences
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kspCompose = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "roomCommon" }
 
