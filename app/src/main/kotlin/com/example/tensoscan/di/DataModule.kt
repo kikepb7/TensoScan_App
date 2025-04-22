@@ -1,9 +1,21 @@
 package com.example.tensoscan.di
 
+import androidx.room.Room
 import com.example.tensoscan.ui.utils.PermissionManager
 import com.example.tensoscan.data.feature.camera.repository.CameraRepositoryImpl
-import com.example.tensoscan.data.feature.camera.service.ImageApiService
+import com.example.tensoscan.data.feature.camera.service.ImageService
+import com.example.tensoscan.data.feature.login.repository.LoginRepositoryImpl
+import com.example.tensoscan.data.feature.login.service.LoginService
+import com.example.tensoscan.data.feature.measurements.database.MeasurementsDatabase
+import com.example.tensoscan.data.feature.measurements.database.dao.MeasurementDao
+import com.example.tensoscan.data.feature.measurements.datasource.MeasurementDatabaseDatasource
+import com.example.tensoscan.data.feature.measurements.datasource.MeasurementRemoteDataSource
+import com.example.tensoscan.data.feature.measurements.repository.MeasurementsRepositoryImpl
+import com.example.tensoscan.data.feature.measurements.service.MeasurementsService
+import com.example.tensoscan.data.local.TokenManager
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
+import com.example.tensoscan.domain.feature.login.repository.LoginRepository
+import com.example.tensoscan.domain.feature.measurements.repository.MeasurementsRepository
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
@@ -29,9 +41,29 @@ val dataModule = module {
             .build()
     }
 
-    single { get<Retrofit>().create(ImageApiService::class.java)}
+    single { TokenManager(androidApplication()) }
 
-    factory<CameraRepository> { CameraRepositoryImpl(androidApplication(), get()) }
+    single { Room.databaseBuilder(get(), MeasurementsDatabase::class.java, "measurement_db")
+        .fallbackToDestructiveMigration(false)
+        .build() }
+
+    single<MeasurementDao> { get<MeasurementsDatabase>().getMeasurementDao() }
+
+    single { get<Retrofit>().create(ImageService::class.java)}
+
+    single { get<Retrofit>().create(LoginService::class.java)}
+
+    single { get<Retrofit>().create(MeasurementsService::class.java)}
+
+    factory<CameraRepository> { CameraRepositoryImpl(androidApplication(), get(), get()) }
+
+    factory<LoginRepository> { LoginRepositoryImpl(get(), get()) }
+
+    single { MeasurementRemoteDataSource(get(), get()) }
+
+    single { MeasurementDatabaseDatasource(get()) }
+
+    single<MeasurementsRepository> { MeasurementsRepositoryImpl(get(), get()) }
 
     single { PermissionManager() }
 }
