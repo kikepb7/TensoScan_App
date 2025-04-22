@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tensoscan.domain.common.Either
 import com.example.tensoscan.domain.feature.camera.usecase.UploadImageUseCase
+import com.example.tensoscan.domain.feature.measurements.model.MeasurementModel
+import com.example.tensoscan.domain.feature.measurements.usecase.GetMeasurementsUseCase
 import com.example.tensoscan.ui.model.PredictionModel
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,12 +20,42 @@ import java.io.File
 import java.io.IOException
 
 class SummaryViewModel(
-    private val uploadImageUseCase: UploadImageUseCase
+    private val uploadImageUseCase: UploadImageUseCase,
+    private val getMeasurementsUseCase: GetMeasurementsUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(UploadImageUiState())
+    private val _state = MutableStateFlow(SummaryState())
     val state = _state.asStateFlow()
 
+    fun getMeasurements() {
+        viewModelScope.launch {
+            getMeasurementsUseCase.getMeasurements().collect { result ->
+                when (result) {
+                    is Either.Error -> {
+                        _state.update { it.copy(errorMessage = result.error.toString()) }
+                    }
+
+                    is Either.Success -> {
+                        _state.update {
+                            it.copy(
+                                measurements = result.data?.map { measurement ->
+                                    MeasurementModel(
+                                        filename = measurement.filename,
+                                        highPressure = measurement.highPressure,
+                                        lowPressure = measurement.lowPressure,
+                                        pulse = measurement.pulse,
+                                        confidence = measurement.confidence,
+                                        timestamp = measurement.timestamp
+                                    )
+                                } ?: emptyList(),
+                                uploadState = UploadState.Idle
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     fun uploadImage(uri: Uri, context: Context) {
         viewModelScope.launch {
@@ -31,7 +63,7 @@ class SummaryViewModel(
 
             try {
                 val file = uriToFile(uri, context)
-                val result = withTimeout(5000) { uploadImageUseCase.uploadImage(file).first() }
+                val result = withTimeout(7000) { uploadImageUseCase.uploadImage(file).first() }
 
                 when (result) {
                     is Either.Success -> _state.update {
@@ -74,8 +106,10 @@ class SummaryViewModel(
     }
 }
 
-data class UploadImageUiState(
-    val uploadState: UploadState = UploadState.Idle
+data class SummaryState(
+    val uploadState: UploadState = UploadState.Idle,
+    val measurements: List<MeasurementModel> = emptyList(),
+    val errorMessage: String? = null
 )
 
 sealed class UploadState {

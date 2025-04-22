@@ -21,8 +21,9 @@ import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
 import androidx.core.content.ContextCompat
-import com.example.tensoscan.data.feature.camera.service.ImageApiService
+import com.example.tensoscan.data.feature.camera.service.ImageService
 import com.example.tensoscan.data.feature.camera.utils.dtoToDomainModel
+import com.example.tensoscan.data.local.TokenManager
 import com.example.tensoscan.domain.common.Either
 import com.example.tensoscan.domain.feature.camera.repository.CameraRepository
 import com.example.tensoscan.ui.model.PredictionModel
@@ -38,7 +39,8 @@ import java.io.OutputStream
 
 class CameraRepositoryImpl(
     private val application: Application,
-    private val apiService: ImageApiService
+    private val apiService: ImageService,
+    private val tokenManager: TokenManager
 ) : CameraRepository {
 
     private var recording: Recording? = null
@@ -99,10 +101,11 @@ class CameraRepositoryImpl(
 
     override suspend fun uploadImage(file: File): Either<String, PredictionModel> {
         return try {
+            val token = tokenManager.getAccessToken()
             val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
 
-            val response = apiService.uploadImage(body).dtoToDomainModel()
+            val response = apiService.uploadImage(body, "Bearer $token").dtoToDomainModel()
             Either.Success(response)
         } catch (e: Exception) {
             Either.Error("Error uploading the image: ${e.message}")

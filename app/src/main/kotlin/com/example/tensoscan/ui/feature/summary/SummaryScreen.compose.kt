@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,7 +44,9 @@ import com.example.tensoscan.ui.model.PredictionModel
 import com.example.tensoscan.ui.model.TopBarModel
 import com.example.tensoscan.ui.model.UploadErrorModel.*
 import com.example.tensoscan.ui.theme.BackgroundScreenColor
+import com.example.tensoscan.ui.theme.SizeValues.Size08
 import com.example.tensoscan.ui.theme.SizeValues.Size16
+import com.example.tensoscan.ui.theme.SizeValues.Size24
 import com.example.tensoscan.ui.theme.SizeValues.Size84
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -73,6 +78,10 @@ fun SummaryScreenView(
             }
             else -> Unit
         }
+    }
+
+    LaunchedEffect(Unit) {
+        summaryViewModel.getMeasurements()
     }
 
     summaryState.uploadState.let { state ->
@@ -119,11 +128,40 @@ fun SummaryScreenView(
                 onUploadPhotoClicked = { galleryLauncher.launch("image/*") },
                 onSetManuallyData = onSetManually
             )
+
+            summaryState.errorMessage?.let { error ->
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(horizontal = Size16, vertical = Size08)
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(horizontal = Size16).padding(top = Size84)
             ) {
-                items(predictionModels.size) { index ->
-                    SummaryCardListItemView(predictionModels[index], onDelete = {})
+                if (summaryState.measurements.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No hay mediciones registradas aún.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(top = Size24)
+                        )
+                    }
+                } else {
+                    items(summaryState.measurements) { measurement ->
+                        SummaryCardListItemView(
+                            predictionModel = PredictionModel(
+                                highPressure = measurement.highPressure,
+                                lowPressure = measurement.lowPressure,
+                                pulse = measurement.pulse,
+                                confidence = measurement.confidence
+                            ),
+                            onDelete = {}
+                        )
+                    }
                 }
             }
         }
