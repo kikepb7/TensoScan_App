@@ -1,0 +1,48 @@
+package com.example.data.feature.measurements.repository
+
+import com.example.data.common.dtoToMeasureListModel
+import com.example.data.common.measurementModelToMeasurementEntity
+import com.example.data.common.networkBoundResource
+import com.example.data.common.toFailureDomain
+import com.example.data.feature.measurements.datasource.MeasurementDatabaseDatasource
+import com.example.data.feature.measurements.datasource.MeasurementRemoteDataSource
+import com.example.domain.common.Either
+import com.example.domain.feature.camera.model.FailureDomain
+import com.example.domain.feature.measurements.model.MeasurementModel
+import com.example.domain.feature.measurements.repository.MeasurementsRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlin.collections.map
+
+class MeasurementsRepositoryImpl(
+    private val remoteDataSource: MeasurementRemoteDataSource,
+    private val databaseDatasource: MeasurementDatabaseDatasource
+) : MeasurementsRepository {
+
+    override fun getUserMeasurements(): Flow<Either<FailureDomain, List<MeasurementModel>>> = flow {
+        try {
+            networkBoundResource(
+                query = {
+                    databaseDatasource.findMeasurementFromDatabase()
+                },
+                fetch = {
+                    when (val response = remoteDataSource.fetchMeasurementsFromApi()) {
+                        is Either.Success -> response.data.dtoToMeasureListModel()
+                        is Either.Error -> throw Exception(response.error.toFailureDomain().toString())
+                    }
+                },
+                saveFetchResult = { remoteList ->
+                    databaseDatasource.clearMeasurementList()
+                    databaseDatasource.insertMeasurementToDatabase(
+                        remoteList.map { it.measurementModelToMeasurementEntity() }
+                    )
+                },
+                shouldFetch = { true }
+            ).collect { localData ->
+                emit(Either.Success(data = localData))
+            }
+        } catch (e: Exception) {
+            emit(Either.Error(FailureDomain.ApiError))
+        }
+    }
+}

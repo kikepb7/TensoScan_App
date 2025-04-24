@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlinxSerialization)
     kotlin("kapt")
 }
@@ -47,6 +47,10 @@ kapt {
 
 dependencies {
 
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":ui"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,59 +60,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    // Icons
-    implementation(libs.androidx.material.icons.extended)
-
-    // CameraX
-    implementation(libs.androidx.camera.core)
-    implementation(libs.androidx.camera.camera2)
-    implementation(libs.androidx.camera.lifecycle)
-    implementation(libs.androidx.camera.video)
-    implementation(libs.androidx.camera.view)
-    implementation(libs.androidx.camera.extensions)
-
-    // TensorFlow Lite
-    implementation(libs.tensorflowlite)
-
-    // Room Database
-    implementation(libs.room.runtime)
-    implementation(libs.room.runtime.android)
-    kapt(libs.room.compiler)
-
-    // Navigation
-    implementation(libs.navigation.compose)
-
-    // KTOR
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.negotiation)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.serialization)
-
     // DI
     implementation(libs.koin.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.android)
 
-    // ViewModel
-    implementation(libs.viewmodel.compose)
-
-    // Coil
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.ktor)
-
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.gsonConverter)
-
-    // Datastore-Preferences
-    implementation(libs.androidx.datastore)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 }
