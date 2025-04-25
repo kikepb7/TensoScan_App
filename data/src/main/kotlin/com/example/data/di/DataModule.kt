@@ -3,6 +3,9 @@ package com.example.data.di
 import androidx.room.Room
 import com.example.data.feature.camera.repository.CameraRepositoryImpl
 import com.example.data.feature.camera.service.ImageService
+import com.example.data.feature.chatbot.datasource.ChatbotRemoteDataSource
+import com.example.data.feature.chatbot.repository.ChatbotRepositoryImpl
+import com.example.data.feature.chatbot.service.ChatbotService
 import com.example.data.feature.login.repository.LoginRepositoryImpl
 import com.example.data.feature.login.service.LoginService
 import com.example.data.feature.measurements.database.MeasurementsDatabase
@@ -13,6 +16,7 @@ import com.example.data.feature.measurements.repository.MeasurementsRepositoryIm
 import com.example.data.feature.measurements.service.MeasurementsService
 import com.example.data.local.TokenManager
 import com.example.domain.feature.camera.repository.CameraRepository
+import com.example.domain.feature.chatbot.repository.ChatbotRepository
 import com.example.domain.feature.login.repository.LoginRepository
 import com.example.domain.feature.measurements.repository.MeasurementsRepository
 import okhttp3.OkHttpClient
@@ -54,6 +58,8 @@ val dataModule = module {
 
     single { get<Retrofit>().create(MeasurementsService::class.java)}
 
+    single { get<Retrofit>().create(ChatbotService::class.java)}
+
     factory<CameraRepository> { CameraRepositoryImpl(androidApplication(), get(), get()) }
 
     factory<LoginRepository> { LoginRepositoryImpl(get(), get()) }
@@ -61,6 +67,10 @@ val dataModule = module {
     single { MeasurementRemoteDataSource(get(), get()) }
 
     single { MeasurementDatabaseDatasource(get()) }
+
+    single { ChatbotRemoteDataSource(get(), get()) }
+
+    single<ChatbotRepository> { ChatbotRepositoryImpl(get()) }
 
     single<MeasurementsRepository> { MeasurementsRepositoryImpl(get(), get()) }
 }

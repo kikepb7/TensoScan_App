@@ -11,12 +11,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.ui.common.navigation.Routes.Camera
-import com.example.ui.common.navigation.Routes.Login
-import com.example.ui.common.navigation.Routes.Register
-import com.example.ui.common.navigation.Routes.Summary
-import com.example.ui.common.navigation.Routes.User
+import com.example.ui.common.navigation.Routes.*
 import com.example.ui.feature.camera.CameraScreenView
+import com.example.ui.feature.chatbot.ChatbotScreenView
 import com.example.ui.feature.login.LoginScreen
 import com.example.ui.feature.register.RegisterScreen
 import com.example.ui.feature.summary.SummaryScreenView
@@ -44,6 +41,10 @@ fun NavigationWrapper() {
 
         composable(route = Camera.route) {
             CameraScreenView()
+        }
+
+        composable(route = Chatbot.route) {
+            ChatbotScreenView()
         }
 
         composable(

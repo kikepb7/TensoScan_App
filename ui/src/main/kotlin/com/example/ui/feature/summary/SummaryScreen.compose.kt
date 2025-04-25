@@ -45,6 +45,7 @@ import com.example.ui.common.components.SummaryCardListItemView
 import com.example.ui.common.components.SummaryErrorBottomSheet
 import com.example.ui.common.components.TopBarView
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
+import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Chatbot
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.User
 import com.example.ui.feature.summary.UploadError.Timeout
@@ -96,7 +97,7 @@ fun SummaryScreenView(
             )
         },
         bottomBar = {
-            val items = listOf(User(), Camera(), Summary())
+            val items = listOf(User(), Camera(), Summary(), Chatbot())
             BottomBarNavigation(items = items, navController = mainNavController)
         }
     ) { padding ->

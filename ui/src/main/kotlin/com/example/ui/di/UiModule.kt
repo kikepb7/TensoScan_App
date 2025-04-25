@@ -2,6 +2,7 @@ package com.example.ui.di
 
 import com.example.ui.feature.camera.CameraViewModel
 import com.example.ui.feature.camera.PermissionViewModel
+import com.example.ui.feature.chatbot.ChatbotViewModel
 import com.example.ui.feature.login.LoginViewModel
 import com.example.ui.feature.register.RegisterViewModel
 import com.example.ui.feature.summary.SummaryViewModel
@@ -17,5 +18,6 @@ val uiModule = module {
     viewModel { PermissionViewModel(get()) }
     viewModel { SummaryViewModel(get(), get(), get()) }
     viewModel { UserViewModel() }
+    viewModel { ChatbotViewModel(get()) }
     single { PermissionManager() }
 }

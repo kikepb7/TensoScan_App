@@ -1,8 +1,10 @@
 package com.example.data.common
 
+import com.example.data.feature.chatbot.dto.ChatMessageDto
 import com.example.data.feature.measurements.database.entities.MeasurementEntity
 import com.example.data.feature.measurements.dto.MeasurementDto
 import com.example.domain.feature.camera.model.FailureDomain
+import com.example.domain.feature.chatbot.model.ChatMessageModel
 import com.example.domain.feature.measurements.model.MeasurementModel
 
 data class FailureDto(val code: Int, val message: String?)
@@ -50,4 +52,10 @@ fun MeasurementDto.toMeasurementEntity(): MeasurementEntity =
         pulse = this.result.pulse,
         confidence = this.result.confidence.toString(),
         timestamp = this.timestamp
+    )
+
+fun ChatMessageDto.toChatMessageModel(): ChatMessageModel =
+    ChatMessageModel(
+        role = role,
+        conntent = content
     )
