@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "measurement_table")
 data class MeasurementEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     @ColumnInfo(name = "id")
-    val id: Int = 0,
+    val id: String,
     @ColumnInfo(name="fileName")
     val fileName: String,
     @ColumnInfo(name="highPressure")

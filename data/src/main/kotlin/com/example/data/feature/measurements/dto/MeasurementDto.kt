@@ -3,6 +3,10 @@ package com.example.data.feature.measurements.dto
 import com.google.gson.annotations.SerializedName
 
 data class MeasurementDto(
+    @SerializedName("measurement_id")
+    val id: String,
+    @SerializedName("user_id")
+    val userId: String,
     val filename: String,
     val result: MeasureDataDto,
     val timestamp: String

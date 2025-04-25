@@ -6,6 +6,7 @@ import com.example.domain.feature.measurements.model.MeasurementModel
 
 fun MeasurementDto.toDomain(): MeasurementModel =
     MeasurementModel(
+        id = id,
         filename = filename,
         highPressure = result.highPressure,
         lowPressure = result.lowPressure,
@@ -16,6 +17,7 @@ fun MeasurementDto.toDomain(): MeasurementModel =
 
 fun MeasurementEntity.measurementEntityToMeasurementModel(): MeasurementModel =
     MeasurementModel(
+        id = id,
         filename = fileName,
         highPressure = highPressure.toString(),
         lowPressure = lowPressure.toString(),

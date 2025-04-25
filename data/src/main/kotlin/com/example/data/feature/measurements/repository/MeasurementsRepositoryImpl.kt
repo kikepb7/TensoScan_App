@@ -45,4 +45,11 @@ class MeasurementsRepositoryImpl(
             emit(Either.Error(FailureDomain.ApiError))
         }
     }
+
+    override suspend fun deleteMeasurement(measurementId: String): Either<FailureDomain, Unit> {
+        return when (val response = remoteDataSource.deleteMeasurementFromApi(measurementId = measurementId)) {
+            is Either.Error -> Either.Error(error = response.error.toFailureDomain())
+            is Either.Success -> Either.Success(Unit)
+        }
+    }
 }

@@ -35,4 +35,19 @@ class MeasurementRemoteDataSource(
             )
         }
     }
+
+    suspend fun deleteMeasurementFromApi(measurementId: String): Either<FailureDto, Unit> {
+        val token = tokenManager.getAccessToken()
+
+        return try {
+            val response = measurementsService.deleteMeasurement("Bearer $token", measurementId)
+            if (response.isSuccessful) {
+                Either.Success(Unit)
+            } else {
+                Either.Error(FailureDto(code = response.code(), message = response.errorBody()?.string().orEmpty()))
+            }
+        } catch (e: Exception) {
+            Either.Error(FailureDto(code = 500, e.message ?: "Unknown error"))
+        }
+    }
 }

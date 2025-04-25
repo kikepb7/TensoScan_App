@@ -21,6 +21,7 @@ fun List<MeasurementDto>.dtoToMeasureListModel(): List<MeasurementModel> {
 
 fun MeasurementDto.dtoToMeasurementModel(): MeasurementModel =
     MeasurementModel(
+        id = id,
         filename = filename,
         highPressure = result.highPressure,
         lowPressure = result.lowPressure,
@@ -31,6 +32,7 @@ fun MeasurementDto.dtoToMeasurementModel(): MeasurementModel =
 
 fun MeasurementModel.measurementModelToMeasurementEntity(): MeasurementEntity =
     MeasurementEntity(
+        id = id,
         fileName = filename,
         highPressure = highPressure,
         lowPressure = lowPressure,
@@ -41,6 +43,7 @@ fun MeasurementModel.measurementModelToMeasurementEntity(): MeasurementEntity =
 
 fun MeasurementDto.toMeasurementEntity(): MeasurementEntity =
     MeasurementEntity(
+        id = this.id,
         fileName = this.filename,
         highPressure = this.result.highPressure,
         lowPressure = this.result.lowPressure,

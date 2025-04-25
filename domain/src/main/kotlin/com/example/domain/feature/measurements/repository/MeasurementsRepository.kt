@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MeasurementsRepository {
     fun getUserMeasurements(): Flow<Either<FailureDomain, List<MeasurementModel>>>
+    suspend fun deleteMeasurement(measurementId: String): Either<FailureDomain, Unit>
 }

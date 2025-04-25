@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.common.Either
 import com.example.domain.feature.camera.usecase.UploadImageUseCase
 import com.example.domain.feature.measurements.model.MeasurementModel
+import com.example.domain.feature.measurements.usecase.DeleteMeasurementUseCase
 import com.example.domain.feature.measurements.usecase.GetMeasurementsUseCase
 import com.example.ui.feature.summary.UploadError.*
 import com.example.ui.feature.summary.UploadState.*
@@ -23,7 +24,8 @@ import java.io.IOException
 
 class SummaryViewModel(
     private val uploadImageUseCase: UploadImageUseCase,
-    private val getMeasurementsUseCase: GetMeasurementsUseCase
+    private val getMeasurementsUseCase: GetMeasurementsUseCase,
+    private val deleteMeasurementUseCase: DeleteMeasurementUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SummaryState())
@@ -42,6 +44,7 @@ class SummaryViewModel(
                             it.copy(
                                 measurements = result.data.map { measurement ->
                                     MeasurementModel(
+                                        id = measurement.id,
                                         filename = measurement.filename,
                                         highPressure = measurement.highPressure,
                                         lowPressure = measurement.lowPressure,
@@ -54,6 +57,17 @@ class SummaryViewModel(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    fun deleteMeasurement(measurementId: String) {
+        viewModelScope.launch {
+            when (val result = deleteMeasurementUseCase.deleteMeasurement(measurementId = measurementId)) {
+                is Either.Success -> {
+                    getMeasurements()
+                }
+                is Either.Error -> _state.update { it.copy(errorMessage = "Error al eliminar la medición ${result.error}") }
             }
         }
     }
