@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Base.Theme.SplashScreenApp" parent="android:Theme.Material">
+
+    </style>
+
+    <style name="Theme.TensoScan.App" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.TensoScan.SplashScreen" parent="Theme.SplashScreen">
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_tensoscan_round</item>
+        <item name="postSplashScreenTheme">@style/Theme.TensoScan.App</item>
+    </style>
+</resources>
