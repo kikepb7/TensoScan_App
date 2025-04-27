@@ -44,7 +44,7 @@ fun NavigationWrapper() {
         }
 
         composable(route = Chatbot.route) {
-            ChatbotScreenView()
+            ChatbotScreenView(mainNavController = mainNavController)
         }
 
         composable(

@@ -11,7 +11,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem
-import com.example.ui.theme.primaryBackgroundSummarySetManuallyButtonSelector
+import com.example.ui.theme.backgroundBottomBarIcon
+import com.example.ui.theme.bottomBarIcon
 
 @Composable
 fun BottomBarNavigation(
@@ -25,8 +26,8 @@ fun BottomBarNavigation(
         items.forEach { item ->
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = primaryBackgroundSummarySetManuallyButtonSelector,
-                    selectedIconColor = Color.Black,
+                    indicatorColor = backgroundBottomBarIcon,
+                    selectedIconColor = bottomBarIcon,
                     unselectedIconColor = Color.Black
                 ),
                 icon = item.icon,

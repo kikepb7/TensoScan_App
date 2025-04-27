@@ -18,20 +18,32 @@ class ChatbotViewModel(
 
     fun sendMessage(prompt: String) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true, error = null) }
+            val userMessage = ChatMessageModel("user", prompt)
+            val loadingAssistantMessage = ChatMessageModel("assistant", "...")
 
-            val currentHistory = _state.value.history
-            val updatedHistory = currentHistory + ChatMessageModel("user", prompt)
+            _state.update {
+                it.copy(
+                    isLoading = true,
+                    error = null,
+                    history = it.history + userMessage + loadingAssistantMessage
+                )
+            }
 
-            when (val reuslt = chatbotUseCase.sendMessage(prompt = prompt, history = updatedHistory)) {
-                is Either.Success -> _state.update {
-                    it.copy(
-                        isLoading = false,
-                        response = reuslt.data.response,
-                        history = updatedHistory + ChatMessageModel("assistant", reuslt.data.response)
-                    )
+            val result = chatbotUseCase.sendMessage(prompt = prompt, history = _state.value.history)
+
+            when (result) {
+                is Either.Success -> {
+                    _state.update {
+                        val newHistory = it.history.dropLast(1) + ChatMessageModel("assistant", result.data.response)
+                        it.copy(history = newHistory, isLoading = false, response = result.data.response)
+                    }
                 }
-                is Either.Error -> _state.update { it.copy(isLoading = false, error = reuslt.error.toString()) }
+
+                is Either.Error -> {
+                    _state.update {
+                        it.copy(isLoading = false, error = result.error.toString())
+                    }
+                }
             }
         }
     }

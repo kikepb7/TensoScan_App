@@ -14,35 +14,29 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Card
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Green
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.ui.common.extensions.formattedConfidence
 import com.example.ui.common.extensions.getStatusColor
 import com.example.ui.common.extensions.getStatusLabel
 import com.example.ui.model.PredictionUiModel
 import com.example.ui.theme.ElevationValues.Elevation04
-import com.example.ui.theme.Fontalues.Font12
-import com.example.ui.theme.Fontalues.Font14
-import com.example.ui.theme.Fontalues.Font20
-import com.example.ui.theme.SizeValues.Size02
 import com.example.ui.theme.SizeValues.Size04
-import com.example.ui.theme.SizeValues.Size07
+import com.example.ui.theme.SizeValues.Size08
 import com.example.ui.theme.SizeValues.Size12
-import com.example.ui.theme.SizeValues.Size16
-import com.example.ui.theme.SizeValues.Size18
-import com.example.ui.theme.SummaryTrackerButtonColor
+import com.example.ui.theme.SizeValues.Size20
 import com.example.ui.R.string as RString
 
 @Composable
@@ -50,19 +44,23 @@ fun SummaryCardListItemView(
     predictionUiModel: PredictionUiModel,
     onDelete: () -> Unit
 ) {
-    val highPressureValue = predictionUiModel.highPressure.toIntOrNull() ?: 0
-    val statusColor = getStatusColor(highPressureValue)
-    val statusText = getStatusLabel(highPressureValue)
+    val highPressure = predictionUiModel.highPressure.toIntOrNull() ?: 0
+    val statusColor = getStatusColor(highPressure)
+    val statusText = getStatusLabel(highPressure)
 
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Size07),
-        shape = RoundedCornerShape(Size16),
-        colors = CardDefaults.cardColors(containerColor = SummaryTrackerButtonColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = Elevation04)
+            .padding(vertical = Size08, horizontal = Size12),
+        shape = RoundedCornerShape(Size20),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Elevation04),
+        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        Column(modifier = Modifier.padding(Size16)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Size20)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -71,8 +69,8 @@ fun SummaryCardListItemView(
                 Column {
                     Text(
                         text = stringResource(RString.blood_pressure_text),
-                        color = White,
-                        fontSize = Font14
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(Size04))
                     Text(
@@ -81,38 +79,47 @@ fun SummaryCardListItemView(
                             predictionUiModel.highPressure,
                             predictionUiModel.lowPressure
                         ),
-                        color = White,
-                        fontSize = Font20,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                StatusChipView(status = statusText, color = statusColor)
+
+                AssistChip(
+                    onClick = {},
+                    label = { Text(text = statusText) },
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = statusColor.copy(alpha = 0.1f),
+                        labelColor = statusColor
+                    )
+                )
             }
 
-            Spacer(modifier = Modifier.height(Size12))
+            Spacer(modifier = Modifier.height(Size20))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 InfoItem(
                     label = stringResource(RString.pulse_text),
                     value = stringResource(RString.pulse_bpm_text, predictionUiModel.pulse),
                     icon = Icons.Default.Favorite,
-                    iconTint = Color.Red
+                    iconTint = MaterialTheme.colorScheme.primary
                 )
+
                 InfoItem(
                     label = stringResource(RString.accuracy_text),
-                    value = predictionUiModel.confidence + "%",
+                    value = predictionUiModel.formattedConfidence() + "%",
                     icon = Icons.Default.CheckCircle,
-                    iconTint = Green
+                    iconTint = MaterialTheme.colorScheme.secondary
                 )
 
                 IconButton(onClick = onDelete) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = stringResource(RString.remove_card_icon_content_description),
-                        tint = Color.Red
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -127,40 +134,31 @@ private fun InfoItem(
     icon: ImageVector,
     iconTint: Color
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(horizontal = Size08)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
                 tint = iconTint,
-                modifier = Modifier.size(Size18)
+                modifier = Modifier.size(Size20)
             )
             Spacer(modifier = Modifier.width(Size04))
             Text(
                 text = value,
-                color = White,
-                fontSize = Font14
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
-        Spacer(modifier = Modifier.height(Size02))
+        Spacer(modifier = Modifier.height(Size04))
         Text(
             text = label,
-            color = Color.LightGray,
-            fontSize = Font12
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun CardSummaryListItemPreview() {
-    SummaryCardListItemView(
-        predictionUiModel = PredictionUiModel(
-            highPressure = "160",
-            lowPressure = "70",
-            pulse = "168",
-            confidence = "0.95",
-        ),
-        onDelete = {}
-    )
 }

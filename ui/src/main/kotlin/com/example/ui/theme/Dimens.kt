@@ -32,6 +32,8 @@ object SizeValues {
     val Size76 = 76.dp
     val Size84 = 84.dp
     val Size96 = 96.dp
+    val Size150 = 150.dp
+    val Size180 = 180.dp
 }
 
 object ElevationValues {
@@ -59,6 +61,7 @@ object Fontalues {
     val Font16 = 16.sp
     val Font18 = 18.sp
     val Font20 = 20.sp
+    val Font24 = 24.sp
 }
 
 object FontSpacingValues {
