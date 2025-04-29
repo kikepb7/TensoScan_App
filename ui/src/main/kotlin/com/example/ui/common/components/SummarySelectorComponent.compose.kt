@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudUpload
-import androidx.compose.material.icons.filled.DriveFileRenameOutline
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -41,7 +41,7 @@ import com.example.ui.theme.SpacerValues.Spacer16
 fun SummaryActionBar(
     modifier: Modifier = Modifier,
     onUploadPhotoClicked: () -> Unit,
-    onSetManuallyData: () -> Unit
+    showMeasurementHistory: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -55,15 +55,15 @@ fun SummaryActionBar(
             contentDescription = RString.upload_image_text_button,
             color = BackgroundSummaryUploadButtonSelectorColor,
             modifier = Modifier.weight(weight = 1f),
-            onUploadPhotoClicked = onUploadPhotoClicked,
+            onClick = onUploadPhotoClicked,
         )
         SummarySelectorUploadPhoto(
-            text = RString.set_manually_text_button,
-            icon = Icons.Default.DriveFileRenameOutline,
-            contentDescription = RString.set_manually_text_button,
+            text = RString.show_measurement_history_button,
+            icon = Icons.Default.History,
+            contentDescription = RString.show_measurement_history_button,
             color = BackgroundSummarySetManuallyButtonSelectorColor,
             modifier = Modifier.weight(weight = 1f),
-            onUploadPhotoClicked = onSetManuallyData,
+            onClick = showMeasurementHistory,
         )
     }
 }
@@ -75,10 +75,10 @@ fun SummarySelectorUploadPhoto(
     contentDescription: Int,
     color: CustomColor,
     modifier: Modifier,
-    onUploadPhotoClicked: () -> Unit
+    onClick: () -> Unit
 ) {
     FloatingActionButton(
-        onClick = onUploadPhotoClicked,
+        onClick = onClick,
         modifier = modifier.padding(Spacer08),
         containerColor = color,
         elevation = FloatingActionButtonDefaults.elevation(defaultElevation = Elevation06)

@@ -46,10 +46,19 @@ class MeasurementsRepositoryImpl(
         }
     }
 
+    override suspend fun getMeasurementHistoryHtml(): Either<FailureDomain, String> {
+        return when (val response = remoteDataSource.fetchMeasurementHistoryHtml()) {
+            is Either.Success -> Either.Success(data = response.data)
+            is Either.Error -> Either.Error(error = response.error.toFailureDomain())
+        }
+    }
+
     override suspend fun deleteMeasurement(measurementId: String): Either<FailureDomain, Unit> {
         return when (val response = remoteDataSource.deleteMeasurementFromApi(measurementId = measurementId)) {
             is Either.Error -> Either.Error(error = response.error.toFailureDomain())
             is Either.Success -> Either.Success(Unit)
         }
     }
+
+    override suspend fun clearLocalData() = databaseDatasource.clearMeasurementList()
 }

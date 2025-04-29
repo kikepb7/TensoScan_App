@@ -36,6 +36,22 @@ class MeasurementRemoteDataSource(
         }
     }
 
+    suspend fun fetchMeasurementHistoryHtml(): Either<FailureDto, String> {
+        val token = tokenManager.getAccessToken()
+
+        return try {
+            val response = measurementsService.getMeasurementHistoryHtml("Bearer $token")
+            if (response.isSuccessful && response.body() != null) {
+                val htmlContent = response.body()?.string().orEmpty()
+                Either.Success(data = htmlContent)
+            } else {
+                Either.Error(FailureDto(code = response.code(), message = response.errorBody()?.string().orEmpty()))
+            }
+        } catch (e: Exception) {
+            Either.Error(FailureDto(code = 500, message = e.message ?: "Unknown error"))
+        }
+    }
+
     suspend fun deleteMeasurementFromApi(measurementId: String): Either<FailureDto, Unit> {
         val token = tokenManager.getAccessToken()
 

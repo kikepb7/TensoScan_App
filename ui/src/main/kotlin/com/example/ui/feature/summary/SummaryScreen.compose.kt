@@ -1,6 +1,7 @@
 package com.example.ui.feature.summary
 
 import android.content.Context
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -71,8 +72,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 fun SummaryScreenView(
     mainNavController: NavHostController,
-    listPredictionUiModel: List<PredictionUiModel>,
-    onSetManually: () -> Unit
+    listPredictionUiModel: List<PredictionUiModel>
 ) {
     val context = LocalContext.current
     val summaryViewModel = koinViewModel<SummaryViewModel>()
@@ -83,6 +83,13 @@ fun SummaryScreenView(
 
     HandleUploadState(summaryState.uploadState, predictionUiModels, summaryViewModel)
     LaunchedEffect(Unit) { summaryViewModel.getMeasurements() }
+
+    LaunchedEffect(summaryState.measurementHistoryHtml) {
+        summaryState.measurementHistoryHtml?.let { rawHtml ->
+            mainNavController.navigate("webview/${Uri.encode(rawHtml)}")
+            summaryViewModel.resetHistoricalHtml()
+        }
+    }
 
     summaryState.uploadState.DisplayErrors { summaryViewModel.resetUploadState() }
 
@@ -113,7 +120,7 @@ fun SummaryScreenView(
                 }
             },
             onUploadPhotoClicked = { galleryLauncher.launch("image/*") },
-            onSetManually = onSetManually
+            showMeasurementHistory = { summaryViewModel.getMeasurementHistoryHtml() }
         )
     }
 }
@@ -125,7 +132,7 @@ private fun SummaryScreenContent(
     visibleCards: MutableMap<String, Boolean>,
     onDelete: (String) -> Unit,
     onUploadPhotoClicked: () -> Unit,
-    onSetManually: () -> Unit
+    showMeasurementHistory: () -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize().background(BackgroundScreenColor).padding(padding)) {
         SummaryActionBar(
@@ -133,7 +140,7 @@ private fun SummaryScreenContent(
                 .fillMaxWidth()
                 .padding(horizontal = Size16),
             onUploadPhotoClicked = onUploadPhotoClicked,
-            onSetManuallyData = onSetManually
+            showMeasurementHistory = showMeasurementHistory
         )
 
         summaryState.errorMessage?.let { error ->
@@ -204,13 +211,13 @@ private fun rememberGalleryLauncher(
 private fun HandleUploadState(
     uploadState: UploadState,
     predictionUiModels: SnapshotStateList<PredictionUiModel>,
-    viewModel: SummaryViewModel
+    summaryViewModel: SummaryViewModel
 ) {
     LaunchedEffect(uploadState) {
         if (uploadState is UploadState.Success) {
             predictionUiModels.add(uploadState.predictionUiModel)
-            viewModel.getMeasurements()
-            viewModel.resetUploadState()
+            summaryViewModel.getMeasurements()
+            summaryViewModel.resetUploadState()
         }
     }
 }
@@ -225,14 +232,17 @@ private fun UploadingOverlay() {
 
 @Composable
 private fun UploadState.DisplayErrors(onDismiss: () -> Unit) {
-    if (this is UploadState.Uploading) UploadingOverlay()
-    if (this is UploadState.Error) {
-        val message = when (val error = this.error) {
-            is UploadError.Server -> error.message
-            Timeout -> stringResource(UploadErrorModel.Timeout.message)
-            UploadError.Unknown -> stringResource(UploadErrorModel.Unknown.message)
+    when (this) {
+        is UploadState.Uploading -> UploadingOverlay()
+        is UploadState.Error -> {
+            val message = when (val error = this.error) {
+                is UploadError.Server -> error.message
+                Timeout -> stringResource(UploadErrorModel.Timeout.message)
+                UploadError.Unknown -> stringResource(UploadErrorModel.Unknown.message)
+            }
+            SummaryErrorBottomSheet(message = message, onDismiss = onDismiss)
         }
-        SummaryErrorBottomSheet(message = message, onDismiss = onDismiss)
+        else -> Unit
     }
 }
 
@@ -260,7 +270,6 @@ fun SummaryScreenPreview() {
                 pulse = "60",
                 confidence = "0.45",
             ),
-        ),
-        onSetManually = {}
+        )
     )
 }

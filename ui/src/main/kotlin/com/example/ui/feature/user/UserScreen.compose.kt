@@ -14,6 +14,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -31,6 +34,14 @@ fun UserScreenView(
     val userViewModel = koinViewModel<UserViewModel>()
     val userState = userViewModel.state.collectAsStateWithLifecycle()
     val logoutState = userViewModel.logoutState.collectAsStateWithLifecycle()
+    val logoutTriggered = remember { mutableStateOf(false) }
+
+    LaunchedEffect(logoutState.value) {
+        if (logoutState.value && !logoutTriggered.value) {
+            logoutTriggered.value = true
+            onLogoutNavigate()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -56,7 +67,7 @@ fun UserScreenView(
         }
 
         Button(
-            onClick = { userViewModel.logout() },
+            onClick = userViewModel::logout,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
             modifier = Modifier.fillMaxWidth()
         ) {

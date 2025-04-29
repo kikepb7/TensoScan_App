@@ -8,6 +8,7 @@ import com.example.domain.common.Either
 import com.example.domain.feature.camera.usecase.UploadImageUseCase
 import com.example.domain.feature.measurements.model.MeasurementModel
 import com.example.domain.feature.measurements.usecase.DeleteMeasurementUseCase
+import com.example.domain.feature.measurements.usecase.GetMeasurementHistoryHtmlUseCase
 import com.example.domain.feature.measurements.usecase.GetMeasurementsUseCase
 import com.example.ui.feature.summary.UploadError.*
 import com.example.ui.feature.summary.UploadState.*
@@ -25,6 +26,7 @@ import java.io.IOException
 class SummaryViewModel(
     private val uploadImageUseCase: UploadImageUseCase,
     private val getMeasurementsUseCase: GetMeasurementsUseCase,
+    private val getMeasurementHistoryHtmlUseCase: GetMeasurementHistoryHtmlUseCase,
     private val deleteMeasurementUseCase: DeleteMeasurementUseCase
 ) : ViewModel() {
 
@@ -59,6 +61,19 @@ class SummaryViewModel(
                 }
             }
         }
+    }
+
+    fun getMeasurementHistoryHtml() {
+        viewModelScope.launch {
+            when (val result = getMeasurementHistoryHtmlUseCase.getMeasurementHistoryHtml()) {
+                is Either.Success -> _state.update { it.copy(measurementHistoryHtml = result.data) }
+                is Either.Error -> _state.update { it.copy(errorMessage = "Error al cargar el histórico") }
+            }
+        }
+    }
+
+    fun resetHistoricalHtml() {
+        _state.update { it.copy(measurementHistoryHtml = null) }
     }
 
     fun deleteMeasurement(measurementId: String) {
@@ -126,6 +141,7 @@ class SummaryViewModel(
 data class SummaryState(
     val uploadState: UploadState = Idle,
     val measurements: List<MeasurementModel> = emptyList(),
+    val measurementHistoryHtml: String? = null,
     val errorMessage: String? = null
 )
 
