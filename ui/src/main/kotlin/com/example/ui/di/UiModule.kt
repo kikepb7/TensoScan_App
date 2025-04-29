@@ -16,8 +16,8 @@ val uiModule = module {
     viewModel { RegisterViewModel(get()) }
     viewModel { CameraViewModel(get(), get()) }
     viewModel { PermissionViewModel(get()) }
-    viewModel { SummaryViewModel(get(), get(), get()) }
-    viewModel { UserViewModel() }
+    viewModel { SummaryViewModel(get(), get(), get(), get()) }
+    viewModel { UserViewModel(get()) }
     viewModel { ChatbotViewModel(get()) }
     single { PermissionManager() }
 }

@@ -14,11 +14,13 @@ import com.example.data.feature.measurements.datasource.MeasurementDatabaseDatas
 import com.example.data.feature.measurements.datasource.MeasurementRemoteDataSource
 import com.example.data.feature.measurements.repository.MeasurementsRepositoryImpl
 import com.example.data.feature.measurements.service.MeasurementsService
+import com.example.data.feature.session.token.repository.TokenRepositoryImpl
 import com.example.data.local.TokenManager
 import com.example.domain.feature.camera.repository.CameraRepository
 import com.example.domain.feature.chatbot.repository.ChatbotRepository
 import com.example.domain.feature.login.repository.LoginRepository
 import com.example.domain.feature.measurements.repository.MeasurementsRepository
+import com.example.domain.feature.session.repository.TokenRepository
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
@@ -73,4 +75,6 @@ val dataModule = module {
     single<ChatbotRepository> { ChatbotRepositoryImpl(get()) }
 
     single<MeasurementsRepository> { MeasurementsRepositoryImpl(get(), get()) }
+
+    single<TokenRepository> { TokenRepositoryImpl(get()) }
 }
