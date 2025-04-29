@@ -1,5 +1,7 @@
 package com.example.ui.feature.login
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,14 +47,14 @@ import com.example.ui.theme.SizeValues.Size48
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
-
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun LoginScreen(navController: NavController) {
     val loginViewModel = koinViewModel<LoginViewModel>()
     val loginState = loginViewModel.state.collectAsStateWithLifecycle()
+    val localContext = LocalContext.current
 
-    val focusManager = LocalFocusManager.current
+    BackHandler { (localContext as? Activity)?.finish() }
 
     LaunchedEffect(loginState.value.isLoading, loginState.value.error) {
         if (!loginState.value.isLoading && loginState.value.error == null && loginState.value.email.isNotBlank()) {
@@ -75,7 +78,7 @@ fun LoginScreen(navController: NavController) {
             onPasswordChange = { loginViewModel.onEvent(LoginEvent.PasswordChanged(it)) },
             onSubmit = { loginViewModel.onEvent(LoginEvent.Submit) },
             onNavigateToRegister = { navController.navigate(Routes.Register.route) },
-            focusManager = focusManager
+            focusManager = LocalFocusManager.current
         )
     }
 }
