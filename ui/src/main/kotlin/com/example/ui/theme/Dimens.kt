@@ -47,6 +47,7 @@ object ElevationValues {
 
 object RoundedValues {
     val Rounded14 = 14.dp
+    val Rounded16 = 16.dp
     val Rounded24 = 24.dp
 }
 
