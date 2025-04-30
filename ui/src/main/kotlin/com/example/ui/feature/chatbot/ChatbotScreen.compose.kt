@@ -153,32 +153,6 @@ fun ChatbotScreenContent(
     }
 }
 
-//@Composable
-//fun ChatMessageBubble(message: ChatMessageModel) {
-//    val isUser = message.role == "user"
-//    val alignment = if (isUser) Arrangement.End else Arrangement.Start
-//    val backgroundColor = if (isUser) BackgroundUserMessage else BackgroundAssistantMessage
-//
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(Size08),
-//        horizontalArrangement = alignment
-//    ) {
-//        Box(
-//            modifier = Modifier
-//                .background(backgroundColor, shape = RoundedCornerShape(Size16))
-//                .padding(horizontal = Size16, vertical = Size08)
-//        ) {
-//            Text(
-//                text = message.conntent,
-//                color = Color.White,
-//                style = MaterialTheme.typography.bodyMedium
-//            )
-//        }
-//    }
-//}
-
 @Composable
 fun ChatMessageBubble(message: ChatMessageModel) {
     val isUser = message.role == "user"
