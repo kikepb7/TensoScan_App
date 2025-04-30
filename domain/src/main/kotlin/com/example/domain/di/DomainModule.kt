@@ -7,6 +7,7 @@ import com.example.domain.feature.login.usecase.LoginUseCase
 import com.example.domain.feature.login.usecase.RegisterUserUseCase
 import com.example.domain.feature.measurements.usecase.DeleteMeasurementUseCase
 import com.example.domain.feature.measurements.usecase.GetMeasurementHistoryHtmlUseCase
+import com.example.domain.feature.measurements.usecase.GetMeasurementHistoryPdfUseCase
 import com.example.domain.feature.measurements.usecase.GetMeasurementsUseCase
 import com.example.domain.feature.session.usecase.LogoutUseCase
 import org.koin.dsl.module
@@ -19,6 +20,7 @@ val domainModule = module {
     factory { SavePhotoUseCase(get()) }
     factory { DeleteMeasurementUseCase(get()) }
     factory { GetMeasurementHistoryHtmlUseCase(get()) }
+    factory { GetMeasurementHistoryPdfUseCase(get()) }
     factory { LogoutUseCase(get(), get()) }
     factory { ChatbotUseCase(get()) }
 }
