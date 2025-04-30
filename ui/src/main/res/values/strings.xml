@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">TensoScan</string>
-    <string name="photo_library_icon_content_description">Photo Library</string>
-    <string name="record_video_icon_content_description">Record Video</string>
+    <string name="photo_library_icon_content_description">Galería de fotos</string>
+    <string name="record_video_icon_content_description">Grabar video</string>
     <string name="take_photo_icon_content_description">Take Photo</string>
     <string name="switch_camera_preview_icon_content_description">Switch Camera Preview</string>
     <string name="scan_display_text_button">Escanear dispositivo</string>
     <string name="show_measurement_history_button">Ver histórico</string>
-    <string name="button_scan_display_content_description">Botón para escanear dispositivo de meedida</string>
+    <string name="button_scan_display_content_description">Botón para escanear dispositivo de medida</string>
     <string name="button_upload_image_content_description">Botón para subir imagen al servidor</string>
-    <string name="button_write_manually_content_description">Botón para escanear dispositivo de meedida</string>
+    <string name="button_write_manually_content_description">Botón para escanear dispositivo de medida</string>
     <string name="upload_image_text_button">Subir imagen</string>
     <string name="remove_card_icon_content_description">Remove card icon</string>
     <string name="text_accept_default">Aceptar</string>
@@ -21,4 +21,19 @@
     <string name="accuracy_text">Confianza</string>
     <string name="upload_image_timeout_error">Timeout</string>
     <string name="upload_image_unknown_error">Unknown error</string>
+    <string name="login_text">Acceder</string>
+    <string name="login_to_continue_text">Por favor, inicie sesión para continuar</string>
+    <string name="email_label_text">Email</string>
+    <string name="password_label_text">Contraseña</string>
+    <string name="welcome_text">¡Bienvenido/a!</string>
+    <string name="not_account_yet_text">¿Aún no tienes una cuenta? Regístrate</string>
+    <string name="hide_password_content_description">Ocultar</string>
+    <string name="show_password_content_description">Mostrar</string>
+    <string name="create_account_text">Crear una cuenta</string>
+    <string name="fill_fields_text">Por favor, rellena todos los campos</string>
+    <string name="name_register_text">Nombre</string>
+    <string name="lastName_register_text">Apellidos</string>
+    <string name="confirm_password_text">Confirmar</string>
+    <string name="back_button_text">Volver</string>
+    <string name="register_button_text">Registrar</string>
 </resources>

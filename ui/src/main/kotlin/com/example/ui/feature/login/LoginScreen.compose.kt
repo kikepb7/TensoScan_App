@@ -8,42 +8,38 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.ui.R
+import com.example.ui.common.components.TensoScanOutlinedTextField
+import com.example.ui.common.components.TensoScanRoundedButton
 import com.example.ui.common.navigation.Routes
+import com.example.ui.theme.BackgroundAppColor
+import com.example.ui.theme.CardColor
+import com.example.ui.theme.PrimaryTextColor
 import com.example.ui.theme.SizeValues.Size08
-import com.example.ui.theme.SizeValues.Size12
 import com.example.ui.theme.SizeValues.Size16
 import com.example.ui.theme.SizeValues.Size24
-import com.example.ui.theme.SizeValues.Size48
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -68,17 +64,15 @@ fun LoginScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .background(BackgroundAppColor),
         contentAlignment = Alignment.Center
     ) {
-
         LoginCard(
             state = loginState.value,
             onEmailChange = { loginViewModel.onEvent(LoginEvent.EmailChanged(it)) },
             onPasswordChange = { loginViewModel.onEvent(LoginEvent.PasswordChanged(it)) },
             onSubmit = { loginViewModel.onEvent(LoginEvent.Submit) },
-            onNavigateToRegister = { navController.navigate(Routes.Register.route) },
-            focusManager = LocalFocusManager.current
+            onNavigateToRegister = { navController.navigate(Routes.Register.route) }
         )
     }
 }
@@ -90,17 +84,18 @@ private fun LoginCard(
     onPasswordChange: (String) -> Unit,
     onSubmit: () -> Unit,
     onNavigateToRegister: () -> Unit,
-    focusManager: FocusManager
 ) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .padding(Size16),
         shape = RoundedCornerShape(Size24),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Size08)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = Size08),
+        colors = CardDefaults.elevatedCardColors(containerColor = CardColor)
     ) {
         Column(
             modifier = Modifier
+                .background(color = CardColor)
                 .padding(Size24)
                 .navigationBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(Size16),
@@ -108,8 +103,8 @@ private fun LoginCard(
         ) {
             HeaderSection()
             EmailField(state.email, onEmailChange)
-            PasswordField(state.password, onPasswordChange, focusManager, onSubmit)
-            LoginButton(onSubmit)
+            PasswordField(state.password, onPasswordChange)
+            TensoScanRoundedButton(text = stringResource(R.string.login_text), onClick = onSubmit)
             RegisterTextButton(onNavigateToRegister)
 
             if (state.isLoading) {
@@ -132,31 +127,27 @@ private fun LoginCard(
 private fun HeaderSection() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = "¡Bienvenido/a!",
+            text = stringResource(R.string.welcome_text),
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.primary
+            color = PrimaryTextColor
         )
         Text(
-            text = "Por favor, inicie sesión para continuar",
+            text = stringResource(R.string.login_to_continue_text),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = PrimaryTextColor
         )
     }
 }
 
 @Composable
 private fun EmailField(value: String, onValueChange: (String) -> Unit) {
-    OutlinedTextField(
+    TensoScanOutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text("Email") },
-        leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email") },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
-        )
+        label = stringResource(R.string.email_label_text),
+        icon = Icons.Default.Email,
+        keyboardType = KeyboardType.Email,
+        imeAction = ImeAction.Next
     )
 }
 
@@ -164,40 +155,20 @@ private fun EmailField(value: String, onValueChange: (String) -> Unit) {
 private fun PasswordField(
     value: String,
     onValueChange: (String) -> Unit,
-    focusManager: FocusManager,
-    onSubmit: () -> Unit
+    onDone: (() -> Unit)? = null
 ) {
-    OutlinedTextField(
+    TensoScanOutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text("Contraseña") },
-        leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Contraseña") },
-        singleLine = true,
-        visualTransformation = PasswordVisualTransformation(),
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(onDone = {
-            focusManager.clearFocus()
-            onSubmit()
-        })
+        label = stringResource(R.string.password_label_text),
+        icon = Icons.Default.Lock,
+        keyboardType = KeyboardType.Password,
+        imeAction = ImeAction.Done,
+        onDone = onDone,
+        isPassword = true
     )
 }
 
-@Composable
-private fun LoginButton(onSubmit: () -> Unit) {
-    Button(
-        onClick = onSubmit,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(Size48),
-        shape = RoundedCornerShape(Size12)
-    ) {
-        Text("Acceder", style = MaterialTheme.typography.labelLarge)
-    }
-}
 
 @Composable
 private fun RegisterTextButton(onClick: () -> Unit) {
@@ -205,6 +176,6 @@ private fun RegisterTextButton(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier.padding(top = Size08)
     ) {
-        Text("¿Aún no tienes una cuenta? Regístrate")
+        Text(text = stringResource(R.string.not_account_yet_text), color = PrimaryTextColor)
     }
 }

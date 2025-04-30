@@ -12,21 +12,15 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,11 +28,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.ui.R
+import com.example.ui.common.components.TensoScanOutlinedTextField
+import com.example.ui.common.components.TensoScanOutlinedToundedButton
+import com.example.ui.common.components.TensoScanRoundedButton
+import com.example.ui.theme.BackgroundAppColor
+import com.example.ui.theme.CardColor
+import com.example.ui.theme.PrimaryTextColor
+import com.example.ui.theme.SecondaryTextColor
 import com.example.ui.theme.SizeValues.Size08
 import com.example.ui.theme.SizeValues.Size12
 import com.example.ui.theme.SizeValues.Size16
@@ -58,9 +60,7 @@ fun RegisterScreen(navController: NavController) {
     }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+        modifier = Modifier.fillMaxSize().background(BackgroundAppColor),
         contentAlignment = Alignment.Center
     ) {
         RegisterCard(
@@ -82,16 +82,13 @@ private fun RegisterCard(
     focusManager: FocusManager
 ) {
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth(0.9f)
-            .padding(Size16),
+        modifier = Modifier.fillMaxWidth(0.9f).padding(Size16),
         shape = RoundedCornerShape(Size24),
+        colors = CardDefaults.elevatedCardColors(containerColor = CardColor),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Size08)
     ) {
         Column(
-            modifier = Modifier
-                .padding(Size24)
-                .navigationBarsPadding(),
+            modifier = Modifier.padding(Size24).navigationBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(Size16),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -107,14 +104,14 @@ private fun RegisterCard(
 private fun RegisterHeader() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = "Create Account",
+            text = stringResource(R.string.create_account_text),
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.primary
+            color = PrimaryTextColor
         )
         Text(
-            text = "Please fill in the details below",
+            text = stringResource(R.string.fill_fields_text),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = SecondaryTextColor
         )
     }
 }
@@ -127,63 +124,53 @@ private fun RegisterFields(
     focusManager: FocusManager
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(Size12)) {
-        OutlinedTextField(
+        TensoScanOutlinedTextField(
             value = state.name,
             onValueChange = { onEvent(RegisterUserEvent.NameChanged(it)) },
-            label = { Text("First Name") },
-            leadingIcon = { Icon(Icons.Default.Person, null) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            label = stringResource(R.string.name_register_text),
+            icon = Icons.Default.Person,
+            imeAction = ImeAction.Next
         )
-        OutlinedTextField(
+
+        TensoScanOutlinedTextField(
             value = state.lastName,
             onValueChange = { onEvent(RegisterUserEvent.LastNameChanged(it)) },
-            label = { Text("Last Name") },
-            leadingIcon = { Icon(Icons.Default.PersonOutline, null) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            label = stringResource(R.string.lastName_register_text),
+            icon = Icons.Default.PersonOutline,
+            imeAction = ImeAction.Next
         )
-        OutlinedTextField(
+
+        TensoScanOutlinedTextField(
             value = state.email,
             onValueChange = { onEvent(RegisterUserEvent.EmailChanged(it)) },
-            label = { Text("Email") },
-            leadingIcon = { Icon(Icons.Default.Email, null) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            )
+            label = stringResource(R.string.email_label_text),
+            icon = Icons.Default.Email,
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
         )
-        OutlinedTextField(
+
+        TensoScanOutlinedTextField(
             value = state.password,
             onValueChange = { onEvent(RegisterUserEvent.PasswordChanged(it)) },
-            label = { Text("Password") },
-            leadingIcon = { Icon(Icons.Default.Lock, null) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next
-            )
+            label = stringResource(R.string.password_label_text),
+            icon = Icons.Default.Lock,
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next,
+            isPassword = true
         )
-        OutlinedTextField(
+
+        TensoScanOutlinedTextField(
             value = state.confirmPassword,
             onValueChange = { onEvent(RegisterUserEvent.ConfirmPasswordChanged(it)) },
-            label = { Text("Confirm Password") },
-            leadingIcon = { Icon(Icons.Default.Lock, null) },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone = {
+            label = stringResource(R.string.confirm_password_text),
+            icon = Icons.Default.Lock,
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done,
+            isPassword = true,
+            onDone = {
                 focusManager.clearFocus()
                 onRegister()
-            })
+            }
         )
     }
 }
@@ -200,37 +187,19 @@ private fun RegisterErrorAndLoading(registerState: RegisterUserState) {
     }
 
     if (registerState.isLoading) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .padding(top = Size08)
-        )
+        CircularProgressIndicator(modifier = Modifier.padding(top = Size08))
     }
 }
 
 @Composable
-private fun RegisterActions(
-    onBack: () -> Unit,
-    onRegister: () -> Unit
-) {
+private fun RegisterActions(onBack: () -> Unit, onRegister: () -> Unit) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Size16),
+        modifier = Modifier.fillMaxWidth().padding(top = Size16),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        OutlinedButton(
-            onClick = onBack,
-            modifier = Modifier.weight(1f)
-        ) {
-            Text("Back")
-        }
+        TensoScanOutlinedToundedButton(text = stringResource(R.string.back_button_text), onClick = onBack, modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.width(Size12))
-        Button(
-            onClick = onRegister,
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(Size12)
-        ) {
-            Text("Register", style = MaterialTheme.typography.labelLarge)
-        }
+        TensoScanRoundedButton(text = stringResource(R.string.register_button_text), onClick = onRegister, modifier = Modifier.weight(1f))
+
     }
 }
