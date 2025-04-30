@@ -5,6 +5,7 @@ import com.example.data.feature.measurements.dto.MeasurementDto
 import com.example.data.feature.measurements.service.MeasurementsService
 import com.example.data.local.TokenManager
 import com.example.domain.common.Either
+import okhttp3.ResponseBody
 
 class MeasurementRemoteDataSource(
     private val measurementsService: MeasurementsService,
@@ -46,6 +47,23 @@ class MeasurementRemoteDataSource(
                 Either.Success(data = htmlContent)
             } else {
                 Either.Error(FailureDto(code = response.code(), message = response.errorBody()?.string().orEmpty()))
+            }
+        } catch (e: Exception) {
+            Either.Error(FailureDto(code = 500, message = e.message ?: "Unknown error"))
+        }
+    }
+
+    suspend fun downloadMeasurementHistoryPdf(): Either<FailureDto, ResponseBody> {
+        val token = tokenManager.getAccessToken()
+
+        return try {
+            val response = measurementsService.downloadPDF("Bearer $token")
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                Either.Success(data = body)
+            } else {
+                Either.Error(FailureDto(code = response.code(), message = response.errorBody()?.string()))
             }
         } catch (e: Exception) {
             Either.Error(FailureDto(code = 500, message = e.message ?: "Unknown error"))

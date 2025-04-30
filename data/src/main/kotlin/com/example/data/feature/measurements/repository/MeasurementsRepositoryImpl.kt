@@ -53,6 +53,13 @@ class MeasurementsRepositoryImpl(
         }
     }
 
+    override suspend fun getMeasurementHistoryPdf(): Either<FailureDomain, ByteArray> {
+        return when (val response = remoteDataSource.downloadMeasurementHistoryPdf()) {
+            is Either.Success -> Either.Success(data = response.data.bytes())
+            is Either.Error -> Either.Error(error = response.error.toFailureDomain())
+        }
+    }
+
     override suspend fun deleteMeasurement(measurementId: String): Either<FailureDomain, Unit> {
         return when (val response = remoteDataSource.deleteMeasurementFromApi(measurementId = measurementId)) {
             is Either.Error -> Either.Error(error = response.error.toFailureDomain())

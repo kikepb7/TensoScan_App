@@ -9,10 +9,12 @@ import com.example.domain.feature.camera.usecase.UploadImageUseCase
 import com.example.domain.feature.measurements.model.MeasurementModel
 import com.example.domain.feature.measurements.usecase.DeleteMeasurementUseCase
 import com.example.domain.feature.measurements.usecase.GetMeasurementHistoryHtmlUseCase
+import com.example.domain.feature.measurements.usecase.GetMeasurementHistoryPdfUseCase
 import com.example.domain.feature.measurements.usecase.GetMeasurementsUseCase
 import com.example.ui.feature.summary.UploadError.*
 import com.example.ui.feature.summary.UploadState.*
 import com.example.ui.model.PredictionUiModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +29,7 @@ class SummaryViewModel(
     private val uploadImageUseCase: UploadImageUseCase,
     private val getMeasurementsUseCase: GetMeasurementsUseCase,
     private val getMeasurementHistoryHtmlUseCase: GetMeasurementHistoryHtmlUseCase,
+    private val getMeasurementHistoryPdfUseCase: GetMeasurementHistoryPdfUseCase,
     private val deleteMeasurementUseCase: DeleteMeasurementUseCase
 ) : ViewModel() {
 
@@ -71,6 +74,16 @@ class SummaryViewModel(
             }
         }
     }
+
+    fun getMeasurementHistoryPdf() {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = getMeasurementHistoryPdfUseCase.getMeasurementHistoryPdf()) {
+                is Either.Success -> _state.update { it.copy(pdfData = result.data) }
+                is Either.Error -> _state.update { it.copy(errorMessage = "Error al descargar el PDF") }
+            }
+        }
+    }
+
 
     fun resetHistoricalHtml() {
         _state.update { it.copy(measurementHistoryHtml = null) }
@@ -142,6 +155,7 @@ data class SummaryState(
     val uploadState: UploadState = Idle,
     val measurements: List<MeasurementModel> = emptyList(),
     val measurementHistoryHtml: String? = null,
+    val pdfData: ByteArray? = null,
     val errorMessage: String? = null
 )
 

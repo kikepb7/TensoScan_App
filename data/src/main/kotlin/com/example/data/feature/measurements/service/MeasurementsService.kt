@@ -7,6 +7,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
+import retrofit2.http.Streaming
 
 interface MeasurementsService {
     @GET("/ocr/measurements")
@@ -14,6 +15,10 @@ interface MeasurementsService {
 
     @GET("/ocr/user/measurements/html")
     suspend fun getMeasurementHistoryHtml(@Header("Authorization") token: String): Response<ResponseBody>
+
+    @GET("/ocr/user/measurements/pdf")
+    @Streaming
+    suspend fun downloadPDF(@Header("Authorization") token: String): Response<ResponseBody>
 
     @DELETE("/ocr/remove/measurements/{measurement_id}")
     suspend fun deleteMeasurement(

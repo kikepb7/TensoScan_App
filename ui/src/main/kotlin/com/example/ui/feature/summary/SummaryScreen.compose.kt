@@ -1,7 +1,11 @@
 package com.example.ui.feature.summary
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -19,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,6 +41,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
+import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -67,6 +73,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import java.io.File
 
 @OptIn(KoinExperimentalAPI::class, ExperimentalFoundationApi::class)
 @Composable
@@ -91,6 +98,13 @@ fun SummaryScreenView(
         }
     }
 
+    LaunchedEffect(summaryState.pdfData) {
+        summaryState.pdfData?.let { pdfData ->
+            savePdfToStorage(context, pdfData)
+            openPdfFile(context)
+        }
+    }
+
     summaryState.uploadState.DisplayErrors { summaryViewModel.resetUploadState() }
 
     Scaffold(
@@ -106,6 +120,11 @@ fun SummaryScreenView(
         bottomBar = {
             val items = listOf(User(), Camera(), Summary(), Chatbot())
             BottomBarNavigation(items = items, navController = mainNavController)
+        },
+        floatingActionButton = {
+            Button(onClick = { summaryViewModel.getMeasurementHistoryPdf() }) {
+                Text("Descargar Histórico PDF")
+            }
         }
     ) { padding ->
         SummaryScreenContent(
@@ -122,6 +141,35 @@ fun SummaryScreenView(
             onUploadPhotoClicked = { galleryLauncher.launch("image/*") },
             showMeasurementHistory = { summaryViewModel.getMeasurementHistoryHtml() }
         )
+    }
+}
+
+private fun savePdfToStorage(context: Context, pdfData: ByteArray) {
+    try {
+        val file = File(context.filesDir, "measurement_history.pdf")
+        file.writeBytes(pdfData)
+    } catch (e: Exception) {
+        Log.e("SavePdf", "Error saving PDF: ${e.message}")
+    }
+}
+
+private fun openPdfFile(context: Context) {
+    val file = File(context.filesDir, "measurement_history.pdf")
+    val uri = FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.provider",
+        file
+    )
+
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(uri, "application/pdf")
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+
+    try {
+        context.startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, "No hay una app para abrir PDFs", Toast.LENGTH_LONG).show()
     }
 }
 
