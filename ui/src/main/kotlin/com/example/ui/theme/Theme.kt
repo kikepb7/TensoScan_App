@@ -51,7 +51,7 @@ fun TensoScanTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = TensoScanTypography,
         content = content
     )
 }

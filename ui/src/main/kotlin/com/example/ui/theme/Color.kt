@@ -39,7 +39,7 @@ val ButtonLogoutColor
 
 val ButtonBackColor
     @Composable
-    get() = if (isSystemInDarkTheme()) Color(0xFF7949A7) else Color(0xFFC2A4E3)
+    get() = if (isSystemInDarkTheme()) Color(0xFF4B5563) else Color(0xFFCBD5E1)
 
 val ButtonUploadPhotoColor
     @Composable
@@ -55,7 +55,7 @@ val ButtonTextColor
 
 val IconColor
     @Composable
-    get() = if (isSystemInDarkTheme()) Color(0xFFC2A4E3) else Color(0xFF80CFE3)
+    get() = if (isSystemInDarkTheme()) Color(0xFF4CAAC4) else Color(0xFF80CFE3)
 
 val TextFieldBorderColor
     @Composable
@@ -65,19 +65,64 @@ val TextFieldTextColor
     @Composable
     get() = if (isSystemInDarkTheme()) Color(0xFFF7F7F7) else Color(0xFF1A1A1A)
 
+val CardBackgroundColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF2D2D2D) else Color(0xFFFFFFFF)
 
-val backgroundBottomBarIcon = Color(0xFFFCE7E8)
-val bottomBarIcon = Color(0xFF440D1A)
+val CardLabelTextColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFB3B3B3) else Color(0xFF6E6E6E)
+
+val TopBarColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF1A1A1A) else Color(0xFFFFFFFF)
+
+val TopBarTitleColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) PrimaryTextColor else PrimaryTextColor
+
+val BottomBarContainerColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF2D2D2D) else Color(0xFFFFFFFF)
+
+val BottomBarSelectedIconColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF8ED7C6) else Color(0xFF80CFE3)
+
+val BottomBarUnselectedIconColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFFB3B3B3) else Color(0xFF6E6E6E)
+
+val BottomBarIndicatorColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF1A1A1A) else Color(0xFFF7F7F7)
+
+val BackgroundUserMessage: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF29A085) else Color(0xFF8ED7C6)
+
+val BackgroundAssistantMessage: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF1F1F1F) else Color(0xFF80CFE3)
+
+val InputFieldBorderColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF8ED7C6) else Color(0xFF80CFE3)
+
+val InputFieldCursorColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color(0xFF8ED7C6) else Color(0xFF80CFE3)
+
+val InputFieldTextColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.White else Color.Black
+
 val primaryGreenBackgroundPressureState = Color(0xFFA8D0A5)
 val secondaryGreenBackgroundPressureState = Color(0xFFD0E5CD)
 val primaryYellowBackgroundPressureState = Color(0xFFD8C16C)
 val secondaryYellowBackgroundPressureState = Color(0xFFE7DAA1)
 val primaryRedBackgroundPressureState = Color(0xFFFF9A9A)
 val secondaryRedBackgroundPressureState = Color(0xFFFFC3C3)
-val primaryBackgroundAssistantMessage = Color(0xFFB9C4E8)
-val secondaryBackgroundAssistantMessage = Color(0xFFD4DCF1)
-val primaryBackgroundUserMessage = Color(0xFF8FB9A4)
-val secondaryBackgroundUserMessage = Color(0xFFBAD5C7)
 
 
 val BackgroundGreenPressureState
@@ -92,31 +137,12 @@ val BackgroundRedPressureState
     @Composable
     get() = if (isSystemInDarkTheme()) secondaryRedBackgroundPressureState else primaryRedBackgroundPressureState
 
-val BackgroundAssistantMessage
-    @Composable
-    get() = if (isSystemInDarkTheme()) secondaryBackgroundAssistantMessage else primaryBackgroundAssistantMessage
-
-val BackgroundUserMessage
-    @Composable
-    get() = if (isSystemInDarkTheme()) secondaryBackgroundUserMessage else primaryBackgroundUserMessage
 
 
-
-
-val primaryTopBarColor = Color(0xFFFFFFFF)
-val secondaryTopBarColor = Color(0xFF3A3A3A)
 val primaryBackgroundScreenColor = Color(0xFFFFFFFF)
 val secondaryBackgroundScreenColor = Color(0xFF2A2A2A)
-val primaryBackgroundSummaryUploadButtonSelector = Color(0xFFEC9D9D)
-val secondaryBackgroundSummaryUploadButtonSelector = Color(0xFF666756)
-val primaryBackgroundSummarySetManuallyButtonSelector = Color(0xFF9DECB7)
-val secondaryBackgroundSummarySetManuallyButtonSelector = Color(0xFF666756)
 val primaryDefaultButtonColor = Color(0xFFFF3543)
 val secondaryDefaultButtonColor = Color(0xFF666756)
-
-val TopBarColor
-    @Composable
-    get() = if (isSystemInDarkTheme()) secondaryTopBarColor else primaryTopBarColor
 
 val BackgroundScreenColor
     @Composable
@@ -125,11 +151,3 @@ val BackgroundScreenColor
 val TensoScanDefaultButtonColor
     @Composable
     get() = if (isSystemInDarkTheme()) secondaryDefaultButtonColor else primaryDefaultButtonColor
-
-val BackgroundSummarySetManuallyButtonSelectorColor
-    @Composable
-    get() = if (isSystemInDarkTheme()) secondaryBackgroundSummarySetManuallyButtonSelector else primaryBackgroundSummarySetManuallyButtonSelector
-
-val BackgroundSummaryUploadButtonSelectorColor
-    @Composable
-    get() = if (isSystemInDarkTheme()) secondaryBackgroundSummaryUploadButtonSelector else primaryBackgroundSummaryUploadButtonSelector

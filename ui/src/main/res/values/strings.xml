@@ -36,4 +36,10 @@
     <string name="confirm_password_text">Confirmar</string>
     <string name="back_button_text">Volver</string>
     <string name="register_button_text">Registrar</string>
+    <string name="settings_content_description">Ajustes</string>
+    <string name="user_image_content_description">Imagen del usuario</string>
+    <string name="type_a_message_text">Escribe un mensaje …</string>
+    <string name="download_pdf_icon_content_description">PDF icon</string>
+    <string name="clear_text_content_description">Clear text</string>
+    <string name="send_message_button_content_description">Enviar</string>
 </resources>

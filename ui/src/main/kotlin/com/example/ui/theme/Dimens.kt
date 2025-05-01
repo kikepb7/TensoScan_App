@@ -62,7 +62,9 @@ object Fontalues {
     val Font16 = 16.sp
     val Font18 = 18.sp
     val Font20 = 20.sp
+    val Font22 = 22.sp
     val Font24 = 24.sp
+    val Font26 = 26.sp
 }
 
 object FontSpacingValues {
