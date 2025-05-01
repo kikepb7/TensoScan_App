@@ -10,6 +10,12 @@
 
 ---
 
+<p align="center">
+  <img src="assets/demo-tensoscan.gif" alt="TensoScan Demo" width="300"/>
+</p>
+
+---
+
 ## 🚀 Key Features
 
 - 🧠 **AI-based digit recognition** from blood pressure monitors
