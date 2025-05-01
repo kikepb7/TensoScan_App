@@ -21,21 +21,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.ui.R.string as RString
 import androidx.compose.ui.graphics.Color as CustomColor
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.ui.theme.BackgroundSummarySetManuallyButtonSelectorColor
-import com.example.ui.theme.BackgroundSummaryUploadButtonSelectorColor
+import com.example.ui.theme.ButtonGetReportsColor
+import com.example.ui.theme.ButtonTextColor
+import com.example.ui.theme.ButtonUploadPhotoColor
 import com.example.ui.theme.ElevationValues.Elevation06
-import com.example.ui.theme.Fontalues.Font12
 import com.example.ui.theme.SizeValues.Size04
 import com.example.ui.theme.SizeValues.Size08
 import com.example.ui.theme.SizeValues.Size24
 import com.example.ui.theme.SizeValues.Size76
 import com.example.ui.theme.SpacerValues.Spacer08
 import com.example.ui.theme.SpacerValues.Spacer16
+import com.example.ui.theme.TensoScanTypography
 
 @Composable
 fun SummaryActionBar(
@@ -53,7 +53,7 @@ fun SummaryActionBar(
             text = RString.upload_image_text_button,
             icon = Icons.Default.CloudUpload,
             contentDescription = RString.upload_image_text_button,
-            color = BackgroundSummaryUploadButtonSelectorColor,
+            color = ButtonUploadPhotoColor,
             modifier = Modifier.weight(weight = 1f),
             onClick = onUploadPhotoClicked,
         )
@@ -61,7 +61,7 @@ fun SummaryActionBar(
             text = RString.show_measurement_history_button,
             icon = Icons.Default.History,
             contentDescription = RString.show_measurement_history_button,
-            color = BackgroundSummarySetManuallyButtonSelectorColor,
+            color = ButtonGetReportsColor,
             modifier = Modifier.weight(weight = 1f),
             onClick = showMeasurementHistory,
         )
@@ -95,15 +95,15 @@ fun SummarySelectorUploadPhoto(
                 Icon(
                     imageVector = icon,
                     contentDescription = stringResource(id = contentDescription),
-                    tint = White,
+                    tint = ButtonTextColor,
                     modifier = Modifier.size(Size24)
                 )
                 Spacer(modifier = Modifier.width(Size04))
                 Text(
                     text = stringResource(id = text),
-                    color = White,
-                    fontSize = Font12,
-                    fontWeight = Bold
+                    style = TensoScanTypography.labelMedium,
+                    fontWeight = Bold,
+                    color = ButtonTextColor
                 )
             }
         }

@@ -1,11 +1,7 @@
 package com.example.ui.feature.summary
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -22,8 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,7 +40,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
-import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -51,6 +49,8 @@ import com.example.ui.common.components.SummaryActionBar
 import com.example.ui.common.components.SummaryCardListItemView
 import com.example.ui.common.components.SummaryErrorBottomSheet
 import com.example.ui.common.components.TopBarView
+import com.example.ui.common.extensions.openPdfFile
+import com.example.ui.common.extensions.savePdfToStorage
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Chatbot
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
@@ -62,6 +62,8 @@ import com.example.ui.model.PredictionUiModel
 import com.example.ui.model.TopBarModel
 import com.example.ui.model.UploadErrorModel
 import com.example.ui.theme.BackgroundScreenColor
+import com.example.ui.theme.ButtonLoginColor
+import com.example.ui.theme.ButtonTextColor
 import com.example.ui.theme.SizeValues.Size04
 import com.example.ui.theme.SizeValues.Size08
 import com.example.ui.theme.SizeValues.Size16
@@ -73,7 +75,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
-import java.io.File
 
 @OptIn(KoinExperimentalAPI::class, ExperimentalFoundationApi::class)
 @Composable
@@ -122,8 +123,12 @@ fun SummaryScreenView(
             BottomBarNavigation(items = items, navController = mainNavController)
         },
         floatingActionButton = {
-            Button(onClick = { summaryViewModel.getMeasurementHistoryPdf() }) {
-                Text("Descargar Histórico PDF")
+            Button(onClick = { summaryViewModel.getMeasurementHistoryPdf() }, colors = ButtonDefaults.buttonColors(containerColor = ButtonLoginColor)) {
+                Icon(
+                    imageVector = Icons.Default.FileDownload, contentDescription = stringResource(
+                        RString.download_pdf_icon_content_description
+                    ), tint = ButtonTextColor
+                )
             }
         }
     ) { padding ->
@@ -144,35 +149,6 @@ fun SummaryScreenView(
     }
 }
 
-private fun savePdfToStorage(context: Context, pdfData: ByteArray) {
-    try {
-        val file = File(context.filesDir, "measurement_history.pdf")
-        file.writeBytes(pdfData)
-    } catch (e: Exception) {
-        Log.e("SavePdf", "Error saving PDF: ${e.message}")
-    }
-}
-
-private fun openPdfFile(context: Context) {
-    val file = File(context.filesDir, "measurement_history.pdf")
-    val uri = FileProvider.getUriForFile(
-        context,
-        "${context.packageName}.provider",
-        file
-    )
-
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(uri, "application/pdf")
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    }
-
-    try {
-        context.startActivity(intent)
-    } catch (e: ActivityNotFoundException) {
-        Toast.makeText(context, "No hay una app para abrir PDFs", Toast.LENGTH_LONG).show()
-    }
-}
-
 @Composable
 private fun SummaryScreenContent(
     padding: PaddingValues,
@@ -184,9 +160,7 @@ private fun SummaryScreenContent(
 ) {
     Box(modifier = Modifier.fillMaxSize().background(BackgroundScreenColor).padding(padding)) {
         SummaryActionBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Size16),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = Size16),
             onUploadPhotoClicked = onUploadPhotoClicked,
             showMeasurementHistory = showMeasurementHistory
         )
@@ -194,19 +168,14 @@ private fun SummaryScreenContent(
         summaryState.errorMessage?.let { error ->
             Text(
                 text = error,
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error,
+                style =  MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .padding(horizontal = Size16, vertical = Size08)
             )
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = Size16)
-                .padding(top = Size84)
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = Size16).padding(top = Size84)) {
             if (summaryState.measurements.isEmpty()) {
                 item {
                     Text(
@@ -226,10 +195,7 @@ private fun SummaryScreenContent(
                             targetOffsetX = { fullWidth -> fullWidth },
                             animationSpec = tween(durationMillis = 300)
                         ),
-                        modifier = Modifier
-                            .animateItem()
-                            .fillMaxWidth()
-                            .padding(vertical = Size04)
+                        modifier = Modifier.animateItem().fillMaxWidth().padding(vertical = Size04)
                     ) {
                         SummaryCardListItemView(
                             predictionUiModel = PredictionUiModel(

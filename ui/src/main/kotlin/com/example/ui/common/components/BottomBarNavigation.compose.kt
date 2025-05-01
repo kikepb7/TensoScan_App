@@ -6,13 +6,15 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem
-import com.example.ui.theme.backgroundBottomBarIcon
-import com.example.ui.theme.bottomBarIcon
+import com.example.ui.theme.BottomBarContainerColor
+import com.example.ui.theme.BottomBarIndicatorColor
+import com.example.ui.theme.BottomBarSelectedIconColor
+import com.example.ui.theme.BottomBarUnselectedIconColor
+import com.example.ui.theme.TensoScanTypography
 
 @Composable
 fun BottomBarNavigation(
@@ -22,17 +24,24 @@ fun BottomBarNavigation(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    NavigationBar(containerColor = Color.White) {
+    NavigationBar(containerColor = BottomBarContainerColor) {
         items.forEach { item ->
             NavigationBarItem(
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = backgroundBottomBarIcon,
-                    selectedIconColor = bottomBarIcon,
-                    unselectedIconColor = Color.Black
+                    indicatorColor = BottomBarIndicatorColor,
+                    selectedIconColor = BottomBarSelectedIconColor,
+                    unselectedIconColor = BottomBarUnselectedIconColor
                 ),
                 icon = item.icon,
                 label = {
-                    Text(text = item.title, color = Color.Black)
+                    Text(
+                        text = item.title,
+                        style = TensoScanTypography.labelMedium,
+                        color = if (currentDestination?.hierarchy?.any { it.route == item.route } == true)
+                            BottomBarSelectedIconColor
+                        else
+                            BottomBarUnselectedIconColor
+                    )
                 },
                 onClick = {
                     navController.navigate(route = item.route) {

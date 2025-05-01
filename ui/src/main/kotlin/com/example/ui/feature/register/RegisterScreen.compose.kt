@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -31,20 +32,21 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.ui.R
 import com.example.ui.common.components.TensoScanOutlinedTextField
-import com.example.ui.common.components.TensoScanOutlinedToundedButton
+import com.example.ui.common.components.TensoScanOutlinedRoundedButton
 import com.example.ui.common.components.TensoScanRoundedButton
 import com.example.ui.theme.BackgroundAppColor
 import com.example.ui.theme.CardColor
 import com.example.ui.theme.PrimaryTextColor
-import com.example.ui.theme.SecondaryTextColor
 import com.example.ui.theme.SizeValues.Size08
 import com.example.ui.theme.SizeValues.Size12
 import com.example.ui.theme.SizeValues.Size16
 import com.example.ui.theme.SizeValues.Size24
+import com.example.ui.theme.TensoScanTypography
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -105,13 +107,15 @@ private fun RegisterHeader() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(R.string.create_account_text),
-            style = MaterialTheme.typography.headlineMedium,
+            style = TensoScanTypography.headlineSmall,
             color = PrimaryTextColor
         )
+        Spacer(modifier = Modifier.height(Size12))
         Text(
             text = stringResource(R.string.fill_fields_text),
-            style = MaterialTheme.typography.bodyMedium,
-            color = SecondaryTextColor
+            style = TensoScanTypography.bodySmall,
+            textAlign = TextAlign.Center,
+            color = PrimaryTextColor
         )
     }
 }
@@ -197,7 +201,7 @@ private fun RegisterActions(onBack: () -> Unit, onRegister: () -> Unit) {
         modifier = Modifier.fillMaxWidth().padding(top = Size16),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        TensoScanOutlinedToundedButton(text = stringResource(R.string.back_button_text), onClick = onBack, modifier = Modifier.weight(1f))
+        TensoScanOutlinedRoundedButton(text = stringResource(R.string.back_button_text), onClick = onBack, modifier = Modifier.weight(1f))
         Spacer(modifier = Modifier.width(Size12))
         TensoScanRoundedButton(text = stringResource(R.string.register_button_text), onClick = onRegister, modifier = Modifier.weight(1f))
 

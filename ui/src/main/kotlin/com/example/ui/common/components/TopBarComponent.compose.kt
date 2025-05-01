@@ -16,17 +16,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
+import com.example.ui.R
 import com.example.ui.model.TopBarModel
 import com.example.ui.theme.BorderValues.Border01
-import com.example.ui.theme.Fontalues.Font20
 import com.example.ui.theme.SizeValues.Size40
+import com.example.ui.theme.TensoScanTypography
 import com.example.ui.theme.TopBarColor
+import com.example.ui.theme.TopBarTitleColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,36 +37,33 @@ fun TopBarView(topAppBarModel: TopBarModel) {
             ) {
                 Text(
                     text = stringResource(topAppBarModel.title),
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = Font20,
-                        fontFamily = FontFamily.SansSerif,
-                        fontWeight = FontWeight.Bold
-                    )
+                    style = TensoScanTypography.headlineSmall,
+                    color = TopBarTitleColor
                 )
             }
         },
         navigationIcon = {
             Image(
                 painter = painterResource(id = topAppBarModel.image),
-                contentDescription = "User image",
+                contentDescription = stringResource(R.string.user_image_content_description),
                 modifier = Modifier
                     .size(Size40)
                     .clip(CircleShape)
-                    .border(Border01, Color.Black, CircleShape)
+                    .border(Border01, TopBarTitleColor, CircleShape)
             )
         },
         actions = {
             IconButton(onClick = {}) {
                 Icon(
                     imageVector = topAppBarModel.icon,
-                    contentDescription = "Settings"
+                    contentDescription = stringResource(R.string.settings_content_description),
+                    tint = TopBarTitleColor
                 )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = TopBarColor,
-            titleContentColor = Color.White
+            titleContentColor = TopBarTitleColor
         )
     )
 }

@@ -12,27 +12,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,11 +34,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.domain.feature.chatbot.model.ChatMessageModel
 import com.example.ui.common.components.BottomBarNavigation
+import com.example.ui.common.components.TensoScanChatInputField
+import com.example.ui.common.components.TensoScanSendButton
 import com.example.ui.common.components.TopBarView
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
 import com.example.ui.common.navigation.bottomnavigation.BottomBarItem.Chatbot
@@ -55,11 +51,13 @@ import com.example.ui.model.TopBarModel
 import com.example.ui.theme.BackgroundAssistantMessage
 import com.example.ui.theme.BackgroundScreenColor
 import com.example.ui.theme.BackgroundUserMessage
+import com.example.ui.theme.ButtonTextColor
 import com.example.ui.theme.Fontalues.Font24
 import com.example.ui.theme.SizeValues.Size02
+import com.example.ui.theme.SizeValues.Size04
 import com.example.ui.theme.SizeValues.Size08
-import com.example.ui.theme.SizeValues.Size12
 import com.example.ui.theme.SizeValues.Size16
+import com.example.ui.theme.TensoScanTypography
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import com.example.ui.R.drawable as RDrawable
@@ -117,21 +115,17 @@ fun ChatbotScreenContent(
             .padding(padding)
             .padding(Size16)
     ) {
-        Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = Size08)
-            ) {
+        Box(modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth()) {
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = Size08)) {
                 items(chatbotState.history) { message ->
                     ChatMessageBubble(message = message)
                 }
             }
 
             if (chatbotState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
 
@@ -160,9 +154,7 @@ fun ChatMessageBubble(message: ChatMessageModel) {
     val backgroundColor = if (isUser) BackgroundUserMessage else BackgroundAssistantMessage
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(Size08),
+        modifier = Modifier.fillMaxWidth().padding(Size08),
         horizontalArrangement = alignment
     ) {
         Box(
@@ -175,8 +167,8 @@ fun ChatMessageBubble(message: ChatMessageModel) {
             } else {
                 Text(
                     text = message.conntent,
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = TensoScanTypography.bodySmall,
+                    color = ButtonTextColor,
                 )
             }
         }
@@ -184,58 +176,19 @@ fun ChatMessageBubble(message: ChatMessageModel) {
 }
 
 @Composable
-fun ChatInputField(
-    prompt: String,
-    onPromptChange: (String) -> Unit,
-    onSendPrompt: () -> Unit
-) {
+fun ChatInputField(prompt: String, onPromptChange: (String) -> Unit, onSendPrompt: () -> Unit) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = Size08),
+        modifier = Modifier.fillMaxWidth().padding(top = Size08),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(
+        TensoScanChatInputField(
             value = prompt,
             onValueChange = onPromptChange,
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = Size08),
-            placeholder = { Text(text = "Escribe un mensaje ...") },
-            shape = RoundedCornerShape(Size16),
-            singleLine = true,
-            trailingIcon = {
-                if (prompt.isNotBlank()) {
-                    IconButton(onClick = { onPromptChange("") }) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Clear text"
-                        )
-                    }
-                }
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
-                cursorColor = MaterialTheme.colorScheme.primary,
-                focusedLabelColor = MaterialTheme.colorScheme.primary
-            )
+            placeholder = stringResource(RString.type_a_message_text),
+            onClear = { onPromptChange("") }
         )
-        ElevatedButton(
-            onClick = onSendPrompt,
-            shape = RoundedCornerShape(Size12),
-            colors = ButtonDefaults.elevatedButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            )
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = "Send"
-            )
-        }
+        Spacer(modifier = Modifier.width(Size04))
+        TensoScanSendButton(onClick = onSendPrompt)
     }
 }
 

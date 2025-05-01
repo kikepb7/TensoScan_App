@@ -32,11 +32,17 @@ import com.example.ui.common.extensions.formattedConfidence
 import com.example.ui.common.extensions.getStatusColor
 import com.example.ui.common.extensions.getStatusLabel
 import com.example.ui.model.PredictionUiModel
+import com.example.ui.theme.CardBackgroundColor
+import com.example.ui.theme.CardLabelTextColor
 import com.example.ui.theme.ElevationValues.Elevation04
+import com.example.ui.theme.PrimaryTextColor
+import com.example.ui.theme.SecondaryTextColor
 import com.example.ui.theme.SizeValues.Size04
 import com.example.ui.theme.SizeValues.Size08
 import com.example.ui.theme.SizeValues.Size12
+import com.example.ui.theme.SizeValues.Size18
 import com.example.ui.theme.SizeValues.Size20
+import com.example.ui.theme.TensoScanTypography
 import com.example.ui.R.string as RString
 
 @Composable
@@ -49,18 +55,12 @@ fun SummaryCardListItemView(
     val statusText = getStatusLabel(highPressure)
 
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = Size08, horizontal = Size12),
+        modifier = Modifier.fillMaxWidth().padding(vertical = Size08, horizontal = Size12),
         shape = RoundedCornerShape(Size20),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = Elevation04),
-        colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        colors = CardDefaults.elevatedCardColors(containerColor = CardBackgroundColor)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(Size20)
-        ) {
+        Column(modifier = Modifier.fillMaxWidth().padding(Size20)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -69,8 +69,8 @@ fun SummaryCardListItemView(
                 Column {
                     Text(
                         text = stringResource(RString.blood_pressure_text),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = TensoScanTypography.bodyLarge,
+                        color = CardLabelTextColor
                     )
                     Spacer(modifier = Modifier.height(Size04))
                     Text(
@@ -79,14 +79,14 @@ fun SummaryCardListItemView(
                             predictionUiModel.highPressure,
                             predictionUiModel.lowPressure
                         ),
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onSurface
+                        style = TensoScanTypography.headlineSmall,
+                        color = PrimaryTextColor
                     )
                 }
 
                 AssistChip(
                     onClick = {},
-                    label = { Text(text = statusText) },
+                    label = { Text(text = statusText, style = TensoScanTypography.bodySmall) },
                     colors = AssistChipDefaults.assistChipColors(
                         containerColor = statusColor.copy(alpha = 0.1f),
                         labelColor = statusColor
@@ -94,7 +94,7 @@ fun SummaryCardListItemView(
                 )
             }
 
-            Spacer(modifier = Modifier.height(Size20))
+            Spacer(modifier = Modifier.height(Size18))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -128,12 +128,7 @@ fun SummaryCardListItemView(
 }
 
 @Composable
-private fun InfoItem(
-    label: String,
-    value: String,
-    icon: ImageVector,
-    iconTint: Color
-) {
+private fun InfoItem(label: String, value: String, icon: ImageVector, iconTint: Color) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = Size08)
@@ -150,15 +145,15 @@ private fun InfoItem(
             Spacer(modifier = Modifier.width(Size04))
             Text(
                 text = value,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                style = TensoScanTypography.bodyMedium,
+                color = PrimaryTextColor
             )
         }
         Spacer(modifier = Modifier.height(Size04))
         Text(
             text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            style = TensoScanTypography.labelMedium,
+            color = SecondaryTextColor
         )
     }
 }

@@ -6,8 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.ui.R
@@ -38,8 +41,10 @@ import com.example.ui.theme.BackgroundAppColor
 import com.example.ui.theme.CardColor
 import com.example.ui.theme.PrimaryTextColor
 import com.example.ui.theme.SizeValues.Size08
+import com.example.ui.theme.SizeValues.Size12
 import com.example.ui.theme.SizeValues.Size16
 import com.example.ui.theme.SizeValues.Size24
+import com.example.ui.theme.TensoScanTypography
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -128,12 +133,14 @@ private fun HeaderSection() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = stringResource(R.string.welcome_text),
-            style = MaterialTheme.typography.headlineMedium,
+            style = TensoScanTypography.headlineSmall,
             color = PrimaryTextColor
         )
+        Spacer(modifier = Modifier.height(Size12))
         Text(
             text = stringResource(R.string.login_to_continue_text),
-            style = MaterialTheme.typography.bodyMedium,
+            style = TensoScanTypography.bodyLarge,
+            textAlign = TextAlign.Center,
             color = PrimaryTextColor
         )
     }
@@ -176,6 +183,11 @@ private fun RegisterTextButton(onClick: () -> Unit) {
         onClick = onClick,
         modifier = Modifier.padding(top = Size08)
     ) {
-        Text(text = stringResource(R.string.not_account_yet_text), color = PrimaryTextColor)
+        Text(
+            text = stringResource(R.string.not_account_yet_text),
+            style = TensoScanTypography.bodySmall,
+            textAlign = TextAlign.Center,
+            color = PrimaryTextColor
+        )
     }
 }

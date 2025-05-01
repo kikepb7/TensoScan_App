@@ -1,9 +1,11 @@
 package com.example.ui.common.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -25,6 +27,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.ui.R
 import com.example.ui.theme.IconColor
+import com.example.ui.theme.SecondaryTextColor
+import com.example.ui.theme.SizeValues.Size16
+import com.example.ui.theme.TensoScanTypography
 import com.example.ui.theme.TextFieldBorderColor
 import com.example.ui.theme.TextFieldTextColor
 
@@ -44,7 +49,9 @@ fun TensoScanOutlinedTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(text = label, color = TextFieldTextColor) },
+        label = {
+            Text(text = label, style = TensoScanTypography.bodySmall, color = TextFieldTextColor)
+        },
         leadingIcon = { Icon(imageVector = icon, contentDescription = label, tint = IconColor) },
         singleLine = true,
         modifier = Modifier.fillMaxWidth(),
@@ -69,6 +76,46 @@ fun TensoScanOutlinedTextField(
             cursorColor = IconColor,
             focusedLabelColor = TextFieldTextColor,
             unfocusedLabelColor = TextFieldTextColor,
+        )
+    )
+}
+
+@Composable
+fun TensoScanChatInputField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    modifier: Modifier = Modifier,
+    onClear: () -> Unit
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        placeholder = { Text(text = placeholder, style = TensoScanTypography.bodySmall) },
+        shape = RoundedCornerShape(Size16),
+        singleLine = true,
+        trailingIcon = {
+            if (value.isNotBlank()) {
+                IconButton(onClick = onClear) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.clear_text_content_description),
+                        tint = IconColor
+                    )
+                }
+            }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = TextFieldBorderColor,
+            unfocusedBorderColor = TextFieldBorderColor.copy(alpha = 0.5f),
+            cursorColor = TextFieldTextColor,
+            focusedTextColor = TextFieldTextColor,
+            unfocusedTextColor = TextFieldTextColor,
+            focusedLabelColor = TextFieldTextColor,
+            unfocusedLabelColor = TextFieldTextColor,
+            focusedPlaceholderColor = SecondaryTextColor,
+            unfocusedPlaceholderColor = SecondaryTextColor
         )
     )
 }
