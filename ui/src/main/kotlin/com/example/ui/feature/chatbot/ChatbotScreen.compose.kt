@@ -12,18 +12,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -123,10 +120,6 @@ fun ChatbotScreenContent(
                     ChatMessageBubble(message = message)
                 }
             }
-
-            if (chatbotState.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
         }
 
         ChatInputField(
@@ -178,16 +171,18 @@ fun ChatMessageBubble(message: ChatMessageModel) {
 @Composable
 fun ChatInputField(prompt: String, onPromptChange: (String) -> Unit, onSendPrompt: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = Size08),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = Size08),
         verticalAlignment = Alignment.CenterVertically
     ) {
         TensoScanChatInputField(
             value = prompt,
             onValueChange = onPromptChange,
             placeholder = stringResource(RString.type_a_message_text),
+            modifier = Modifier.weight(1f).padding(end = Size04),
             onClear = { onPromptChange("") }
         )
-        Spacer(modifier = Modifier.width(Size04))
         TensoScanSendButton(onClick = onSendPrompt)
     }
 }

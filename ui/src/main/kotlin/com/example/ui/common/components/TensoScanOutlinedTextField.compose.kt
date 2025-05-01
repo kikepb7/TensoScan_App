@@ -94,6 +94,8 @@ fun TensoScanChatInputField(
         modifier = modifier,
         placeholder = { Text(text = placeholder, style = TensoScanTypography.bodySmall) },
         shape = RoundedCornerShape(Size16),
+        maxLines = 5,
+        minLines = 1,
         singleLine = true,
         trailingIcon = {
             if (value.isNotBlank()) {
