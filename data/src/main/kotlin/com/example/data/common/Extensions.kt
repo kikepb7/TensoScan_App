@@ -1,10 +1,12 @@
 package com.example.data.common
 
 import com.example.data.feature.chatbot.dto.ChatMessageDto
+import com.example.data.feature.login.dto.UserResponseDto
 import com.example.data.feature.measurements.database.entities.MeasurementEntity
 import com.example.data.feature.measurements.dto.MeasurementDto
 import com.example.domain.feature.camera.model.FailureDomain
 import com.example.domain.feature.chatbot.model.ChatMessageModel
+import com.example.domain.feature.login.model.UserModel
 import com.example.domain.feature.measurements.model.MeasurementModel
 
 data class FailureDto(val code: Int, val message: String?)
@@ -59,3 +61,11 @@ fun ChatMessageDto.toChatMessageModel(): ChatMessageModel =
         role = role,
         conntent = content
     )
+
+fun UserResponseDto.toUserModel(): UserModel {
+    return UserModel(
+        email = this.email,
+        name = this.name,
+        lastName = this.lastName
+    )
+}

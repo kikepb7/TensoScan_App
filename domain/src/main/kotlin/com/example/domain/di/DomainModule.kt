@@ -3,6 +3,7 @@ package com.example.domain.di
 import com.example.domain.feature.camera.usecase.SavePhotoUseCase
 import com.example.domain.feature.camera.usecase.UploadImageUseCase
 import com.example.domain.feature.chatbot.usecase.ChatbotUseCase
+import com.example.domain.feature.login.usecase.GetCurrentUserUseCase
 import com.example.domain.feature.login.usecase.LoginUseCase
 import com.example.domain.feature.login.usecase.RegisterUserUseCase
 import com.example.domain.feature.measurements.usecase.DeleteMeasurementUseCase
@@ -21,6 +22,7 @@ val domainModule = module {
     factory { DeleteMeasurementUseCase(get()) }
     factory { GetMeasurementHistoryHtmlUseCase(get()) }
     factory { GetMeasurementHistoryPdfUseCase(get()) }
+    factory { GetCurrentUserUseCase(get()) }
     factory { LogoutUseCase(get(), get()) }
     factory { ChatbotUseCase(get()) }
 }

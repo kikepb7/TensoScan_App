@@ -1,10 +1,12 @@
 package com.example.data.feature.login.repository
 
+import com.example.data.common.toUserModel
 import com.example.data.feature.login.service.LoginService
 import com.example.data.feature.login.utils.toDomain
 import com.example.data.feature.login.utils.toDto
 import com.example.data.local.TokenManager
 import com.example.domain.feature.login.model.LoginResponseModel
+import com.example.domain.feature.login.model.UserModel
 import com.example.domain.feature.login.model.UserRegistrationModel
 import com.example.domain.feature.login.repository.LoginRepository
 
@@ -30,5 +32,12 @@ class LoginRepositoryImpl(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    override suspend fun getCurrentUser(): UserModel {
+        val token = tokenManager.getAccessToken() ?: throw Exception("Token not found")
+        val response = loginService.getCurrentUser("Bearer $token")
+
+        return response.toUserModel()
     }
 }
