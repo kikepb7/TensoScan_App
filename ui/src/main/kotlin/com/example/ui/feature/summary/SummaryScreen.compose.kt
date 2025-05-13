@@ -9,12 +9,16 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -37,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
@@ -66,8 +71,9 @@ import com.example.ui.theme.ButtonLoginColor
 import com.example.ui.theme.ButtonTextColor
 import com.example.ui.theme.SizeValues.Size04
 import com.example.ui.theme.SizeValues.Size08
+import com.example.ui.theme.SizeValues.Size128
 import com.example.ui.theme.SizeValues.Size16
-import com.example.ui.theme.SizeValues.Size24
+import com.example.ui.theme.SizeValues.Size64
 import com.example.ui.theme.SizeValues.Size84
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -158,9 +164,14 @@ private fun SummaryScreenContent(
     onUploadPhotoClicked: () -> Unit,
     showMeasurementHistory: () -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize().background(BackgroundScreenColor).padding(padding)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(BackgroundScreenColor)
+        .padding(padding)) {
         SummaryActionBar(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = Size16),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Size16),
             onUploadPhotoClicked = onUploadPhotoClicked,
             showMeasurementHistory = showMeasurementHistory
         )
@@ -175,15 +186,12 @@ private fun SummaryScreenContent(
             )
         }
 
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(horizontal = Size16).padding(top = Size84)) {
+        LazyColumn(modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = Size16)
+            .padding(top = Size84)) {
             if (summaryState.measurements.isEmpty()) {
-                item {
-                    Text(
-                        text = "No hay mediciones registradas aún.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(top = Size24)
-                    )
-                }
+                item { EmptyMeasurementsView() }
             } else {
                 items(summaryState.measurements, key = { it.id }) { measurement ->
                     val isVisible = visibleCards[measurement.id] != false
@@ -195,7 +203,10 @@ private fun SummaryScreenContent(
                             targetOffsetX = { fullWidth -> fullWidth },
                             animationSpec = tween(durationMillis = 300)
                         ),
-                        modifier = Modifier.animateItem().fillMaxWidth().padding(vertical = Size04)
+                        modifier = Modifier
+                            .animateItem()
+                            .fillMaxWidth()
+                            .padding(vertical = Size04)
                     ) {
                         SummaryCardListItemView(
                             predictionUiModel = PredictionUiModel(
@@ -239,7 +250,10 @@ private fun HandleUploadState(
 @Composable
 private fun UploadingOverlay() {
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.4f)).zIndex(1f),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.4f))
+            .zIndex(1f),
         contentAlignment = Alignment.Center
     ) { PulseLoadingView() }
 }
@@ -257,6 +271,29 @@ private fun UploadState.DisplayErrors(onDismiss: () -> Unit) {
             SummaryErrorBottomSheet(message = message, onDismiss = onDismiss)
         }
         else -> Unit
+    }
+}
+
+@Composable
+private fun EmptyMeasurementsView() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = Size64),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(id = RDrawable.ic_empty_list),
+            contentDescription = stringResource(RString.empty_measurements_content_description),
+            modifier = Modifier
+                .size(Size128)
+                .padding(bottom = Size16)
+        )
+        Text(
+            text = stringResource(RString.no_measurements_yet_text),
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
 

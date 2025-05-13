@@ -29,9 +29,11 @@ object SizeValues {
     val Size45 = 45.dp
     val Size48 = 48.dp
     val Size60 = 60.dp
+    val Size64 = 64.dp
     val Size76 = 76.dp
     val Size84 = 84.dp
     val Size96 = 96.dp
+    val Size128 = 128.dp
     val Size150 = 150.dp
     val Size180 = 180.dp
 }

@@ -40,8 +40,8 @@ val dataModule = module {
 
     single {
         Retrofit.Builder()
-            .baseUrl("http:/:8000/")   // Dispositivo físico (comprobar ip con ipconfig)
-//            .baseUrl("http://10.0.2.2:8000/")     // Emulador
+//            .baseUrl("http:/:8000/")   // Dispositivo físico (comprobar ip con ipconfig)
+            .baseUrl("http://10.0.2.2:8000/")     // Emulador
             .addConverterFactory(GsonConverterFactory.create())
             .client(get())
             .build()

@@ -51,4 +51,7 @@
     <string name="about_tensoscan">TensoScan te permite llevar un registro histórico de tus mediciones de presión arterial tomadas con diferentes tensiómetros. Analiza tendencias, identifica patrones y mejora tu salud cardiovascular</string>
     <string name="tensoscan_disclaimer">Aviso legal</string>
     <string name="tensoscan_disclaimer_text">TensoScan no sustituye el diagnóstico médico profesional. Consulta siempre con tu médico ante cualquier duda sobre tu salud o tratamiento</string>
+    <string name="empty_measurements_content_description">Sin mediciones</string>
+    <string name="no_measurements_yet_text">No hay mediciones registradas aún</string>
+    <string name="chatbot_avatar_content_description">Avatar del asistente</string>
 </resources>
