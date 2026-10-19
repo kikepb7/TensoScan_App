@@ -10,6 +10,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tensoscan.presentation.navigation.ScanRoute
+import com.tensoscan.ui.common.navigation.Routes
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem
 import com.tensoscan.ui.theme.BottomBarContainerColor
 import com.tensoscan.ui.theme.BottomBarIndicatorColor
@@ -51,11 +52,8 @@ fun BottomBarNavigation(items: List<BottomBarItem>, navController: NavHostContro
                         return@NavigationBarItem
                     }
                     navController.navigate(route = item.route) {
-                        navController.graph.startDestinationRoute?.let { route ->
-                            popUpTo(route = route) {
-                                saveState = true
-                            }
-                        }
+                        // The history is always the root of a signed-in session (see `NavigationWrapper`).
+                        popUpTo(route = Routes.Summary.route) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
                     }

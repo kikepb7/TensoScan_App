@@ -1,9 +1,9 @@
 package com.tensoscan.data.di
 
 import com.tensoscan.data.config.ApiConfig
-import com.tensoscan.data.feature.chatbot.service.ChatbotService
-import com.tensoscan.data.feature.login.service.AuthApi
-import com.tensoscan.data.feature.login.service.UserApi
+import com.tensoscan.data.feature.account.remote.AccountApi
+import com.tensoscan.data.feature.account.remote.PublicAccountApi
+import com.tensoscan.data.feature.assistant.AssistantApi
 import com.tensoscan.data.feature.measurements.remote.MeasurementApi
 import com.tensoscan.data.network.AuthInterceptor
 import com.tensoscan.data.network.AuthenticatedApi
@@ -71,7 +71,16 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun authApi(@PublicApi retrofit: Retrofit): AuthApi = retrofit.create(AuthApi::class.java)
+    fun publicAccountApi(@PublicApi retrofit: Retrofit): PublicAccountApi =
+        retrofit.create(PublicAccountApi::class.java)
+
+    @Provides
+    @Singleton
+    fun accountApi(@AuthenticatedApi retrofit: Retrofit): AccountApi = retrofit.create(AccountApi::class.java)
+
+    @Provides
+    @Singleton
+    fun assistantApi(@AuthenticatedApi retrofit: Retrofit): AssistantApi = retrofit.create(AssistantApi::class.java)
 
     @Provides
     @Singleton
@@ -79,17 +88,8 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun userApi(@AuthenticatedApi retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)
-
-    @Provides
-    @Singleton
     fun measurementApi(@AuthenticatedApi retrofit: Retrofit): MeasurementApi =
         retrofit.create(MeasurementApi::class.java)
-
-    @Provides
-    @Singleton
-    fun chatbotService(@AuthenticatedApi retrofit: Retrofit): ChatbotService =
-        retrofit.create(ChatbotService::class.java)
 
     private fun retrofit(client: OkHttpClient, json: Json, config: ApiConfig): Retrofit = Retrofit
         .Builder()

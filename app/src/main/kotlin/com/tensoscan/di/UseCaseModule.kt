@@ -1,12 +1,15 @@
 package com.tensoscan.di
 
-import com.tensoscan.domain.feature.chatbot.repository.ChatbotRepository
-import com.tensoscan.domain.feature.chatbot.usecase.ChatbotUseCase
-import com.tensoscan.domain.feature.login.repository.LoginRepository
-import com.tensoscan.domain.feature.login.usecase.GetCurrentUserUseCase
-import com.tensoscan.domain.feature.login.usecase.LoginUseCase
-import com.tensoscan.domain.feature.login.usecase.RegisterUserUseCase
-import com.tensoscan.domain.feature.session.usecase.LogoutUseCase
+import com.tensoscan.domain.account.AccountInputValidator
+import com.tensoscan.domain.account.AccountRepository
+import com.tensoscan.domain.account.DeleteAccountUseCase
+import com.tensoscan.domain.account.GetCurrentUserUseCase
+import com.tensoscan.domain.account.LoginUseCase
+import com.tensoscan.domain.account.LogoutUseCase
+import com.tensoscan.domain.account.ObserveSessionUseCase
+import com.tensoscan.domain.account.RegisterAccountUseCase
+import com.tensoscan.domain.assistant.AssistantRepository
+import com.tensoscan.domain.assistant.SendAssistantMessageUseCase
 import com.tensoscan.domain.measurement.model.MeasurementId
 import com.tensoscan.domain.measurement.repository.MeasurementOwnership
 import com.tensoscan.domain.measurement.repository.MeasurementReportRepository
@@ -39,20 +42,37 @@ import java.util.UUID
 @InstallIn(SingletonComponent::class)
 internal object UseCaseModule {
     @Provides
-    fun loginUseCase(repository: LoginRepository) = LoginUseCase(repository)
+    fun accountInputValidator() = AccountInputValidator()
 
     @Provides
-    fun registerUserUseCase(repository: LoginRepository) = RegisterUserUseCase(repository)
+    fun loginUseCase(validator: AccountInputValidator, repository: AccountRepository) =
+        LoginUseCase(validator, repository)
 
     @Provides
-    fun getCurrentUserUseCase(repository: LoginRepository) = GetCurrentUserUseCase(repository)
+    fun registerAccountUseCase(validator: AccountInputValidator, repository: AccountRepository) =
+        RegisterAccountUseCase(validator, repository)
+
+    @Provides
+    fun getCurrentUserUseCase(repository: AccountRepository) = GetCurrentUserUseCase(repository)
+
+    @Provides
+    fun observeSessionUseCase(repository: AccountRepository) = ObserveSessionUseCase(repository)
 
     @Provides
     fun logoutUseCase(
+        accountRepository: AccountRepository,
         sessionRepository: SessionRepository,
         measurementRepository: MeasurementRepository,
         ownership: MeasurementOwnership,
-    ) = LogoutUseCase(sessionRepository, measurementRepository, ownership)
+    ) = LogoutUseCase(accountRepository, sessionRepository, measurementRepository, ownership)
+
+    @Provides
+    fun deleteAccountUseCase(
+        accountRepository: AccountRepository,
+        sessionRepository: SessionRepository,
+        measurementRepository: MeasurementRepository,
+        ownership: MeasurementOwnership,
+    ) = DeleteAccountUseCase(accountRepository, sessionRepository, measurementRepository, ownership)
 
     @Provides
     fun readingValidator(clock: AppClock) = ReadingValidator(clock)
@@ -100,5 +120,5 @@ internal object UseCaseModule {
         DownloadMeasurementsReportUseCase(repository)
 
     @Provides
-    fun chatbotUseCase(repository: ChatbotRepository) = ChatbotUseCase(repository)
+    fun sendAssistantMessageUseCase(repository: AssistantRepository) = SendAssistantMessageUseCase(repository)
 }

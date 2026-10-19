@@ -43,6 +43,8 @@ fun TensoScanOutlinedTextField(
     imeAction: ImeAction = ImeAction.Next,
     onDone: (() -> Unit)? = null,
     isPassword: Boolean = false,
+    errorText: String? = null,
+    modifier: Modifier = Modifier,
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -54,7 +56,9 @@ fun TensoScanOutlinedTextField(
         },
         leadingIcon = { Icon(imageVector = icon, contentDescription = label, tint = IconColor) },
         singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
+        isError = errorText != null,
+        supportingText = errorText?.let { message -> { Text(text = message) } },
+        modifier = modifier.fillMaxWidth(),
         visualTransformation =
         if (isPassword &&
             !passwordVisible

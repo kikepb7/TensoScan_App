@@ -11,5 +11,5 @@ sealed class Routes(val route: String) {
 
     data object Summary : Routes("summary")
 
-    data object Chatbot : Routes("chatbot")
+    data object Assistant : Routes("assistant")
 }

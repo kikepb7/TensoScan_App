@@ -52,8 +52,8 @@ import com.tensoscan.ui.common.components.SummaryCardListItemView
 import com.tensoscan.ui.common.components.TopBarView
 import com.tensoscan.ui.common.extensions.openPdfFile
 import com.tensoscan.ui.common.extensions.savePdfToStorage
+import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Assistant
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
-import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Chatbot
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.User
 import com.tensoscan.ui.model.TopBarModel
@@ -128,7 +128,7 @@ private fun SummaryScreenContent(
         },
         bottomBar = {
             BottomBarNavigation(
-                items = listOf(User(), Camera(), Summary(), Chatbot()),
+                items = listOf(User(), Camera(), Summary(), Assistant()),
                 navController = mainNavController,
             )
         },

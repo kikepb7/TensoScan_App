@@ -23,6 +23,9 @@ sealed class DomainError(message: String? = null, cause: Throwable? = null) : Ex
 
     data class Validation(val details: List<FieldError>) : DomainError("Validation failed: $details")
 
+    /** Too many requests in a short time; the user should wait a moment. */
+    data object RateLimited : DomainError("Rate limited")
+
     data object Server : DomainError("Server error")
 
     /** Local persistence failure (disk full, corrupted database, ...). */

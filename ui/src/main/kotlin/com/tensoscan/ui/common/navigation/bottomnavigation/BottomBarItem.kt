@@ -54,13 +54,13 @@ sealed class BottomBarItem {
         },
     ) : BottomBarItem()
 
-    data class Chatbot(
-        override val route: String = Routes.Chatbot.route,
-        override val title: String = "CHATBOT",
+    data class Assistant(
+        override val route: String = Routes.Assistant.route,
+        override val title: String = "ASISTENTE",
         override val icon: @Composable () -> Unit = {
             Icon(
                 painter = rememberVectorPainter(Icons.AutoMirrored.Filled.Chat),
-                contentDescription = "Chatbot icon",
+                contentDescription = "Assistant icon",
                 modifier = Modifier.size(SizeValues.Size32),
             )
         },

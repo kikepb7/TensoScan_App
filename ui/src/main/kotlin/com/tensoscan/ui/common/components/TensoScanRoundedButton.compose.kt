@@ -29,9 +29,10 @@ import com.tensoscan.ui.theme.SizeValues.Size40
 import com.tensoscan.ui.theme.TensoScanTypography
 
 @Composable
-fun TensoScanRoundedButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun TensoScanRoundedButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier.fillMaxWidth().height(Size40),
         shape = RoundedCornerShape(Rounded24),
         colors = ButtonDefaults.buttonColors(containerColor = ButtonLoginColor, contentColor = ButtonTextColor),
@@ -54,9 +55,10 @@ fun TensoScanOutlinedRoundedButton(text: String, onClick: () -> Unit, modifier: 
 }
 
 @Composable
-fun TensoScanSendButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun TensoScanSendButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     ElevatedButton(
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(Size12),
         colors =
         ButtonDefaults.elevatedButtonColors(

@@ -45,6 +45,10 @@ internal class HttpErrorMapper @Inject constructor(private val json: Json) {
                 DomainError.NotFound
             }
 
+            HTTP_TOO_MANY_REQUESTS -> {
+                DomainError.RateLimited
+            }
+
             HTTP_CONFLICT -> {
                 DomainError.Conflict(reason = error?.code)
             }
@@ -77,6 +81,7 @@ internal class HttpErrorMapper @Inject constructor(private val json: Json) {
         const val HTTP_NOT_FOUND = 404
         const val HTTP_CONFLICT = 409
         const val HTTP_UNPROCESSABLE = 422
+        const val HTTP_TOO_MANY_REQUESTS = 429
         val HTTP_SERVER_ERROR_RANGE = 500..599
         const val TOKEN_EXPIRED = "TOKEN_EXPIRED"
     }

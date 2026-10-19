@@ -1,11 +1,11 @@
 package com.tensoscan.data.di
 
-import com.tensoscan.data.feature.chatbot.repository.ChatbotRepositoryImpl
-import com.tensoscan.data.feature.login.repository.LoginRepositoryImpl
+import com.tensoscan.data.feature.account.repository.AccountRepositoryImpl
+import com.tensoscan.data.feature.assistant.AssistantRepositoryImpl
 import com.tensoscan.data.feature.measurements.repository.MeasurementReportRepositoryImpl
 import com.tensoscan.data.feature.measurements.repository.MeasurementRepositoryImpl
-import com.tensoscan.domain.feature.chatbot.repository.ChatbotRepository
-import com.tensoscan.domain.feature.login.repository.LoginRepository
+import com.tensoscan.domain.account.AccountRepository
+import com.tensoscan.domain.assistant.AssistantRepository
 import com.tensoscan.domain.measurement.repository.MeasurementReportRepository
 import com.tensoscan.domain.measurement.repository.MeasurementRepository
 import dagger.Binds
@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 internal abstract class RepositoryModule {
     @Binds
-    abstract fun loginRepository(impl: LoginRepositoryImpl): LoginRepository
+    abstract fun accountRepository(impl: AccountRepositoryImpl): AccountRepository
 
     @Binds
     @Singleton
@@ -28,5 +28,5 @@ internal abstract class RepositoryModule {
     abstract fun measurementReportRepository(impl: MeasurementReportRepositoryImpl): MeasurementReportRepository
 
     @Binds
-    abstract fun chatbotRepository(impl: ChatbotRepositoryImpl): ChatbotRepository
+    abstract fun assistantRepository(impl: AssistantRepositoryImpl): AssistantRepository
 }

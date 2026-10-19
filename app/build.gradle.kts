@@ -60,12 +60,12 @@ android {
         debug {
             buildConfigField("String", "API_BASE_URL", "\"$debugApiBaseUrl\"")
             // The server does not issue refresh tokens until the v1 auth endpoints are deployed (spec B-001).
-            buildConfigField("boolean", "REFRESH_TOKEN_ENABLED", "false")
+            buildConfigField("boolean", "REFRESH_TOKEN_ENABLED", "true")
             buildConfigField("String", "DIGIT_DETECTOR_PRIMARY", "\"$debugDetector\"")
         }
         release {
             buildConfigField("String", "API_BASE_URL", "\"$releaseApiBaseUrl\"")
-            buildConfigField("boolean", "REFRESH_TOKEN_ENABLED", "false")
+            buildConfigField("boolean", "REFRESH_TOKEN_ENABLED", "true")
             // The in-house model becomes the primary detector only after the field validation (A-002 T-A002-35).
             buildConfigField("String", "DIGIT_DETECTOR_PRIMARY", "\"mlkit\"")
             isMinifyEnabled = true
@@ -96,6 +96,8 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlinx.coroutines.android)

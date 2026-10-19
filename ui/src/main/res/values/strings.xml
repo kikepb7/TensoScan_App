@@ -144,4 +144,45 @@
     </plurals>
     <string name="user_logout_unsynced_confirm">Cerrar sesión igualmente</string>
     <string name="user_logout_unsynced_cancel">Cancelar</string>
+
+    <!-- Account -->
+    <string name="common_retry">Reintentar</string>
+    <string name="account_error_required">Este campo es obligatorio</string>
+    <string name="account_error_invalid_email">Introduce un email válido</string>
+    <string name="account_error_password_too_short">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="account_error_password_too_long">La contraseña no puede superar los 128 caracteres</string>
+    <string name="account_error_passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="account_error_privacy_not_accepted">Debes aceptar la información de privacidad para crear la cuenta</string>
+    <string name="account_error_invalid_credentials">Email o contraseña incorrectos</string>
+    <string name="account_error_email_taken">Este email ya está registrado</string>
+    <string name="account_error_rate_limited">Demasiados intentos. Espera un momento y vuelve a probar</string>
+    <string name="account_error_network">No hay conexión. Comprueba tu red e inténtalo de nuevo</string>
+    <string name="account_error_server">El servidor no responde ahora mismo. Inténtalo más tarde</string>
+    <string name="account_error_invalid_input">Revisa los datos introducidos</string>
+    <string name="account_error_unknown">Algo ha salido mal. Inténtalo de nuevo</string>
+    <string name="login_session_expired">Tu sesión ha caducado. Vuelve a iniciar sesión; tus mediciones pendientes siguen a salvo en el móvil</string>
+    <string name="login_account_created">Cuenta creada. Inicia sesión para continuar</string>
+    <string name="register_privacy_label">He leído la información de privacidad y acepto que TensoScan guarde mis mediciones de tensión y pulso</string>
+    <string name="register_privacy_details">Ver información de privacidad</string>
+    <string name="privacy_summary_title">Tu privacidad</string>
+    <string name="privacy_summary_text">TensoScan guarda tus mediciones de tensión y pulso, y los datos de tu cuenta, para que puedas consultarlas desde tu historial. La app nunca guarda ni envía fotos: la cámara se usa solo para leer los números en tu móvil. Puedes eliminar tu cuenta y todos tus datos cuando quieras desde la pantalla de usuario.</string>
+    <string name="privacy_summary_close">Entendido</string>
+    <string name="user_profile_load_failed">No se pudo cargar tu perfil</string>
+    <string name="user_delete_account">Eliminar mi cuenta</string>
+    <string name="user_delete_account_title">¿Eliminar tu cuenta?</string>
+    <string name="user_delete_account_message">Se borrarán tu cuenta y todas tus mediciones, en el servidor y en este móvil. No se puede deshacer. Escribe tu contraseña para confirmar.</string>
+    <string name="user_delete_account_confirm">Eliminar definitivamente</string>
+    <string name="user_delete_account_cancel">Cancelar</string>
+
+    <!-- Assistant -->
+    <string name="assistant_disclaimer">El asistente no sustituye el consejo médico</string>
+    <string name="assistant_empty_hint">Pregúntame sobre la tensión arterial o sobre cómo usar la app</string>
+    <string name="assistant_typing_content_description">El asistente está escribiendo</string>
+    <string name="assistant_message_from_user">Tú: %1$s</string>
+    <string name="assistant_message_from_assistant">Asistente: %1$s</string>
+    <string name="assistant_error_rate_limited">Has enviado muchos mensajes seguidos. Espera un momento</string>
+    <string name="assistant_error_network">No hay conexión. Tu mensaje sigue escrito para que lo reenvíes</string>
+    <string name="assistant_error_unavailable">El asistente no está disponible ahora mismo</string>
+    <string name="assistant_error_session_expired">Tu sesión ha caducado. Vuelve a iniciar sesión</string>
+    <string name="assistant_error_unknown">No se pudo enviar el mensaje</string>
 </resources>

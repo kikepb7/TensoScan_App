@@ -33,6 +33,7 @@ class HttpErrorMapperTest {
         Triple(403, errorBody("FORBIDDEN"), DomainError.Unauthorized),
         Triple(404, errorBody("NOT_FOUND"), DomainError.NotFound),
         Triple(409, errorBody("CLIENT_ID_CONFLICT"), DomainError.Conflict(reason = "CLIENT_ID_CONFLICT")),
+        Triple(429, errorBody("RATE_LIMITED"), DomainError.RateLimited),
         Triple(500, "", DomainError.Server),
         Triple(503, errorBody("UPSTREAM_UNAVAILABLE"), DomainError.Server),
     ).map { (code, body, expected) ->
