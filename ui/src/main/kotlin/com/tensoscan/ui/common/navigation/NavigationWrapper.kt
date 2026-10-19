@@ -16,7 +16,7 @@ import com.tensoscan.ui.common.navigation.Routes.User
 import com.tensoscan.ui.feature.chatbot.ChatbotScreenView
 import com.tensoscan.ui.feature.login.LoginScreen
 import com.tensoscan.ui.feature.register.RegisterScreen
-import com.tensoscan.ui.feature.review.ReviewPlaceholderScreen
+import com.tensoscan.ui.feature.review.ReviewMeasurementScreen
 import com.tensoscan.ui.feature.scan.ScanScreen
 import com.tensoscan.ui.feature.summary.SummaryScreenView
 import com.tensoscan.ui.feature.user.UserScreenView
@@ -51,9 +51,12 @@ fun NavigationWrapper() {
             )
         }
         composable<ReviewMeasurementRoute> { backStackEntry ->
-            ReviewPlaceholderScreen(
+            ReviewMeasurementScreen(
                 route = backStackEntry.toRoute<ReviewMeasurementRoute>(),
-                onBack = { mainNavController.popBackStack() },
+                onRetake = {
+                    mainNavController.navigate(ScanRoute) { popUpTo<ReviewMeasurementRoute> { inclusive = true } }
+                },
+                onFinished = { mainNavController.popBackStack() },
             )
         }
         composable(route = Chatbot.route) {

@@ -83,7 +83,42 @@
     <string name="scan_unavailable_recognition_message">El reconocimiento automático no está disponible en este dispositivo. Puedes introducir los valores a mano.</string>
     <string name="scan_retry">Reintentar</string>
 
-    <!-- Review (temporary until the review screen ships) -->
-    <string name="review_placeholder_title">Revisa la medición</string>
-    <string name="review_placeholder_back">Volver</string>
+    <!-- Review -->
+    <string name="review_title">Revisa la medición</string>
+    <string name="review_subtitle_scan">Comprueba que los valores coinciden con la pantalla de tu tensiómetro. Puedes corregirlos antes de guardar.</string>
+    <string name="review_subtitle_partial">No se pudo leer todo. Completa los valores que faltan y comprueba el resto.</string>
+    <string name="review_subtitle_manual">Introduce los valores que muestra tu tensiómetro.</string>
+    <string name="review_systolic_label">Sistólica (SYS)</string>
+    <string name="review_diastolic_label">Diastólica (DIA)</string>
+    <string name="review_pulse_label">Pulso (PUL)</string>
+    <string name="review_unit_mmhg">mmHg</string>
+    <string name="review_unit_ppm">ppm</string>
+    <string name="review_hint_check">Comprueba este valor</string>
+    <string name="review_error_required">Falta este valor</string>
+    <string name="review_error_out_of_range">Debe estar entre %1$d y %2$d</string>
+    <string name="review_error_systolic_not_greater">La sistólica debe ser mayor que la diastólica</string>
+    <string name="review_date_label">Fecha y hora de la medición</string>
+    <string name="review_date_error_future">La fecha no puede ser futura</string>
+    <string name="review_date_error_too_old">La fecha es demasiado antigua</string>
+    <string name="review_date_change">Cambiar</string>
+    <string name="review_confirm">Confirmar y guardar</string>
+    <string name="review_retake">Repetir lectura</string>
+    <string name="review_discard">Descartar</string>
+    <string name="review_saving">Guardando…</string>
+    <string name="review_warnings_title">Antes de guardar</string>
+    <string name="review_warning_very_high">Valores muy elevados. Repite la medición tras 5 minutos de reposo. Si se mantienen o tienes síntomas, busca atención médica urgente.</string>
+    <string name="review_warning_low">Valores bajos. Comprueba que la lectura es correcta.</string>
+    <string name="review_warning_unusual_pulse">Pulso inusual. Comprueba la lectura.</string>
+    <string name="review_warning_unusual_pulse_pressure">La diferencia entre sistólica y diastólica es inusual. Comprueba la lectura.</string>
+    <string name="review_warning_duplicate">Ya guardaste una medición idéntica hace un momento.</string>
+    <string name="review_warnings_review">Revisar</string>
+    <string name="review_warnings_save_anyway">Guardar igualmente</string>
+    <string name="review_discard_title">¿Descartar los cambios?</string>
+    <string name="review_discard_message">Se perderán la lectura y los valores que has editado.</string>
+    <string name="review_discard_confirm">Descartar</string>
+    <string name="review_discard_keep_editing">Seguir editando</string>
+    <string name="review_save_error">No se pudo guardar la medición</string>
+    <string name="review_save_retry">Reintentar</string>
+    <string name="review_date_picker_confirm">Aceptar</string>
+    <string name="review_date_picker_cancel">Cancelar</string>
 </resources>
