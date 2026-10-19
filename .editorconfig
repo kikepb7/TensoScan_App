@@ -1,0 +1,23 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_size = 4
+max_line_length = 120
+ktlint_code_style = intellij_idea
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+# @Composable functions are PascalCase by convention.
+ktlint_function_naming_ignore_when_annotated_with = Composable
+# Legacy UI files are named "*.compose.kt"; they are renamed in the legacy-feature migration (spec A-003).
+ktlint_standard_filename = disabled
+# Constructor injection is written inline: `class X @Inject constructor(...)`.
+ktlint_standard_class-signature = disabled
+
+[*.{xml,yml,yaml,toml,json}]
+indent_size = 2

@@ -21,7 +21,10 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "TensoScan"
+
 include(":app")
 include(":ui")
+include(":presentation")
 include(":domain")
 include(":data")
+include(":core:testing")
