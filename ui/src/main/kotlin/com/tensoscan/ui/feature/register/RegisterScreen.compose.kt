@@ -182,9 +182,9 @@ private fun RegisterFields(
 
 @Composable
 private fun RegisterErrorAndLoading(registerState: RegisterUserState) {
-    if (registerState.error != null) {
+    registerState.error?.let { message ->
         Text(
-            text = registerState.error,
+            text = message,
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.padding(top = Size08),
