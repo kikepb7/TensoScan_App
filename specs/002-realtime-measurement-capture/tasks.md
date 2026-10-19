@@ -83,23 +83,23 @@
 
 ## Fase C — Revisión y guardado local
 
-- [ ] **T-A002-20 · `ReadingInputParser`** (con tests).
-- [ ] **T-A002-21 · Casos de uso de guardado**
+- [x] **T-A002-20 · `ReadingInputParser`** (con tests).
+- [x] **T-A002-21 · Casos de uso de guardado**
   - `ValidateReadingUseCase`, `CheckDuplicateMeasurementUseCase`, `SaveMeasurementUseCase`
     (`editedFields`) e interfaces `MeasurementRepository` y `MeasurementSyncScheduler`.
   - Req.: REQ-A002-30, 31, 34.
-- [ ] **T-A002-22 · `ReviewMeasurementViewModel` + contratos + mapper**
+- [x] **T-A002-22 · `ReviewMeasurementViewModel` + contratos + mapper**
   - Req.: REQ-A002-26…33, 35.
-- [ ] **T-A002-23 · `ReviewMeasurementScreen` / `Content` y componentes**
+- [x] **T-A002-23 · `ReviewMeasurementScreen` / `Content` y componentes**
   - Campos, diálogo de avisos, diálogo de descarte, selector de fecha y hora, y previews.
   - Test de Compose en `androidTest`.
   - Req.: REQ-A002-26…30, 32, 45.
-- [ ] **T-A002-24 · Room v2**
+- [x] **T-A002-24 · Room v2**
   - `MeasurementEntity`, DAO reactivo, `Migration1To2` (ADR-A002-11), esquema exportado y
     `MigrationTestHelper`. Eliminar `fallbackToDestructiveMigration`.
   - Hallazgos: AUD-A-33, 34, 35, 36.
-- [ ] **T-A002-25 · `MeasurementLocalDataSource` + `MeasurementEntityMapper`** (con tests).
-- [ ] **T-A002-26 · `MeasurementRepositoryImpl`** (parte local: `observe`, `save`, `findAround`,
+- [x] **T-A002-25 · `MeasurementLocalDataSource` + `MeasurementEntityMapper`** (con tests).
+- [x] **T-A002-26 · `MeasurementRepositoryImpl`** (parte local: `observe`, `save`, `findAround`,
   `clearLocal`, `observeUnsyncedCount`) y un `NoOpMeasurementSyncScheduler` provisional.
   - Hallazgos: AUD-A-14 (parcial).
 - [ ] **🔎 Punto de control 2**: flujo completo escaneo → revisión → guardado local → historial
@@ -107,27 +107,27 @@
 
 ## Fase D — Sincronización con el backend (requiere B-002 desplegado en un entorno accesible)
 
-- [ ] **T-A002-27 · `MeasurementApi` v1 + DTO + `MeasurementDtoMapper`**
+- [x] **T-A002-27 · `MeasurementApi` v1 + DTO + `MeasurementDtoMapper`**
   - Según `contracts/api-v1.md` §3. Tests de serialización con JSON de ejemplo del contrato.
-- [ ] **T-A002-28 · `MeasurementRemoteDataSource` v1**
+- [x] **T-A002-28 · `MeasurementRemoteDataSource` v1**
   - `suspendRunCatching` + `HttpErrorMapper`, paginación por cursor.
   - Tests con MockWebServer.
   - Hallazgos: AUD-A-13.
-- [ ] **T-A002-29 · `MeasurementSynchronizer` + `SyncMeasurementsWorker` + `WorkManagerMeasurementSyncScheduler`**
+- [x] **T-A002-29 · `MeasurementSynchronizer` + `SyncMeasurementsWorker` + `WorkManagerMeasurementSyncScheduler`**
   - `HiltWorkerFactory` en `Application` (`Configuration.Provider`) y desactivación del
     inicializador por defecto en el manifiesto.
   - Programación al arrancar y tras el login.
   - Tests de la tabla §9.5.
   - Req.: REQ-A002-36…40.
-- [ ] **T-A002-30 · `refresh()` con fusión + propietario de los datos locales**
+- [x] **T-A002-30 · `refresh()` con fusión + propietario de los datos locales**
   - Hallazgos: AUD-A-14 · Req.: REQ-A002-42, §9.5.
-- [ ] **T-A002-31 · Integración con el historial**
+- [x] **T-A002-31 · Integración con el historial**
   - `ObserveMeasurementsUseCase` tipado, indicadores `PENDING` / `SYNC_FAILED`, «Reintentar»
     (`RetryMeasurementSyncUseCase`) y «Eliminar».
   - Retirar `MeasurementModel` legacy, `UploadImageUseCase`, `ImageService` y el flujo de
     subida de la galería en el historial.
   - Req.: REQ-A002-38, 42.
-- [ ] **T-A002-32 · Borrado *offline-aware* + aviso de logout con pendientes**
+- [x] **T-A002-32 · Borrado *offline-aware* + aviso de logout con pendientes**
   - Req.: REQ-A002-41, 43.
 
 ## Fase E — Modelo propio
@@ -136,12 +136,12 @@
 > se completan contra el modelo *dummy* de B-003 (T-B003-10b). T-A002-35 y T-A002-39 pertenecen a la
 > **etapa 2** y requieren el modelo entrenado.
 
-- [ ] **T-A002-33 · `LiteRtDigitDetector`**
+- [x] **T-A002-33 · `LiteRtDigitDetector`**
   - Dependencias LiteRT, `ModelAssetLoader` (sha256 y versión de contrato),
     `LetterboxPreprocessor`, delegate GPU con *fallback* a CPU y calentamiento.
   - Modelo en `data/src/main/assets/models/`.
   - Hallazgos: AUD-A-31 · Req.: REQ-A002-13, 24.
-- [ ] **T-A002-34 · `DetectionDecoder`** (umbral, NMS y deshacer letterbox), con tests de tensores
+- [x] **T-A002-34 · `DetectionDecoder`** (umbral, NMS y deshacer letterbox), con tests de tensores
   sintéticos.
 - [ ] **T-A002-35 · (Etapa 2) Cambiar el primario a `litert`**
   - El respaldo pasa a ser `MlKitDigitDetector`.
