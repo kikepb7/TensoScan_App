@@ -35,14 +35,22 @@ class ScanViewModelTest {
     private val clock = AppClock { now }
     private val detector = ScriptedDigitDetector()
 
-    private val sut = ScanViewModel(
-        prepareDetector = PrepareDetectorUseCase(detector),
-        recognizeFrame = RecognizeFrameUseCase(detector, DisplayLayoutParser(), FrameExposureEvaluator(sampleStep = 1)),
-        sessionFactory = ScanSessionFactory(ReadingValidator(clock)),
-        mapper = ScanUiStateMapper(),
-        dispatchers = TestAppDispatchers(mainDispatcher.dispatcher),
-        clock = clock,
-    )
+    // Lazy on purpose: the ViewModel creates its scope when constructed, which must happen after the extension has
+    // replaced Dispatchers.Main (instance properties are initialised before the extension's beforeEach).
+    private val sut by lazy {
+        ScanViewModel(
+            prepareDetector = PrepareDetectorUseCase(detector),
+            recognizeFrame = RecognizeFrameUseCase(
+                detector,
+                DisplayLayoutParser(),
+                FrameExposureEvaluator(sampleStep = 1),
+            ),
+            sessionFactory = ScanSessionFactory(ReadingValidator(clock)),
+            mapper = ScanUiStateMapper(),
+            dispatchers = TestAppDispatchers(mainDispatcher.dispatcher),
+            clock = clock,
+        )
+    }
 
     private fun granted() = ScanUiAction.PermissionResult(granted = true, shouldShowRationale = false)
 

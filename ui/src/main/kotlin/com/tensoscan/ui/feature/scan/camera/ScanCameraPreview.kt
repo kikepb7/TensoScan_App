@@ -172,9 +172,7 @@ internal fun ScanCameraPreview(
 }
 
 /** Only problems the user can act on are reported; CameraX retries the transient ones by itself. */
-private fun CameraState.StateError.isActionable(): Boolean = type == CameraState.ERROR_TYPE_CRITICAL ||
-    code == CameraState.ERROR_CAMERA_IN_USE ||
-    code == CameraState.ERROR_MAX_CAMERAS_IN_USE
+private fun CameraState.StateError.isActionable(): Boolean = code in ACTIONABLE_ERRORS
 
 private fun CameraState.StateError.toCause(): CameraFailureCause = when (code) {
     CameraState.ERROR_CAMERA_IN_USE, CameraState.ERROR_MAX_CAMERAS_IN_USE -> CameraFailureCause.IN_USE
@@ -197,5 +195,12 @@ private fun meterOnGuide(controller: LifecycleCameraController, previewView: Pre
         .build()
     controller.cameraControl?.startFocusAndMetering(action)
 }
+private val ACTIONABLE_ERRORS = setOf(
+    CameraState.ERROR_CAMERA_IN_USE,
+    CameraState.ERROR_MAX_CAMERAS_IN_USE,
+    CameraState.ERROR_CAMERA_DISABLED,
+    CameraState.ERROR_CAMERA_FATAL_ERROR,
+)
+
 private const val ANALYSIS_THREAD_NAME = "scan-analysis"
 private const val SHUTDOWN_TIMEOUT_MILLIS = 500L
