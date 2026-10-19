@@ -9,7 +9,6 @@
     <string name="blood_pressure_text">Presión arterial</string>
     <string name="pulse_text">Pulso</string>
     <string name="pulse_bpm_text">%1$s BPM</string>
-    <string name="accuracy_text">Confianza</string>
     <string name="login_text">Acceder</string>
     <string name="login_to_continue_text">Por favor, inicie sesión para continuar</string>
     <string name="email_label_text">Email</string>
@@ -28,7 +27,7 @@
     <string name="settings_content_description">Ajustes</string>
     <string name="user_image_content_description">Imagen del usuario</string>
     <string name="type_a_message_text">Escribe un mensaje …</string>
-    <string name="download_pdf_icon_content_description">PDF icon</string>
+    <string name="download_pdf_icon_content_description">Descargar y compartir el informe en PDF</string>
     <string name="clear_text_content_description">Clear text</string>
     <string name="send_message_button_content_description">Enviar</string>
     <string name="name_profile_item">Nombre</string>
@@ -144,6 +143,32 @@
     </plurals>
     <string name="user_logout_unsynced_confirm">Cerrar sesión igualmente</string>
     <string name="user_logout_unsynced_cancel">Cancelar</string>
+
+    <!-- History: classification and chart -->
+    <string name="category_non_elevated">No elevada</string>
+    <string name="category_elevated">Elevada</string>
+    <string name="category_hypertension_range">En rango de hipertensión</string>
+    <string name="category_content_description">Clasificación orientativa: %1$s</string>
+    <string name="summary_classification_disclaimer">Clasificación orientativa basada en lecturas domiciliarias individuales. El diagnóstico requiere varias mediciones y la valoración de un profesional. Fuente: %1$s.</string>
+    <string name="summary_chart_title">Evolución</string>
+    <string name="summary_chart_range_week">7 días</string>
+    <string name="summary_chart_range_month">30 días</string>
+    <string name="summary_chart_range_all">Todo</string>
+    <string name="summary_chart_empty">No hay mediciones en este periodo</string>
+    <string name="summary_chart_unit">mmHg · lpm</string>
+    <string name="summary_chart_series_systolic">Sistólica</string>
+    <string name="summary_chart_series_diastolic">Diastólica</string>
+    <string name="summary_chart_series_pulse">Pulso</string>
+    <string name="summary_chart_content_description">Gráfico de evolución. %1$s. %2$s. %3$s.</string>
+    <string name="summary_chart_series_description">%1$s: mínimo %2$d, máximo %3$d, media %4$d</string>
+    <string name="summary_chart_empty_content_description">Gráfico de evolución sin datos en este periodo</string>
+    <string name="summary_load_failed">No se pudo cargar tu historial</string>
+    <string name="summary_delete_title">¿Eliminar esta medición?</string>
+    <string name="summary_delete_message">%1$s · %2$s. Esta acción no se puede deshacer.</string>
+    <string name="summary_delete_confirm">Eliminar</string>
+    <string name="summary_delete_cancel">Cancelar</string>
+    <string name="summary_report_share_title">Compartir informe</string>
+    <string name="summary_report_no_app">No hay ninguna aplicación para abrir o compartir el PDF</string>
 
     <!-- Account -->
     <string name="common_retry">Reintentar</string>

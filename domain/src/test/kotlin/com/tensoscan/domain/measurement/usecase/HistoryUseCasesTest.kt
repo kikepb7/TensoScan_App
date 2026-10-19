@@ -9,6 +9,7 @@ import com.tensoscan.domain.measurement.model.MeasurementSource
 import com.tensoscan.domain.measurement.model.SyncStatus
 import com.tensoscan.domain.measurement.repository.MeasurementReportRepository
 import com.tensoscan.domain.measurement.repository.MeasurementSyncScheduler
+import com.tensoscan.domain.measurement.repository.ReportFile
 import com.tensoscan.domain.support.FakeMeasurementRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
@@ -86,22 +87,22 @@ class HistoryUseCasesTest {
     fun `When the report is requested then the time zone is passed to the repository`() = runTest {
         var received: String? = null
         val reports = object : MeasurementReportRepository {
-            override suspend fun downloadPdf(timeZoneId: String): Result<ByteArray> {
+            override suspend fun downloadPdf(timeZoneId: String): Result<ReportFile> {
                 received = timeZoneId
-                return Result.success(byteArrayOf(1, 2, 3))
+                return Result.success(ReportFile("reports/report.pdf", "application/pdf"))
             }
         }
 
         val result = DownloadMeasurementsReportUseCase(reports)("Europe/Madrid")
 
         assertEquals(expected = "Europe/Madrid", actual = received)
-        assertEquals(expected = 3, actual = result.getOrThrow().size)
+        assertEquals(expected = "application/pdf", actual = result.getOrThrow().mimeType)
     }
 
     @Test
     fun `When the report fails then the error is returned`() = runTest {
         val reports = object : MeasurementReportRepository {
-            override suspend fun downloadPdf(timeZoneId: String): Result<ByteArray> =
+            override suspend fun downloadPdf(timeZoneId: String): Result<ReportFile> =
                 Result.failure(DomainError.NotFound)
         }
 

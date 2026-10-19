@@ -90,7 +90,7 @@ internal fun entity(
     syncError = null,
 )
 
-private val testJson = Json {
+internal val testJson = Json {
     ignoreUnknownKeys = true
     explicitNulls = false
 }

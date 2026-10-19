@@ -11,13 +11,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -32,10 +29,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.tensoscan.domain.measurement.classification.BloodPressureCategory
 import com.tensoscan.presentation.summary.MeasurementItemUiState
 import com.tensoscan.presentation.summary.SyncUiState
-import com.tensoscan.ui.common.extensions.getStatusColor
-import com.tensoscan.ui.common.extensions.getStatusLabel
+import com.tensoscan.ui.feature.summary.components.BloodPressureCategoryChip
 import com.tensoscan.ui.theme.CardBackgroundColor
 import com.tensoscan.ui.theme.CardLabelTextColor
 import com.tensoscan.ui.theme.ElevationValues.Elevation04
@@ -60,8 +57,6 @@ private val DateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate
 
 @Composable
 fun SummaryCardListItemView(item: MeasurementItemUiState, onDelete: () -> Unit, onRetry: () -> Unit) {
-    val statusColor = getStatusColor(item.systolic)
-    val statusText = getStatusLabel(item.systolic)
     val date = Instant.ofEpochMilli(item.measuredAtEpochMillis).atZone(ZoneId.systemDefault()).format(DateFormatter)
 
     ElevatedCard(
@@ -91,14 +86,7 @@ fun SummaryCardListItemView(item: MeasurementItemUiState, onDelete: () -> Unit, 
                     Text(text = date, style = TensoScanTypography.bodySmall, color = SecondaryTextColor)
                 }
 
-                AssistChip(
-                    onClick = {},
-                    label = { Text(text = statusText, style = TensoScanTypography.bodySmall) },
-                    colors = AssistChipDefaults.assistChipColors(
-                        containerColor = statusColor.copy(alpha = 0.1f),
-                        labelColor = statusColor,
-                    ),
-                )
+                BloodPressureCategoryChip(item.category)
             }
 
             Spacer(modifier = Modifier.height(Size18))
@@ -114,15 +102,6 @@ fun SummaryCardListItemView(item: MeasurementItemUiState, onDelete: () -> Unit, 
                     icon = Icons.Default.Favorite,
                     iconTint = MaterialTheme.colorScheme.primary,
                 )
-
-                item.confidencePercent?.let {
-                    InfoItem(
-                        label = stringResource(RString.accuracy_text),
-                        value = "$it%",
-                        icon = Icons.Default.CheckCircle,
-                        iconTint = MaterialTheme.colorScheme.secondary,
-                    )
-                }
 
                 IconButton(onClick = onDelete) {
                     Icon(
@@ -200,7 +179,15 @@ private fun InfoItem(label: String, value: String, icon: ImageVector, iconTint: 
 @Composable
 private fun SummaryCardPendingPreview() {
     SummaryCardListItemView(
-        item = MeasurementItemUiState("1", 128, 82, 67, 1_760_000_000_000L, 93, SyncUiState.Pending),
+        item = MeasurementItemUiState(
+            "1",
+            128,
+            82,
+            67,
+            1_760_000_000_000L,
+            BloodPressureCategory.ELEVATED,
+            SyncUiState.Pending,
+        ),
         onDelete = {},
         onRetry = {},
     )
@@ -216,7 +203,7 @@ private fun SummaryCardFailedPreview() {
             95,
             80,
             1_760_000_000_000L,
-            null,
+            BloodPressureCategory.HYPERTENSION_RANGE,
             SyncUiState.Failed("MEASUREMENT_INVALID"),
         ),
         onDelete = {},

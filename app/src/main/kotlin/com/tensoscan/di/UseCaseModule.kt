@@ -10,6 +10,7 @@ import com.tensoscan.domain.account.ObserveSessionUseCase
 import com.tensoscan.domain.account.RegisterAccountUseCase
 import com.tensoscan.domain.assistant.AssistantRepository
 import com.tensoscan.domain.assistant.SendAssistantMessageUseCase
+import com.tensoscan.domain.measurement.classification.BloodPressureClassifier
 import com.tensoscan.domain.measurement.model.MeasurementId
 import com.tensoscan.domain.measurement.repository.MeasurementOwnership
 import com.tensoscan.domain.measurement.repository.MeasurementReportRepository
@@ -118,6 +119,9 @@ internal object UseCaseModule {
     @Provides
     fun downloadMeasurementsReportUseCase(repository: MeasurementReportRepository) =
         DownloadMeasurementsReportUseCase(repository)
+
+    @Provides
+    fun bloodPressureClassifier() = BloodPressureClassifier()
 
     @Provides
     fun sendAssistantMessageUseCase(repository: AssistantRepository) = SendAssistantMessageUseCase(repository)

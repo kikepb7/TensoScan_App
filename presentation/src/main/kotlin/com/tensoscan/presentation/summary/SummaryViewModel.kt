@@ -3,6 +3,7 @@ package com.tensoscan.presentation.summary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tensoscan.domain.error.DomainError
+import com.tensoscan.domain.measurement.classification.BloodPressureClassifier
 import com.tensoscan.domain.measurement.model.Measurement
 import com.tensoscan.domain.measurement.model.MeasurementId
 import com.tensoscan.domain.measurement.model.SyncStatus
@@ -12,6 +13,7 @@ import com.tensoscan.domain.measurement.usecase.ObserveMeasurementsUseCase
 import com.tensoscan.domain.measurement.usecase.ObserveUnsyncedCountUseCase
 import com.tensoscan.domain.measurement.usecase.RefreshMeasurementsUseCase
 import com.tensoscan.domain.measurement.usecase.RetryMeasurementSyncUseCase
+import com.tensoscan.domain.time.AppClock
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +26,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 /**
  * History of measurements. It always shows what is on the device (so it works offline), reconciles with the server in
@@ -38,25 +39,44 @@ class SummaryViewModel @Inject constructor(
     private val deleteMeasurement: DeleteMeasurementUseCase,
     private val retryMeasurementSync: RetryMeasurementSyncUseCase,
     private val downloadReport: DownloadMeasurementsReportUseCase,
+    private val classifier: BloodPressureClassifier,
+    private val clock: AppClock,
 ) : ViewModel() {
 
     private val isRefreshing = MutableStateFlow(false)
     private val isDownloadingReport = MutableStateFlow(false)
+    private val loadFailed = MutableStateFlow(false)
+    private val chartRange = MutableStateFlow(ChartRange.LAST_30_DAYS)
+    private val pendingDeletionId = MutableStateFlow<String?>(null)
 
     private val _events = Channel<SummaryUiEvent>(Channel.BUFFERED)
     val events: Flow<SummaryUiEvent> = _events.receiveAsFlow()
 
+    private val screenState = combine(
+        isRefreshing,
+        isDownloadingReport,
+        loadFailed,
+        pendingDeletionId,
+        chartRange,
+        ::ScreenState,
+    )
+
     val uiState: StateFlow<SummaryUiState> = combine(
         observeMeasurements(),
         observeUnsyncedCount(),
-        isRefreshing,
-        isDownloadingReport,
-    ) { measurements, unsynced, refreshing, downloading ->
+        screenState,
+    ) { measurements, unsynced, screen ->
+        val items = measurements.map { it.toItem() }
         SummaryUiState(
-            items = measurements.map { it.toItem() },
-            isRefreshing = refreshing,
-            isDownloadingReport = downloading,
+            isLoading = items.isEmpty() && screen.refreshing,
+            items = items,
+            chart = SummaryChartMapper.map(measurements, screen.range, clock.now()),
+            isRefreshing = screen.refreshing,
+            isDownloadingReport = screen.downloading,
             unsyncedCount = unsynced,
+            loadFailed = screen.loadFailed && items.isEmpty(),
+            pendingDeletion = items.firstOrNull { it.id == screen.pendingDeletionId },
+            classificationReference = classifier.reference,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), SummaryUiState())
 
@@ -67,7 +87,10 @@ class SummaryViewModel @Inject constructor(
     fun onAction(action: SummaryUiAction) {
         when (action) {
             SummaryUiAction.RefreshRequested -> refresh()
-            is SummaryUiAction.DeleteClicked -> delete(action.id)
+            is SummaryUiAction.ChartRangeSelected -> chartRange.value = action.range
+            is SummaryUiAction.DeleteClicked -> pendingDeletionId.value = action.id
+            SummaryUiAction.DeleteDismissed -> pendingDeletionId.value = null
+            SummaryUiAction.DeleteConfirmed -> pendingDeletionId.value?.let { delete(it) }
             is SummaryUiAction.RetryClicked -> retry(action.id)
             is SummaryUiAction.DownloadReportClicked -> download(action.timeZoneId)
         }
@@ -77,19 +100,23 @@ class SummaryViewModel @Inject constructor(
         if (isRefreshing.value) return
         viewModelScope.launch {
             isRefreshing.value = true
-            refreshMeasurements().onFailure { error ->
-                // Being offline is normal for an offline-first app: the list is already on screen.
-                when (error) {
-                    DomainError.Network -> Unit
-                    DomainError.SessionExpired, DomainError.Unauthorized -> emit(SummaryError.SESSION_EXPIRED)
-                    else -> emit(SummaryError.REFRESH_FAILED)
+            refreshMeasurements()
+                .onSuccess { loadFailed.value = false }
+                .onFailure { error ->
+                    // With data on screen a failed refresh is only mentioned; without any, the screen shows the error.
+                    loadFailed.value = true
+                    when (error) {
+                        DomainError.Network -> Unit
+                        DomainError.SessionExpired, DomainError.Unauthorized -> emit(SummaryError.SESSION_EXPIRED)
+                        else -> emit(SummaryError.REFRESH_FAILED)
+                    }
                 }
-            }
             isRefreshing.value = false
         }
     }
 
     private fun delete(id: String) {
+        pendingDeletionId.value = null
         viewModelScope.launch {
             deleteMeasurement(MeasurementId(id)).onFailure { error ->
                 // The measurement stays in the list: it is only removed once the server confirmed (or never had it).
@@ -117,7 +144,7 @@ class SummaryViewModel @Inject constructor(
         viewModelScope.launch {
             isDownloadingReport.value = true
             downloadReport(timeZoneId).fold(
-                onSuccess = { _events.trySend(SummaryUiEvent.ReportReady(it)) },
+                onSuccess = { _events.trySend(SummaryUiEvent.ShareReport(it.path, it.mimeType)) },
                 onFailure = { error ->
                     emit(
                         when (error) {
@@ -143,7 +170,7 @@ class SummaryViewModel @Inject constructor(
         diastolic = reading.diastolic,
         pulse = reading.pulse,
         measuredAtEpochMillis = measuredAt.toEpochMilli(),
-        confidencePercent = recognition?.let { (it.confidence * PERCENT).roundToInt().coerceIn(0, PERCENT) },
+        category = classifier(reading),
         sync = when (val status = syncStatus) {
             SyncStatus.Pending -> SyncUiState.Pending
             SyncStatus.Synced -> SyncUiState.Synced
@@ -151,8 +178,15 @@ class SummaryViewModel @Inject constructor(
         },
     )
 
+    private data class ScreenState(
+        val refreshing: Boolean,
+        val downloading: Boolean,
+        val loadFailed: Boolean,
+        val pendingDeletionId: String?,
+        val range: ChartRange,
+    )
+
     private companion object {
         const val STOP_TIMEOUT_MILLIS = 5_000L
-        const val PERCENT = 100
     }
 }
