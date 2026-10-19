@@ -18,7 +18,7 @@
 | B1 | Verificar las etiquetas de las fotos | Tú | La tabla de 53 lecturas | **Bloquea B y C** |
 | B2 | Herramienta de volcado de detecciones | Claude | — | **No existe aún** |
 | B3 | Línea base de ML Kit con tus fotos | Tú + Claude | B1 + B2 + móvil | Pendiente |
-| C1 | Decidir las correcciones del parser (F1–F3) | Tú | — | **Bloquea C** |
+| C1 | Decidir las correcciones del parser (F1–F3) | Tú | — | ✅ Hecho (contrato 1.1.0) |
 | C2 | Dataset sintético | Claude | C1 | Pendiente |
 | C3 | Entrenar con GPU | Tú | Colab o Kaggle | Pendiente |
 | C4 | Evaluar, exportar y publicar el modelo `beta` (incluye terminar `release`) | Claude | C3 + B1 | Pendiente |
@@ -157,18 +157,17 @@ como validación de producción.
 
 ## Bloque C — Modelo propio (LiteRT)
 
-### C1. Decisiones sobre las reglas de lectura (bloquea C)
+### C1. Reglas de lectura (hecho: contrato 1.1.0)
 
-El generador de datos encontró cuatro problemas en las reglas compartidas (detalle en
-`TensoScan_Backend/ml/README.md` §5). Hay que decidir antes de entrenar, porque cambian los casos
-dorados y el contrato:
+Las correcciones F1–F3 ya están aplicadas en el contrato (`specs/contracts/reading-rules.md` §6), en el
+parser de Python y en el de la app, con 7 casos dorados nuevos que pasan con el mismo resultado en
+los dos lenguajes:
 
-| Id | Problema | Decisión pedida |
-|----|----------|-----------------|
-| **F1** | El parser no une un «1» con su vecino de la izquierda: con tipografía normal solo reconstruye el 54 % de las lecturas normales (121, 81, 71…). | ¿Aprobar la corrección probada (sube la versión del contrato y regenera los casos)? **Recomendado: sí.** |
-| F2 | Con ±8° de giro, las cajas del «1» solapan con las vecinas y el acierto baja al 86–98 %. | Informativo; se mitiga con aumentos al entrenar. |
-| F3 | Los dos puntos y el guion con cajas ajustadas caen por debajo de la altura mínima, y `---` se leería como «sin lectura» en vez de «midiendo». | ¿Anotar cajas de altura completa (como los casos dorados) o ajustar el umbral? |
-| F4 | El convertidor intenta descargar un fichero de GitHub. | Ya resuelto en el pipeline. |
+| Id | Qué se hizo |
+|----|-------------|
+| F1 | Permiso para el hueco previo a un «1» (que depende de la proporción de la ROI, `roi_aspect`) y partición de tandas de 4 a 6 dígitos. Con el generador sintético: fuentes ordinarias 86 % → 99,6 %. |
+| F2 | `GROUP_MAX_OVERLAP_FACTOR` 0,30 → 0,45: el acierto con giro y perspectiva se estabiliza desde 0,45. |
+| F3 | Se mantienen las cajas ajustadas de la guía de CVAT; guiones y dos puntos tienen altura mínima propia y «midiendo» es «al menos 2 guiones». |
 
 ### C2. Dataset sintético (Claude, ~15 min)
 
