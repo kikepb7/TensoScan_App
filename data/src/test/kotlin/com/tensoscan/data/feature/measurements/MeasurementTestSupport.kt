@@ -96,6 +96,12 @@ private val testJson = Json {
 }
 
 internal fun remoteDataSource(server: MockWebServer): MeasurementSyncRemoteDataSource {
+    // url() needs a started server; tests that already started it (or closed it on purpose) are left as they are.
+    try {
+        server.start()
+    } catch (_: IllegalStateException) {
+        // already started
+    }
     val retrofit = Retrofit
         .Builder()
         .baseUrl(server.url("/"))
