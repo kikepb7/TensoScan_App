@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
+    // Type-safe navigation routes are @Serializable classes.
+    implementation(libs.kotlinx.serialization.json)
 
     // CameraX is used only by the scanner UI; no ViewModel ever sees it.
     implementation(libs.androidx.camera.core)

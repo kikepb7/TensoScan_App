@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.tensoscan.presentation.navigation.ScanRoute
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem
 import com.tensoscan.ui.theme.BottomBarContainerColor
 import com.tensoscan.ui.theme.BottomBarIndicatorColor
@@ -44,6 +45,11 @@ fun BottomBarNavigation(items: List<BottomBarItem>, navController: NavHostContro
                     )
                 },
                 onClick = {
+                    if (item is BottomBarItem.Camera) {
+                        // The camera is a full-screen flow, not a tab with its own bottom bar.
+                        navController.navigate(ScanRoute)
+                        return@NavigationBarItem
+                    }
                     navController.navigate(route = item.route) {
                         navController.graph.startDestinationRoute?.let { route ->
                             popUpTo(route = route) {

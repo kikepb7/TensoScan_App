@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.tensoscan.presentation.navigation.ScanRoute
 import com.tensoscan.presentation.summary.SummaryState
 import com.tensoscan.presentation.summary.SummaryViewModel
 import com.tensoscan.ui.common.components.BottomBarNavigation
@@ -50,7 +51,6 @@ import com.tensoscan.ui.common.components.SummaryCardListItemView
 import com.tensoscan.ui.common.components.TopBarView
 import com.tensoscan.ui.common.extensions.openPdfFile
 import com.tensoscan.ui.common.extensions.savePdfToStorage
-import com.tensoscan.ui.common.navigation.Routes
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Chatbot
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
@@ -137,7 +137,7 @@ fun SummaryScreenView(mainNavController: NavHostController) {
                     summaryViewModel.deleteMeasurement(id)
                 }
             },
-            onNewMeasurementClicked = { mainNavController.navigate(Routes.Camera.route) },
+            onNewMeasurementClicked = { mainNavController.navigate(ScanRoute) },
             showMeasurementHistory = { summaryViewModel.getMeasurementHistoryHtml() },
         )
     }

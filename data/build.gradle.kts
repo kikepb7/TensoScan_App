@@ -63,6 +63,10 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.datastore.preferences)
 
+    // On-device recognition (the Latin text model is bundled, so it works offline from the first launch)
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.play.services.tasks)
+
     // Dependency injection (the Hilt Gradle plugin is only needed in :app)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

@@ -45,5 +45,45 @@
     <string name="no_measurements_yet_text">No hay mediciones registradas aún</string>
     <string name="chatbot_avatar_content_description">Avatar del asistente</string>
     <string name="new_measurement_text_button">Nueva medición</string>
-    <string name="scan_coming_soon_text">El escáner en tiempo real estará disponible muy pronto</string>
+
+    <!-- Scanner -->
+    <string name="scan_close_content_description">Cerrar el escáner</string>
+    <string name="scan_torch_off_content_description">Encender la linterna</string>
+    <string name="scan_torch_on_content_description">Apagar la linterna</string>
+    <string name="scan_guidance_align_display">Encaja la pantalla del tensiómetro en el recuadro</string>
+    <string name="scan_guidance_hold_steady">Mantén el móvil quieto</string>
+    <string name="scan_guidance_point_at_display">No veo ningún número. Apunta a la pantalla del tensiómetro</string>
+    <string name="scan_guidance_move_closer">Acércate un poco más</string>
+    <string name="scan_guidance_low_light">Hay poca luz. Prueba con la linterna</string>
+    <string name="scan_guidance_glare">Hay reflejos. Inclina un poco el móvil</string>
+    <string name="scan_guidance_device_measuring">El tensiómetro está midiendo. Espera a que termine</string>
+    <string name="scan_guidance_device_error">El tensiómetro muestra un error. Repite la medición</string>
+    <string name="scan_guidance_timed_out">No consigo una lectura estable</string>
+    <string name="scan_label_systolic">SYS</string>
+    <string name="scan_label_diastolic">DIA</string>
+    <string name="scan_label_pulse">PUL</string>
+    <string name="scan_value_unknown">—</string>
+    <string name="scan_value_content_description">%1$s: %2$s</string>
+    <string name="scan_value_unknown_content_description">sin leer</string>
+    <string name="scan_value_stable_content_description">%1$s, fijado</string>
+    <string name="scan_enter_manually">Introducir a mano</string>
+    <string name="scan_use_partial_reading">Usar lo leído</string>
+    <string name="scan_continue">Continuar</string>
+    <string name="scan_paused_message">El escaneo se ha pausado para ahorrar batería</string>
+    <string name="scan_preparing">Preparando el reconocimiento…</string>
+    <string name="scan_permission_title">Necesitamos la cámara</string>
+    <string name="scan_permission_rationale">TensoScan usa la cámara para leer los valores de la pantalla de tu tensiómetro. Las imágenes no salen del móvil ni se guardan.</string>
+    <string name="scan_permission_denied_permanently">Has denegado el permiso de la cámara. Actívalo en los ajustes del móvil para poder escanear.</string>
+    <string name="scan_permission_grant">Conceder permiso</string>
+    <string name="scan_open_settings">Abrir ajustes</string>
+    <string name="scan_unavailable_camera_title">No se pudo abrir la cámara</string>
+    <string name="scan_unavailable_camera_message">Comprueba que ninguna otra aplicación la está usando e inténtalo de nuevo.</string>
+    <string name="scan_unavailable_camera_in_use_message">La cámara está en uso por otra aplicación. Ciérrala e inténtalo de nuevo.</string>
+    <string name="scan_unavailable_recognition_title">Lectura automática no disponible</string>
+    <string name="scan_unavailable_recognition_message">El reconocimiento automático no está disponible en este dispositivo. Puedes introducir los valores a mano.</string>
+    <string name="scan_retry">Reintentar</string>
+
+    <!-- Review (temporary until the review screen ships) -->
+    <string name="review_placeholder_title">Revisa la medición</string>
+    <string name="review_placeholder_back">Volver</string>
 </resources>

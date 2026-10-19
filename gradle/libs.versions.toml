@@ -25,6 +25,10 @@ room = "2.8.5"
 work = "2.12.0"
 datastore = "1.2.1"
 
+# On-device recognition
+mlkitTextRecognition = "16.0.1"
+playServicesTasks = "18.2.0"
+
 # Kotlin libraries
 coroutines = "1.11.0"
 serialization = "1.11.0"
@@ -79,6 +83,10 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
+
+# On-device recognition
+mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkitTextRecognition" }
+play-services-tasks = { module = "com.google.android.gms:play-services-tasks", version.ref = "playServicesTasks" }
 
 # Dependency injection
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
