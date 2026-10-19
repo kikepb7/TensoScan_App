@@ -146,8 +146,9 @@
 - [ ] **T-A002-35 · (Etapa 2) Cambiar el primario a `litert`**
   - El respaldo pasa a ser `MlKitDigitDetector`.
   - Re-ejecutar la matriz de validación de campo.
-- [ ] **T-A002-36 · Benchmark instrumentado** (`LiteRtDigitDetectorBenchmark`)
+- [x] **T-A002-36 · Benchmark instrumentado** (`LiteRtDigitDetectorBenchmark`)
   - Req.: RNF-A002-03.
+  - Escrito (`data/src/androidTest`); se omite sin modelo y se ejecuta en un dispositivo en la etapa 2.
 
 ## Fase F — Endurecimiento y cierre
 
