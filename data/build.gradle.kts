@@ -66,6 +66,8 @@ dependencies {
     // On-device recognition (the Latin text model is bundled, so it works offline from the first launch)
     implementation(libs.mlkit.text.recognition)
     implementation(libs.play.services.tasks)
+    // In-house digit model (LiteRT, CPU/XNNPACK). A GPU delegate is deliberately not included: the CPU meets the budget.
+    implementation(libs.litert)
 
     // Background upload of pending measurements
     implementation(libs.androidx.work.runtime.ktx)

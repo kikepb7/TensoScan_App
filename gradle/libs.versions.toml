@@ -28,6 +28,7 @@ datastore = "1.2.1"
 # On-device recognition
 mlkitTextRecognition = "16.0.1"
 playServicesTasks = "18.2.0"
+litert = "1.4.0"
 
 # Kotlin libraries
 coroutines = "1.11.0"
@@ -86,6 +87,7 @@ androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version
 
 # On-device recognition
 mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "mlkitTextRecognition" }
+litert = { module = "com.google.ai.edge.litert:litert", version.ref = "litert" }
 play-services-tasks = { module = "com.google.android.gms:play-services-tasks", version.ref = "playServicesTasks" }
 
 # Dependency injection

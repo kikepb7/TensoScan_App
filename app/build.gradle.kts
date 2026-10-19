@@ -16,6 +16,9 @@ val localProperties =
 
 // Debug builds talk to the Android emulator's host loopback unless local.properties overrides it
 // (physical device: tensoscan.apiBaseUrl=http://<computer-ip>:8000/).
+// Which digit detector the scanner tries first: "mlkit" (default) or "litert" (local.properties: tensoscan.detector).
+val debugDetector = localProperties.getProperty("tensoscan.detector", "mlkit")
+
 val debugApiBaseUrl = localProperties.getProperty("tensoscan.apiBaseUrl", "http://10.0.2.2:8000/")
 
 // Production endpoint; placeholder until the deployment is decided (spec A-001, Q-A001-02).
@@ -58,10 +61,13 @@ android {
             buildConfigField("String", "API_BASE_URL", "\"$debugApiBaseUrl\"")
             // The server does not issue refresh tokens until the v1 auth endpoints are deployed (spec B-001).
             buildConfigField("boolean", "REFRESH_TOKEN_ENABLED", "false")
+            buildConfigField("String", "DIGIT_DETECTOR_PRIMARY", "\"$debugDetector\"")
         }
         release {
             buildConfigField("String", "API_BASE_URL", "\"$releaseApiBaseUrl\"")
             buildConfigField("boolean", "REFRESH_TOKEN_ENABLED", "false")
+            // The in-house model becomes the primary detector only after the field validation (A-002 T-A002-35).
+            buildConfigField("String", "DIGIT_DETECTOR_PRIMARY", "\"mlkit\"")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")

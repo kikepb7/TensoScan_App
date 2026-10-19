@@ -2,6 +2,7 @@ package com.tensoscan.di
 
 import com.tensoscan.BuildConfig
 import com.tensoscan.data.config.ApiConfig
+import com.tensoscan.data.config.DetectorConfig
 import com.tensoscan.domain.time.AppClock
 import dagger.Module
 import dagger.Provides
@@ -19,6 +20,10 @@ internal object ConfigModule {
         baseUrl = BuildConfig.API_BASE_URL,
         refreshEnabled = BuildConfig.REFRESH_TOKEN_ENABLED,
     )
+
+    @Provides
+    @Singleton
+    fun detectorConfig(): DetectorConfig = DetectorConfig.fromSetting(BuildConfig.DIGIT_DETECTOR_PRIMARY)
 
     @Provides
     @Singleton
