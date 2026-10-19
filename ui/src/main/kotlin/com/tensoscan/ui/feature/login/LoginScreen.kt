@@ -52,7 +52,7 @@ import com.tensoscan.ui.theme.TensoScanTypography
 
 /** Leaving the screen after a successful sign-in is the app's job: it follows the session, see `NavigationWrapper`. */
 @Composable
-fun LoginScreen(onNavigateToRegister: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+internal fun LoginScreen(onNavigateToRegister: () -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     LoginContent(state = state, onAction = viewModel::onAction, onNavigateToRegister = onNavigateToRegister)
 }

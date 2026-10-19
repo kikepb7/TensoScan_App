@@ -29,7 +29,12 @@ import com.tensoscan.ui.theme.SizeValues.Size40
 import com.tensoscan.ui.theme.TensoScanTypography
 
 @Composable
-fun TensoScanRoundedButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
+internal fun TensoScanRoundedButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
     Button(
         onClick = onClick,
         enabled = enabled,
@@ -42,7 +47,7 @@ fun TensoScanRoundedButton(text: String, onClick: () -> Unit, modifier: Modifier
 }
 
 @Composable
-fun TensoScanOutlinedRoundedButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+internal fun TensoScanOutlinedRoundedButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     OutlinedButton(
         onClick = onClick,
         modifier = modifier.height(Size40),
@@ -55,7 +60,7 @@ fun TensoScanOutlinedRoundedButton(text: String, onClick: () -> Unit, modifier: 
 }
 
 @Composable
-fun TensoScanSendButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
+internal fun TensoScanSendButton(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     ElevatedButton(
         onClick = onClick,
         enabled = enabled,

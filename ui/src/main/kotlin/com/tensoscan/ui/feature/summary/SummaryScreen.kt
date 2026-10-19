@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -53,9 +52,9 @@ import com.tensoscan.presentation.summary.SummaryUiEvent
 import com.tensoscan.presentation.summary.SummaryUiState
 import com.tensoscan.presentation.summary.SummaryViewModel
 import com.tensoscan.ui.common.components.BottomBarNavigation
+import com.tensoscan.ui.common.components.MeasurementCard
 import com.tensoscan.ui.common.components.SummaryActionBar
-import com.tensoscan.ui.common.components.SummaryCardListItemView
-import com.tensoscan.ui.common.components.TopBarView
+import com.tensoscan.ui.common.components.TopBar
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Assistant
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
@@ -82,7 +81,7 @@ import com.tensoscan.ui.R.plurals as RPlurals
 import com.tensoscan.ui.R.string as RString
 
 @Composable
-fun SummaryScreenView(
+internal fun SummaryScreen(
     mainNavController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: SummaryViewModel = hiltViewModel(),
@@ -140,11 +139,10 @@ private fun SummaryScreenContent(
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopBarView(
+            TopBar(
                 topAppBarModel = TopBarModel(
                     title = RString.app_name,
                     image = RDrawable.ic_default_user,
-                    icon = Icons.Default.Settings,
                 ),
             )
         },
@@ -251,7 +249,7 @@ private fun SummaryList(
                     )
                 }
                 items(state.items, key = { it.id }) { measurement ->
-                    SummaryCardListItemView(
+                    MeasurementCard(
                         item = measurement,
                         onDelete = { onAction(SummaryUiAction.DeleteClicked(measurement.id)) },
                         onRetry = { onAction(SummaryUiAction.RetryClicked(measurement.id)) },

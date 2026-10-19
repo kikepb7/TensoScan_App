@@ -1,68 +1,22 @@
 package com.tensoscan.ui.common.navigation.bottomnavigation
 
-import androidx.compose.foundation.layout.size
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.tensoscan.ui.R
 import com.tensoscan.ui.common.navigation.Routes
-import com.tensoscan.ui.theme.SizeValues
 
-sealed class BottomBarItem {
-    abstract val route: String
-    abstract val title: String
-    abstract val icon: @Composable () -> Unit
+/** A tab of the bottom bar. The title is the only description of the icon, so the icon itself is decorative. */
+internal sealed class BottomBarItem(val route: String, @StringRes val titleRes: Int, val icon: ImageVector) {
+    class User : BottomBarItem(Routes.User.route, R.string.nav_user, Icons.Default.Person)
 
-    data class User(
-        override val route: String = Routes.User.route,
-        override val title: String = "USUARIO",
-        override val icon: @Composable () -> Unit = {
-            Icon(
-                painter = rememberVectorPainter(Icons.Default.Person),
-                contentDescription = "User icon",
-                modifier = Modifier.size(SizeValues.Size32),
-            )
-        },
-    ) : BottomBarItem()
+    class Camera : BottomBarItem(Routes.Camera.route, R.string.nav_camera, Icons.Default.CameraAlt)
 
-    data class Camera(
-        override val route: String = Routes.Camera.route,
-        override val title: String = "CÁMARA",
-        override val icon: @Composable () -> Unit = {
-            Icon(
-                painter = rememberVectorPainter(Icons.Default.CameraAlt),
-                contentDescription = "User icon",
-                modifier = Modifier.size(SizeValues.Size32),
-            )
-        },
-    ) : BottomBarItem()
+    class Summary : BottomBarItem(Routes.Summary.route, R.string.nav_history, Icons.Default.History)
 
-    data class Summary(
-        override val route: String = Routes.Summary.route,
-        override val title: String = "HISTORIAL",
-        override val icon: @Composable () -> Unit = {
-            Icon(
-                painter = rememberVectorPainter(Icons.Default.History),
-                contentDescription = "Historical icon",
-                modifier = Modifier.size(SizeValues.Size32),
-            )
-        },
-    ) : BottomBarItem()
-
-    data class Assistant(
-        override val route: String = Routes.Assistant.route,
-        override val title: String = "ASISTENTE",
-        override val icon: @Composable () -> Unit = {
-            Icon(
-                painter = rememberVectorPainter(Icons.AutoMirrored.Filled.Chat),
-                contentDescription = "Assistant icon",
-                modifier = Modifier.size(SizeValues.Size32),
-            )
-        },
-    ) : BottomBarItem()
+    class Assistant : BottomBarItem(Routes.Assistant.route, R.string.nav_assistant, Icons.AutoMirrored.Filled.Chat)
 }

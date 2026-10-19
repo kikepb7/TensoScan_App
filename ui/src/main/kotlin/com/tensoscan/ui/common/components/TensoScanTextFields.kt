@@ -34,7 +34,7 @@ import com.tensoscan.ui.theme.TextFieldBorderColor
 import com.tensoscan.ui.theme.TextFieldTextColor
 
 @Composable
-fun TensoScanOutlinedTextField(
+internal fun TensoScanOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -100,7 +100,7 @@ fun TensoScanOutlinedTextField(
 }
 
 @Composable
-fun TensoScanChatInputField(
+internal fun TensoScanChatInputField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,

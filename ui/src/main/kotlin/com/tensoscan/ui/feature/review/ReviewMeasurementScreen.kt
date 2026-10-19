@@ -54,7 +54,7 @@ import com.tensoscan.ui.theme.TensoScanTheme
 
 /** Stateful entry point: owns the ViewModel (created with the draft that came from the scanner) and the snackbar. */
 @Composable
-fun ReviewMeasurementScreen(
+internal fun ReviewMeasurementScreen(
     route: ReviewMeasurementRoute,
     onRetake: () -> Unit,
     onFinished: () -> Unit,

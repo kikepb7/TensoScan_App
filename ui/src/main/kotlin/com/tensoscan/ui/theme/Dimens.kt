@@ -58,7 +58,7 @@ object BorderValues {
     val Border02 = 2.dp
 }
 
-object Fontalues {
+object FontValues {
     val Font12 = 12.sp
     val Font14 = 14.sp
     val Font16 = 16.sp

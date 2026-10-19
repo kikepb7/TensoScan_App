@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -28,7 +26,7 @@ import com.tensoscan.ui.theme.TopBarTitleColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBarView(topAppBarModel: TopBarModel) {
+internal fun TopBar(topAppBarModel: TopBarModel) {
     TopAppBar(
         title = {
             Row(
@@ -52,15 +50,6 @@ fun TopBarView(topAppBarModel: TopBarModel) {
                     .clip(CircleShape)
                     .border(Border01, TopBarTitleColor, CircleShape),
             )
-        },
-        actions = {
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = topAppBarModel.icon,
-                    contentDescription = stringResource(R.string.settings_content_description),
-                    tint = TopBarTitleColor,
-                )
-            }
         },
         colors =
         TopAppBarDefaults.topAppBarColors(

@@ -69,7 +69,7 @@ import com.tensoscan.ui.theme.TensoScanTypography
  * this screen by itself when the session appears.
  */
 @Composable
-fun RegisterScreen(
+internal fun RegisterScreen(
     onBack: () -> Unit,
     onGoToLogin: (email: String) -> Unit,
     viewModel: RegisterViewModel = hiltViewModel(),

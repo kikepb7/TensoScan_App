@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,7 +46,7 @@ import com.tensoscan.presentation.assistant.ChatMessageUiState
 import com.tensoscan.ui.common.components.BottomBarNavigation
 import com.tensoscan.ui.common.components.TensoScanChatInputField
 import com.tensoscan.ui.common.components.TensoScanSendButton
-import com.tensoscan.ui.common.components.TopBarView
+import com.tensoscan.ui.common.components.TopBar
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Assistant
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
@@ -57,7 +56,7 @@ import com.tensoscan.ui.theme.BackgroundAssistantMessage
 import com.tensoscan.ui.theme.BackgroundScreenColor
 import com.tensoscan.ui.theme.BackgroundUserMessage
 import com.tensoscan.ui.theme.ButtonTextColor
-import com.tensoscan.ui.theme.Fontalues.Font24
+import com.tensoscan.ui.theme.FontValues.Font24
 import com.tensoscan.ui.theme.SizeValues.Size02
 import com.tensoscan.ui.theme.SizeValues.Size04
 import com.tensoscan.ui.theme.SizeValues.Size08
@@ -67,16 +66,15 @@ import com.tensoscan.ui.R.drawable as RDrawable
 import com.tensoscan.ui.R.string as RString
 
 @Composable
-fun AssistantScreen(mainNavController: NavHostController, viewModel: AssistantViewModel = hiltViewModel()) {
+internal fun AssistantScreen(mainNavController: NavHostController, viewModel: AssistantViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
-            TopBarView(
+            TopBar(
                 topAppBarModel = TopBarModel(
                     title = RString.app_name,
                     image = RDrawable.ic_default_user,
-                    icon = Icons.Default.Settings,
                 ),
             )
         },

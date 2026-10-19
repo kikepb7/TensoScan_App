@@ -80,7 +80,7 @@ import com.tensoscan.ui.theme.TensoScanTheme
  * intent, the orientation lock and the camera. The ViewModel only receives facts as [ScanUiAction]s.
  */
 @Composable
-fun ScanScreen(
+internal fun ScanScreen(
     onNavigateToReview: (ReviewMeasurementRoute) -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,

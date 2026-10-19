@@ -1,11 +1,15 @@
 package com.tensoscan.ui.common.components
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -16,10 +20,11 @@ import com.tensoscan.ui.theme.BottomBarContainerColor
 import com.tensoscan.ui.theme.BottomBarIndicatorColor
 import com.tensoscan.ui.theme.BottomBarSelectedIconColor
 import com.tensoscan.ui.theme.BottomBarUnselectedIconColor
+import com.tensoscan.ui.theme.SizeValues
 import com.tensoscan.ui.theme.TensoScanTypography
 
 @Composable
-fun BottomBarNavigation(items: List<BottomBarItem>, navController: NavHostController) {
+internal fun BottomBarNavigation(items: List<BottomBarItem>, navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -32,10 +37,16 @@ fun BottomBarNavigation(items: List<BottomBarItem>, navController: NavHostContro
                     selectedIconColor = BottomBarSelectedIconColor,
                     unselectedIconColor = BottomBarUnselectedIconColor,
                 ),
-                icon = item.icon,
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = null,
+                        modifier = Modifier.size(SizeValues.Size32),
+                    )
+                },
                 label = {
                     Text(
-                        text = item.title,
+                        text = stringResource(item.titleRes),
                         style = TensoScanTypography.labelMedium,
                         color =
                         if (currentDestination?.hierarchy?.any { it.route == item.route } == true) {

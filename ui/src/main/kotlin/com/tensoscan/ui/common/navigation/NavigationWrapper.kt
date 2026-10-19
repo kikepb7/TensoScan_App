@@ -22,8 +22,8 @@ import com.tensoscan.ui.feature.login.LoginScreen
 import com.tensoscan.ui.feature.register.RegisterScreen
 import com.tensoscan.ui.feature.review.ReviewMeasurementScreen
 import com.tensoscan.ui.feature.scan.ScanScreen
-import com.tensoscan.ui.feature.summary.SummaryScreenView
-import com.tensoscan.ui.feature.user.UserScreenView
+import com.tensoscan.ui.feature.summary.SummaryScreen
+import com.tensoscan.ui.feature.user.UserScreen
 
 /**
  * The app's navigation graph. Where the user is follows the session (REQ-A003-01, 02): the start destination depends on
@@ -53,7 +53,7 @@ fun NavigationWrapper(session: AppSession) {
                 },
             )
         }
-        composable(route = User.route) { UserScreenView(mainNavController = navController) }
+        composable(route = User.route) { UserScreen(mainNavController = navController) }
         composable<ScanRoute> {
             ScanScreen(
                 onNavigateToReview = { route ->
@@ -74,7 +74,7 @@ fun NavigationWrapper(session: AppSession) {
             )
         }
         composable(route = Assistant.route) { AssistantScreen(mainNavController = navController) }
-        composable(route = Summary.route) { SummaryScreenView(mainNavController = navController) }
+        composable(route = Summary.route) { SummaryScreen(mainNavController = navController) }
     }
 }
 

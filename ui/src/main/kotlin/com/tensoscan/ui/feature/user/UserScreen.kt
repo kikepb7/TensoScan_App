@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,7 +34,7 @@ import com.tensoscan.presentation.user.UserUiState
 import com.tensoscan.presentation.user.UserViewModel
 import com.tensoscan.ui.common.components.BottomBarNavigation
 import com.tensoscan.ui.common.components.TensoScanOutlinedTextField
-import com.tensoscan.ui.common.components.TopBarView
+import com.tensoscan.ui.common.components.TopBar
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Assistant
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Camera
 import com.tensoscan.ui.common.navigation.bottomnavigation.BottomBarItem.Summary
@@ -53,7 +52,7 @@ import com.tensoscan.ui.R.string as RString
 
 /** Signing out and deleting the account end with the session gone; the app then leaves this screen by itself. */
 @Composable
-fun UserScreenView(mainNavController: NavHostController, viewModel: UserViewModel = hiltViewModel()) {
+internal fun UserScreen(mainNavController: NavHostController, viewModel: UserViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     UserScreenContent(state = state, mainNavController = mainNavController, onAction = viewModel::onAction)
 }
@@ -66,11 +65,10 @@ private fun UserScreenContent(
 ) {
     Scaffold(
         topBar = {
-            TopBarView(
+            TopBar(
                 topAppBarModel = TopBarModel(
                     title = RString.app_name,
                     image = RDrawable.ic_default_user,
-                    icon = Icons.Default.Settings,
                 ),
             )
         },

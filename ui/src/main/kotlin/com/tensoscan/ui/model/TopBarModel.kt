@@ -1,5 +1,6 @@
 package com.tensoscan.ui.model
 
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 
-data class TopBarModel(val title: Int, val image: Int, val icon: ImageVector)
+internal data class TopBarModel(@StringRes val title: Int, @DrawableRes val image: Int)

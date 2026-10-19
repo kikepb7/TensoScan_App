@@ -38,7 +38,7 @@ import androidx.compose.ui.graphics.Color as CustomColor
 import com.tensoscan.ui.R.string as RString
 
 @Composable
-fun SummaryActionBar(modifier: Modifier = Modifier, onNewMeasurementClicked: () -> Unit) {
+internal fun SummaryActionBar(modifier: Modifier = Modifier, onNewMeasurementClicked: () -> Unit) {
     Row(
         modifier =
         Modifier
@@ -46,7 +46,7 @@ fun SummaryActionBar(modifier: Modifier = Modifier, onNewMeasurementClicked: () 
             .height(Size76),
         horizontalArrangement = Arrangement.spacedBy(Size08),
     ) {
-        SummarySelectorUploadPhoto(
+        NewMeasurementButton(
             text = RString.new_measurement_text_button,
             icon = Icons.Default.Add,
             contentDescription = RString.new_measurement_text_button,
@@ -58,7 +58,7 @@ fun SummaryActionBar(modifier: Modifier = Modifier, onNewMeasurementClicked: () 
 }
 
 @Composable
-fun SummarySelectorUploadPhoto(
+internal fun NewMeasurementButton(
     text: Int,
     icon: ImageVector,
     contentDescription: Int,
@@ -101,6 +101,6 @@ fun SummarySelectorUploadPhoto(
 
 @Composable
 @Preview(showBackground = true)
-fun SummaryActionBarPreview() {
+internal fun SummaryActionBarPreview() {
     SummaryActionBar(modifier = Modifier, onNewMeasurementClicked = {})
 }

@@ -56,7 +56,7 @@ private val DateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate
 )
 
 @Composable
-fun SummaryCardListItemView(item: MeasurementItemUiState, onDelete: () -> Unit, onRetry: () -> Unit) {
+internal fun MeasurementCard(item: MeasurementItemUiState, onDelete: () -> Unit, onRetry: () -> Unit) {
     val date = Instant.ofEpochMilli(item.measuredAtEpochMillis).atZone(ZoneId.systemDefault()).format(DateFormatter)
 
     ElevatedCard(
@@ -178,7 +178,7 @@ private fun InfoItem(label: String, value: String, icon: ImageVector, iconTint: 
 @Preview(showBackground = true)
 @Composable
 private fun SummaryCardPendingPreview() {
-    SummaryCardListItemView(
+    MeasurementCard(
         item = MeasurementItemUiState(
             "1",
             128,
@@ -196,7 +196,7 @@ private fun SummaryCardPendingPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun SummaryCardFailedPreview() {
-    SummaryCardListItemView(
+    MeasurementCard(
         item = MeasurementItemUiState(
             "2",
             150,

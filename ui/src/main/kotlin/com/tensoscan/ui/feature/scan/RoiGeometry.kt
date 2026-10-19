@@ -5,17 +5,17 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 /** A rectangle with fractional coordinates; [NormalizedRect] uses `0f..1f`, [ViewRect] uses view pixels. */
-data class NormalizedRect(val left: Float, val top: Float, val right: Float, val bottom: Float) {
+internal data class NormalizedRect(val left: Float, val top: Float, val right: Float, val bottom: Float) {
     val width: Float get() = right - left
     val height: Float get() = bottom - top
 }
 
-data class PixelRect(val left: Int, val top: Int, val right: Int, val bottom: Int) {
+internal data class PixelRect(val left: Int, val top: Int, val right: Int, val bottom: Int) {
     val width: Int get() = right - left
     val height: Int get() = bottom - top
 }
 
-data class ViewRect(val left: Float, val top: Float, val right: Float, val bottom: Float) {
+internal data class ViewRect(val left: Float, val top: Float, val right: Float, val bottom: Float) {
     val width: Float get() = right - left
     val height: Float get() = bottom - top
     val centerX: Float get() = (left + right) / 2f
@@ -29,7 +29,7 @@ data class ViewRect(val left: Float, val top: Float, val right: Float, val botto
  *
  * Pure functions, no Android types, so they are covered by plain JVM tests.
  */
-object RoiGeometry {
+internal object RoiGeometry {
     const val WIDTH_FRACTION = 0.80f
     const val HEIGHT_TO_WIDTH = 1.25f
     const val MAX_HEIGHT_FRACTION = 0.60f
