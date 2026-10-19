@@ -54,12 +54,15 @@ class ScanUiStateMapper @Inject constructor() {
         )
     }
 
-    fun guidance(session: ScanSessionState.Scanning?): ScanGuidance = when {
-        session == null -> ScanGuidance.ALIGN_DISPLAY
-        session.hint != null -> session.hint.toGuidance()
-        session.isTimedOut -> ScanGuidance.TIMED_OUT
-        session.progress > 0f || session.provisional.isNotEmpty() -> ScanGuidance.HOLD_STEADY
-        else -> ScanGuidance.ALIGN_DISPLAY
+    fun guidance(session: ScanSessionState.Scanning?): ScanGuidance {
+        if (session == null) return ScanGuidance.ALIGN_DISPLAY
+        val hint = session.hint
+        return when {
+            hint != null -> hint.toGuidance()
+            session.isTimedOut -> ScanGuidance.TIMED_OUT
+            session.progress > 0f || session.provisional.isNotEmpty() -> ScanGuidance.HOLD_STEADY
+            else -> ScanGuidance.ALIGN_DISPLAY
+        }
     }
 
     private fun value(field: ReadingField, provisional: Map<ReadingField, Int>, stable: Map<ReadingField, Int>) =
