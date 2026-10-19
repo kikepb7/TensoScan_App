@@ -12,6 +12,7 @@
 | Modelo de negocio | Comercial → solo dependencias de licencia permisiva; se descarta Ultralytics/YOLO (AGPL) |
 | Zona horaria | `Europe/Madrid`: migración de fechas legacy y zona por defecto del informe PDF |
 | Datos reales | Fotos de 1 tensiómetro con varios valores; se aportan en la etapa 2. Un solo dispositivo → el modelo se publica en canal `beta`; `production` exige ≥ 3 dispositivos (B-003 §1) |
+| Reglas de lectura (contrato 1.1.0) | Se aprueba la corrección F1 del parser (permiso para el hueco previo a un «1», con `roi_aspect`); F2: `GROUP_MAX_OVERLAP_FACTOR` 0,30 → 0,45; F3: `dash`/`colon` con altura mínima propia y «midiendo» por recuento de guiones. Se mantienen las cajas ajustadas de la guía de CVAT. Detalle en `contracts/reading-rules.md` §6 |
 | Cumplimiento | Datos de salud (RGPD art. 9), supresión de cuenta, consentimiento, valoración regulatoria antes de publicar (constitución C-LEGAL) |
 
 ## 2. Cómo se verifica cada parte (limitaciones reales del entorno)

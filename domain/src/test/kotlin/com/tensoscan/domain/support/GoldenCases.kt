@@ -9,6 +9,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.float
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
@@ -25,6 +26,8 @@ object GoldenCases {
         val systolic: Int?,
         val diastolic: Int?,
         val pulse: Int?,
+        /** Width / height of the ROI the boxes are normalised to (contract 1.1.0); 0.8 when the case does not say. */
+        val roiAspect: Double = 0.8,
     )
 
     data class ValidationCase(
@@ -54,6 +57,7 @@ object GoldenCases {
                 systolic = expected.intOrNull("systolic"),
                 diastolic = expected.intOrNull("diastolic"),
                 pulse = expected.intOrNull("pulse"),
+                roiAspect = (case["roi_aspect"] as? JsonPrimitive)?.doubleOrNull ?: 0.8,
             )
         }
     }

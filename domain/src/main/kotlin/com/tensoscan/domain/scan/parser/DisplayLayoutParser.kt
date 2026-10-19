@@ -14,18 +14,21 @@ class DisplayLayoutParser {
 
     private val grouper = NumberGrouper()
 
-    fun parse(detections: List<SymbolDetection>): FrameReading {
-        val groups = grouper.group(detections)
+    /**
+     * [roiAspect] is the width / height in pixels of the ROI the boxes are normalised to: the boxes hide it, and the
+     * gap that a "1" leaves in front of it depends on it.
+     */
+    fun parse(detections: List<SymbolDetection>, roiAspect: Double = LayoutRules.DEFAULT_ROI_ASPECT): FrameReading {
+        require(roiAspect > 0.0) { "roiAspect must be positive" }
+        val groups = grouper.group(detections, roiAspect)
         val numbers = groups.filterIsInstance<GlyphGroup.Number>()
 
         return when {
             groups.any { it is GlyphGroup.DeviceError } -> FrameReading.empty(FrameReadingStatus.DEVICE_ERROR)
 
             numbers.isEmpty() -> FrameReading.empty(
-                if (groups.any {
-                        it is GlyphGroup.Measuring
-                    }
-                ) {
+                // Dashes sit a cell apart and are far flatter than a digit, so they are counted, not grouped.
+                if (grouper.dashCount(detections) >= LayoutRules.MIN_DASHES) {
                     FrameReadingStatus.MEASURING
                 } else {
                     FrameReadingStatus.NO_READING

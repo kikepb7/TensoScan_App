@@ -19,7 +19,12 @@ class RecognizeFrameUseCase(
         val detections = detector.detect(frame)
         return detections.fold(
             onSuccess = { found ->
-                FrameRecognition(frame.timestampMillis, found, parser.parse(found), exposure)
+                FrameRecognition(
+                    frame.timestampMillis,
+                    found,
+                    parser.parse(found, roiAspect = frame.width.toDouble() / frame.height),
+                    exposure,
+                )
             },
             onFailure = {
                 FrameRecognition(
