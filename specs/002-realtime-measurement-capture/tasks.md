@@ -7,71 +7,74 @@
 
 ## Fase A — Limpieza y núcleo de dominio (puro, sin Android)
 
-- [ ] **T-A002-01 · Retirar la captura legacy**
+- [x] **T-A002-01 · Retirar la captura legacy**
   - Eliminar: guardado en DCIM (`CameraRepositoryImpl.takePhoto/saveMedia/saveVideo`),
     `SavePhotoUseCase`, `recordVideo`, el botón de vídeo, el botón de galería sin efecto, el cambio
     a la cámara frontal, `bitmapToFile`, `PermissionManager`, `PermissionViewModel`, `Constants`
     y el permiso `RECORD_AUDIO` (de los dos manifiestos).
   - La pestaña «Cámara» muestra temporalmente un *placeholder* «Próximamente» hasta T-A002-19.
   - Hallazgos: AUD-A-24, 25, 26, 27, 28, 30, 41 · Req.: REQ-A002-05, 06, 25.
-- [ ] **T-A002-02 · Modelos de dominio de medición**
+- [x] **T-A002-02 · Modelos de dominio de medición**
   - `measurement/model/*` (design §4). `MeasurementModel` (legacy, con `String`) convive marcado
     `@Deprecated` hasta T-A002-31.
   - Hallazgos: AUD-A-32.
-- [ ] **T-A002-03 · `ReadingLimits` + `ReadingValidator`**
+- [x] **T-A002-03 · `ReadingLimits` + `ReadingValidator`**
   - Tarea Gradle `syncContractFixtures` (design §12.1).
   - Tests: todos los `validation_cases`, más `IN_FUTURE` y `TOO_OLD` con un `Clock` falso.
   - Req.: REQ-A002-28 (lógica), contrato `reading-rules.md` §2–3.
-- [ ] **T-A002-04 · Modelos de dominio de escaneo** (`scan/model/*` y `error/DetectorError`).
-- [ ] **T-A002-05 · Interfaz `DigitDetector`** (sin implementación).
-- [ ] **T-A002-06 · `NumberGrouper`** (pasos 1–3 de reading-rules §4.3).
+- [x] **T-A002-04 · Modelos de dominio de escaneo** (`scan/model/*` y `error/DetectorError`).
+- [x] **T-A002-05 · Interfaz `DigitDetector`** (sin implementación).
+- [x] **T-A002-06 · `NumberGrouper`** (pasos 1–3 de reading-rules §4.3).
   - Tests: agrupación de glifos, hueco y solape límite, altura dispar, clasificación de los
     grupos (error, midiendo, hora y número).
-- [ ] **T-A002-07 · `DisplayLayoutParser`**
+- [x] **T-A002-07 · `DisplayLayoutParser`**
   - Tests: **todos** los `parser_cases` (`@TestFactory`) más `primaryHeight`.
   - Req.: REQ-A002-14.
-- [ ] **T-A002-08 · `ReadingStabilizer`**
+- [x] **T-A002-08 · `ReadingStabilizer`**
   - Tests: escenarios de design §12.1.
   - Req.: REQ-A002-16, 17.
-- [ ] **T-A002-09 · `FrameExposureEvaluator`**
+- [x] **T-A002-09 · `FrameExposureEvaluator`**
   - Req.: REQ-A002-21.
-- [ ] **T-A002-10 · `RecognizeFrameUseCase` + `PrepareDetectorUseCase`**
+- [x] **T-A002-10 · `RecognizeFrameUseCase` + `PrepareDetectorUseCase`**
   - Req.: REQ-A002-13, 14.
-- [ ] **T-A002-11 · `ScanSession`**
+- [x] **T-A002-11 · `ScanSession`**
   - Pistas, temporizadores, comandos y congelado tras la captura (design §6.5).
   - Req.: REQ-A002-09, 19, 20, 22, 23.
 
 ## Fase B — Escaneo en vivo con el detector ML Kit
 
-- [ ] **T-A002-12 · `MlKitDigitDetector` + `MlKitSymbolMapper`**
+- [x] **T-A002-12 · `MlKitDigitDetector` + `MlKitSymbolMapper`**
+  - Nota de implementación: se usa el nivel `Text.Symbol` de ML Kit (caja y confianza por carácter); compila con `text-recognition:16.0.1`.
   - Dependencia de ML Kit empaquetado y reglas R8.
   - Tests del mapper (tabla §9.1).
   - Req.: REQ-A002-13.
-- [ ] **T-A002-13 · `FallbackDigitDetector` + `DetectorModule`**
+- [x] **T-A002-13 · `FallbackDigitDetector` + `DetectorModule`**
+  - Nota de implementación: `FallbackDigitDetector` y `UnavailableDigitDetector` viven en `:domain` (Kotlin puro, testeables en JVM); `DetectorModule` está en `:data` (visibilidad `internal`, `ViewModelComponent`) y `ScanModule` en `:app`. No hay flag `BuildConfig`: el primario se cambia en `DetectorModule`.
   - Flag `BuildConfig.DIGIT_DETECTOR_PRIMARY = "mlkit"`. Sin LiteRT todavía, el respaldo es un
     `UnavailableDigitDetector` (devuelve `ModelMissing`).
   - Tests del cambio por 5 fallos y de `prepare` con primario y respaldo.
   - Req.: REQ-A002-24.
-- [ ] **T-A002-14 · Contratos de presentación del escaneo + `ScanUiStateMapper`**
+- [x] **T-A002-14 · Contratos de presentación del escaneo + `ScanUiStateMapper`**
+  - Nota de implementación: los tipos son `public` porque `:presentation` y `:ui` son módulos distintos; las rutas tipadas (`ScanRoute`, `ReviewMeasurementRoute`) viven en `:presentation` para que los ViewModels las emitan y las lean de `SavedStateHandle`.
   - Tests del mapper (roles de las cajas, «—» y guía).
-- [ ] **T-A002-15 · `ScanViewModel`**
+- [x] **T-A002-15 · `ScanViewModel`**
   - Permisos, `prepare`, `onFrame` y cola de comandos, captura, inactividad y «Usar lo leído».
   - Tests con Turbine (design §12.1).
   - Req.: REQ-A002-02…04, 09, 10, 16…24, 44.
-- [ ] **T-A002-16 · `RoiGeometry` + recuadro guía en dp**
+- [x] **T-A002-16 · `RoiGeometry` + recuadro guía en dp**
   - Sustituye `CameraUserAssistantView` (píxeles fijos).
   - Tests JVM de las transformaciones.
   - Hallazgos: AUD-A-29 · Req.: REQ-A002-12.
-- [ ] **T-A002-17 · `ScanCameraPreview` + `ImageProxyFrameConverter`**
+- [x] **T-A002-17 · `ScanCameraPreview` + `ImageProxyFrameConverter`**
   - CameraX `IMAGE_ANALYSIS`, RGBA_8888, `KEEP_ONLY_LATEST`, executor dedicado, linterna,
     enfoque y medición en la ROI, ciclo de vida y errores de cámara.
   - Hallazgos: AUD-A-23 · Req.: REQ-A002-06…11.
-- [ ] **T-A002-18 · `ScanScreen` / `ScanContent` y componentes**
+- [x] **T-A002-18 · `ScanScreen` / `ScanContent` y componentes**
   - Overlay, panel de valores en vivo, banner de guía, contenido de permisos y no disponible,
     acciones de timeout, haptic, `LiveRegion`, bloqueo vertical y `@Preview` de **cada** estado de
     `ScanScreenUiState`.
   - Req.: REQ-A002-15, 18, 44, 45.
-- [ ] **T-A002-19 · Navegación**
+- [x] **T-A002-19 · Navegación**
   - `ScanRoute` y `ReviewMeasurementRoute` (tipadas). FAB «Nueva medición» en el historial y
     pestaña «Cámara» → `ScanRoute`.
   - Req.: REQ-A002-01.
