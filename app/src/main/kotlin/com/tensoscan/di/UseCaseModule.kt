@@ -6,16 +6,19 @@ import com.tensoscan.domain.feature.login.repository.LoginRepository
 import com.tensoscan.domain.feature.login.usecase.GetCurrentUserUseCase
 import com.tensoscan.domain.feature.login.usecase.LoginUseCase
 import com.tensoscan.domain.feature.login.usecase.RegisterUserUseCase
-import com.tensoscan.domain.feature.measurements.repository.MeasurementsRepository
-import com.tensoscan.domain.feature.measurements.usecase.DeleteMeasurementUseCase
-import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementHistoryHtmlUseCase
-import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementHistoryPdfUseCase
-import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementsUseCase
 import com.tensoscan.domain.feature.session.usecase.LogoutUseCase
 import com.tensoscan.domain.measurement.model.MeasurementId
+import com.tensoscan.domain.measurement.repository.MeasurementOwnership
+import com.tensoscan.domain.measurement.repository.MeasurementReportRepository
 import com.tensoscan.domain.measurement.repository.MeasurementRepository
 import com.tensoscan.domain.measurement.repository.MeasurementSyncScheduler
 import com.tensoscan.domain.measurement.usecase.CheckDuplicateMeasurementUseCase
+import com.tensoscan.domain.measurement.usecase.DeleteMeasurementUseCase
+import com.tensoscan.domain.measurement.usecase.DownloadMeasurementsReportUseCase
+import com.tensoscan.domain.measurement.usecase.ObserveMeasurementsUseCase
+import com.tensoscan.domain.measurement.usecase.ObserveUnsyncedCountUseCase
+import com.tensoscan.domain.measurement.usecase.RefreshMeasurementsUseCase
+import com.tensoscan.domain.measurement.usecase.RetryMeasurementSyncUseCase
 import com.tensoscan.domain.measurement.usecase.SaveMeasurementUseCase
 import com.tensoscan.domain.measurement.usecase.ValidateReadingUseCase
 import com.tensoscan.domain.measurement.validation.ReadingValidator
@@ -45,22 +48,11 @@ internal object UseCaseModule {
     fun getCurrentUserUseCase(repository: LoginRepository) = GetCurrentUserUseCase(repository)
 
     @Provides
-    fun getMeasurementsUseCase(repository: MeasurementsRepository) = GetMeasurementsUseCase(repository)
-
-    @Provides
-    fun deleteMeasurementUseCase(repository: MeasurementsRepository) = DeleteMeasurementUseCase(repository)
-
-    @Provides
-    fun getMeasurementHistoryHtmlUseCase(repository: MeasurementsRepository) =
-        GetMeasurementHistoryHtmlUseCase(repository)
-
-    @Provides
-    fun getMeasurementHistoryPdfUseCase(repository: MeasurementsRepository) =
-        GetMeasurementHistoryPdfUseCase(repository)
-
-    @Provides
-    fun logoutUseCase(sessionRepository: SessionRepository, measurementsRepository: MeasurementsRepository) =
-        LogoutUseCase(sessionRepository, measurementsRepository)
+    fun logoutUseCase(
+        sessionRepository: SessionRepository,
+        measurementRepository: MeasurementRepository,
+        ownership: MeasurementOwnership,
+    ) = LogoutUseCase(sessionRepository, measurementRepository, ownership)
 
     @Provides
     fun readingValidator(clock: AppClock) = ReadingValidator(clock)
@@ -85,6 +77,27 @@ internal object UseCaseModule {
         clock = clock,
         idGenerator = { MeasurementId(UUID.randomUUID().toString()) },
     )
+
+    @Provides
+    fun observeMeasurementsUseCase(repository: MeasurementRepository) = ObserveMeasurementsUseCase(repository)
+
+    @Provides
+    fun observeUnsyncedCountUseCase(repository: MeasurementRepository) = ObserveUnsyncedCountUseCase(repository)
+
+    @Provides
+    fun refreshMeasurementsUseCase(repository: MeasurementRepository, syncScheduler: MeasurementSyncScheduler) =
+        RefreshMeasurementsUseCase(repository, syncScheduler)
+
+    @Provides
+    fun deleteMeasurementUseCase(repository: MeasurementRepository) = DeleteMeasurementUseCase(repository)
+
+    @Provides
+    fun retryMeasurementSyncUseCase(repository: MeasurementRepository, syncScheduler: MeasurementSyncScheduler) =
+        RetryMeasurementSyncUseCase(repository, syncScheduler)
+
+    @Provides
+    fun downloadMeasurementsReportUseCase(repository: MeasurementReportRepository) =
+        DownloadMeasurementsReportUseCase(repository)
 
     @Provides
     fun chatbotUseCase(repository: ChatbotRepository) = ChatbotUseCase(repository)

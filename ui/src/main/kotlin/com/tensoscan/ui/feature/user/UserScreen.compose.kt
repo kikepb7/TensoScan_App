@@ -13,18 +13,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,6 +41,7 @@ import com.tensoscan.ui.theme.SizeValues.Size16
 import com.tensoscan.ui.theme.SizeValues.Size24
 import com.tensoscan.ui.theme.TensoScanTypography
 import com.tensoscan.ui.R.drawable as RDrawable
+import com.tensoscan.ui.R.plurals as RPlurals
 import com.tensoscan.ui.R.string as RString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +51,7 @@ fun UserScreenView(onLogoutNavigate: () -> Unit) {
     val userState = userViewModel.state.collectAsStateWithLifecycle()
     val logoutState = userViewModel.logoutState.collectAsStateWithLifecycle()
     val logoutTriggered = remember { mutableStateOf(false) }
+    val confirmLogout = remember { mutableStateOf(false) }
 
     LaunchedEffect(logoutState.value) {
         if (logoutState.value && !logoutTriggered.value) {
@@ -91,7 +96,9 @@ fun UserScreenView(onLogoutNavigate: () -> Unit) {
             }
 
             LogoutButton(
-                onLogout = userViewModel::logout,
+                onLogout = {
+                    if (userState.value.unsyncedCount > 0) confirmLogout.value = true else userViewModel.logout()
+                },
                 modifier =
                 Modifier
                     .align(Alignment.BottomCenter)
@@ -99,6 +106,32 @@ fun UserScreenView(onLogoutNavigate: () -> Unit) {
             )
         }
     }
+
+    if (confirmLogout.value) {
+        UnsyncedLogoutDialog(
+            unsyncedCount = userState.value.unsyncedCount,
+            onConfirm = {
+                confirmLogout.value = false
+                userViewModel.logout()
+            },
+            onDismiss = { confirmLogout.value = false },
+        )
+    }
+}
+
+@Composable
+private fun UnsyncedLogoutDialog(unsyncedCount: Int, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(RString.user_logout_unsynced_title)) },
+        text = { Text(pluralStringResource(RPlurals.user_logout_unsynced_message, unsyncedCount, unsyncedCount)) },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(RString.user_logout_unsynced_cancel)) }
+        },
+        dismissButton = {
+            TextButton(onClick = onConfirm) { Text(stringResource(RString.user_logout_unsynced_confirm)) }
+        },
+    )
 }
 
 @Composable

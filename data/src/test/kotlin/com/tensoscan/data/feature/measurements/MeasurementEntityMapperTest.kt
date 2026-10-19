@@ -2,7 +2,6 @@ package com.tensoscan.data.feature.measurements
 
 import com.tensoscan.data.feature.measurements.utils.toDomain
 import com.tensoscan.data.feature.measurements.utils.toEntity
-import com.tensoscan.data.feature.measurements.utils.toLegacyModel
 import com.tensoscan.domain.measurement.model.BloodPressureReading
 import com.tensoscan.domain.measurement.model.Measurement
 import com.tensoscan.domain.measurement.model.MeasurementId
@@ -93,16 +92,5 @@ class MeasurementEntityMapperTest {
 
         assertEquals(expected = "SYNCED", actual = entity.syncStatus)
         assertNull(entity.syncError)
-    }
-
-    @Test
-    fun `When shown in the legacy history then values are rendered as text`() {
-        val actual = measurement().toLegacyModel()
-
-        assertEquals(expected = "128", actual = actual.highPressure)
-        assertEquals(expected = "82", actual = actual.lowPressure)
-        assertEquals(expected = "67", actual = actual.pulse)
-        assertEquals(expected = "client-1", actual = actual.id)
-        assertEquals(expected = "2026-10-19T08:15:00Z", actual = actual.timestamp)
     }
 }

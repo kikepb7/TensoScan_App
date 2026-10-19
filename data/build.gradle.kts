@@ -67,6 +67,11 @@ dependencies {
     implementation(libs.mlkit.text.recognition)
     implementation(libs.play.services.tasks)
 
+    // Background upload of pending measurements
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+
     // Dependency injection (the Hilt Gradle plugin is only needed in :app)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

@@ -2,106 +2,157 @@ package com.tensoscan.presentation.summary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tensoscan.domain.common.Either
-import com.tensoscan.domain.feature.measurements.model.MeasurementModel
-import com.tensoscan.domain.feature.measurements.usecase.DeleteMeasurementUseCase
-import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementHistoryHtmlUseCase
-import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementHistoryPdfUseCase
-import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementsUseCase
+import com.tensoscan.domain.error.DomainError
+import com.tensoscan.domain.measurement.model.Measurement
+import com.tensoscan.domain.measurement.model.MeasurementId
+import com.tensoscan.domain.measurement.model.SyncStatus
+import com.tensoscan.domain.measurement.usecase.DeleteMeasurementUseCase
+import com.tensoscan.domain.measurement.usecase.DownloadMeasurementsReportUseCase
+import com.tensoscan.domain.measurement.usecase.ObserveMeasurementsUseCase
+import com.tensoscan.domain.measurement.usecase.ObserveUnsyncedCountUseCase
+import com.tensoscan.domain.measurement.usecase.RefreshMeasurementsUseCase
+import com.tensoscan.domain.measurement.usecase.RetryMeasurementSyncUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 /**
- * Legacy history screen state holder. It is rewritten with the full UDF pattern in A-003; for now it only
- * lost the image-upload flow (which required a `Context`/`Uri` and is replaced by on-device scanning).
+ * History of measurements. It always shows what is on the device (so it works offline), reconciles with the server in
+ * the background and reports problems as one-off events.
  */
 @HiltViewModel
 class SummaryViewModel @Inject constructor(
-    private val getMeasurementsUseCase: GetMeasurementsUseCase,
-    private val getMeasurementHistoryHtmlUseCase: GetMeasurementHistoryHtmlUseCase,
-    private val getMeasurementHistoryPdfUseCase: GetMeasurementHistoryPdfUseCase,
-    private val deleteMeasurementUseCase: DeleteMeasurementUseCase,
+    observeMeasurements: ObserveMeasurementsUseCase,
+    observeUnsyncedCount: ObserveUnsyncedCountUseCase,
+    private val refreshMeasurements: RefreshMeasurementsUseCase,
+    private val deleteMeasurement: DeleteMeasurementUseCase,
+    private val retryMeasurementSync: RetryMeasurementSyncUseCase,
+    private val downloadReport: DownloadMeasurementsReportUseCase,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(SummaryState())
-    val state: StateFlow<SummaryState> = _state.asStateFlow()
 
-    fun getMeasurements() {
+    private val isRefreshing = MutableStateFlow(false)
+    private val isDownloadingReport = MutableStateFlow(false)
+
+    private val _events = Channel<SummaryUiEvent>(Channel.BUFFERED)
+    val events: Flow<SummaryUiEvent> = _events.receiveAsFlow()
+
+    val uiState: StateFlow<SummaryUiState> = combine(
+        observeMeasurements(),
+        observeUnsyncedCount(),
+        isRefreshing,
+        isDownloadingReport,
+    ) { measurements, unsynced, refreshing, downloading ->
+        SummaryUiState(
+            items = measurements.map { it.toItem() },
+            isRefreshing = refreshing,
+            isDownloadingReport = downloading,
+            unsyncedCount = unsynced,
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS), SummaryUiState())
+
+    init {
+        refresh()
+    }
+
+    fun onAction(action: SummaryUiAction) {
+        when (action) {
+            SummaryUiAction.RefreshRequested -> refresh()
+            is SummaryUiAction.DeleteClicked -> delete(action.id)
+            is SummaryUiAction.RetryClicked -> retry(action.id)
+            is SummaryUiAction.DownloadReportClicked -> download(action.timeZoneId)
+        }
+    }
+
+    private fun refresh() {
+        if (isRefreshing.value) return
         viewModelScope.launch {
-            getMeasurementsUseCase.getMeasurements().collect { result ->
-                when (result) {
-                    is Either.Error -> _state.update { it.copy(errorMessage = result.error.toString()) }
-                    is Either.Success -> _state.update { it.copy(measurements = result.data) }
+            isRefreshing.value = true
+            refreshMeasurements().onFailure { error ->
+                // Being offline is normal for an offline-first app: the list is already on screen.
+                when (error) {
+                    DomainError.Network -> Unit
+                    DomainError.SessionExpired, DomainError.Unauthorized -> emit(SummaryError.SESSION_EXPIRED)
+                    else -> emit(SummaryError.REFRESH_FAILED)
                 }
             }
+            isRefreshing.value = false
         }
     }
 
-    fun getMeasurementHistoryHtml() {
+    private fun delete(id: String) {
         viewModelScope.launch {
-            when (val result = getMeasurementHistoryHtmlUseCase.getMeasurementHistoryHtml()) {
-                is Either.Success -> _state.update { it.copy(measurementHistoryHtml = result.data) }
-                is Either.Error -> _state.update { it.copy(errorMessage = "Error al cargar el histórico") }
+            deleteMeasurement(MeasurementId(id)).onFailure { error ->
+                // The measurement stays in the list: it is only removed once the server confirmed (or never had it).
+                emit(
+                    if (error ==
+                        DomainError.Network
+                    ) {
+                        SummaryError.DELETE_NEEDS_NETWORK
+                    } else {
+                        SummaryError.DELETE_FAILED
+                    },
+                )
             }
         }
     }
 
-    fun getMeasurementHistoryPdf() {
+    private fun retry(id: String) {
         viewModelScope.launch {
-            when (val result = getMeasurementHistoryPdfUseCase.getMeasurementHistoryPdf()) {
-                is Either.Success -> _state.update { it.copy(pdfData = result.data) }
-                is Either.Error -> _state.update { it.copy(errorMessage = "Error al descargar el PDF") }
-            }
+            retryMeasurementSync(MeasurementId(id)).onFailure { emit(SummaryError.DELETE_FAILED) }
         }
     }
 
-    fun resetHistoricalHtml() {
-        _state.update { it.copy(measurementHistoryHtml = null) }
-    }
-
-    fun deleteMeasurement(measurementId: String) {
+    private fun download(timeZoneId: String) {
+        if (isDownloadingReport.value) return
         viewModelScope.launch {
-            when (val result = deleteMeasurementUseCase.deleteMeasurement(measurementId = measurementId)) {
-                is Either.Success -> {
-                    getMeasurements()
-                }
-
-                is Either.Error -> {
-                    _state.update {
-                        it.copy(
-                            errorMessage = "Error al eliminar la medición ${result.error}",
-                        )
-                    }
-                }
-            }
+            isDownloadingReport.value = true
+            downloadReport(timeZoneId).fold(
+                onSuccess = { _events.trySend(SummaryUiEvent.ReportReady(it)) },
+                onFailure = { error ->
+                    emit(
+                        when (error) {
+                            DomainError.NotFound -> SummaryError.REPORT_EMPTY
+                            DomainError.Network -> SummaryError.REPORT_NEEDS_NETWORK
+                            DomainError.SessionExpired, DomainError.Unauthorized -> SummaryError.SESSION_EXPIRED
+                            else -> SummaryError.REPORT_FAILED
+                        },
+                    )
+                },
+            )
+            isDownloadingReport.update { false }
         }
     }
-}
 
-data class SummaryState(
-    val measurements: List<MeasurementModel> = emptyList(),
-    val measurementHistoryHtml: String? = null,
-    val pdfData: ByteArray? = null,
-    val errorMessage: String? = null,
-) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is SummaryState) return false
-        return measurements == other.measurements &&
-            measurementHistoryHtml == other.measurementHistoryHtml &&
-            pdfData.contentEquals(other.pdfData) &&
-            errorMessage == other.errorMessage
+    private fun emit(error: SummaryError) {
+        _events.trySend(SummaryUiEvent.ShowError(error))
     }
 
-    override fun hashCode(): Int {
-        var result = measurements.hashCode()
-        result = 31 * result + (measurementHistoryHtml?.hashCode() ?: 0)
-        result = 31 * result + (pdfData?.contentHashCode() ?: 0)
-        result = 31 * result + (errorMessage?.hashCode() ?: 0)
-        return result
+    private fun Measurement.toItem() = MeasurementItemUiState(
+        id = id.value,
+        systolic = reading.systolic,
+        diastolic = reading.diastolic,
+        pulse = reading.pulse,
+        measuredAtEpochMillis = measuredAt.toEpochMilli(),
+        confidencePercent = recognition?.let { (it.confidence * PERCENT).roundToInt().coerceIn(0, PERCENT) },
+        sync = when (val status = syncStatus) {
+            SyncStatus.Pending -> SyncUiState.Pending
+            SyncStatus.Synced -> SyncUiState.Synced
+            is SyncStatus.Failed -> SyncUiState.Failed(status.reason)
+        },
+    )
+
+    private companion object {
+        const val STOP_TIMEOUT_MILLIS = 5_000L
+        const val PERCENT = 100
     }
 }

@@ -2,7 +2,6 @@ package com.tensoscan.di
 
 import com.tensoscan.BuildConfig
 import com.tensoscan.data.config.ApiConfig
-import com.tensoscan.domain.measurement.repository.MeasurementSyncScheduler
 import com.tensoscan.domain.time.AppClock
 import dagger.Module
 import dagger.Provides
@@ -24,9 +23,4 @@ internal object ConfigModule {
     @Provides
     @Singleton
     fun appClock(): AppClock = AppClock { Instant.now() }
-
-    /** Placeholder until the background synchronisation exists: measurements simply stay `PENDING` on the device. */
-    @Provides
-    @Singleton
-    fun measurementSyncScheduler(): MeasurementSyncScheduler = MeasurementSyncScheduler { }
 }

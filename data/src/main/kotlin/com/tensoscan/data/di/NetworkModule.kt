@@ -4,7 +4,7 @@ import com.tensoscan.data.config.ApiConfig
 import com.tensoscan.data.feature.chatbot.service.ChatbotService
 import com.tensoscan.data.feature.login.service.AuthApi
 import com.tensoscan.data.feature.login.service.UserApi
-import com.tensoscan.data.feature.measurements.service.MeasurementsService
+import com.tensoscan.data.feature.measurements.remote.MeasurementApi
 import com.tensoscan.data.network.AuthInterceptor
 import com.tensoscan.data.network.AuthenticatedApi
 import com.tensoscan.data.network.PublicApi
@@ -83,8 +83,8 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun measurementsService(@AuthenticatedApi retrofit: Retrofit): MeasurementsService =
-        retrofit.create(MeasurementsService::class.java)
+    fun measurementApi(@AuthenticatedApi retrofit: Retrofit): MeasurementApi =
+        retrofit.create(MeasurementApi::class.java)
 
     @Provides
     @Singleton

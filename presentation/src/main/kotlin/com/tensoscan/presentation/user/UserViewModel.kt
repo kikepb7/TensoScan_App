@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tensoscan.domain.feature.login.usecase.GetCurrentUserUseCase
 import com.tensoscan.domain.feature.session.usecase.LogoutUseCase
+import com.tensoscan.domain.measurement.usecase.ObserveUnsyncedCountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class UserViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val observeUnsyncedCount: ObserveUnsyncedCountUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(UserUiState())
     val state = _state.asStateFlow()
@@ -24,6 +26,10 @@ class UserViewModel @Inject constructor(
 
     init {
         loadUserData()
+        // Signing out discards what is not on the server yet, so the screen warns when there is something to lose.
+        viewModelScope.launch {
+            observeUnsyncedCount().collect { count -> _state.update { it.copy(unsyncedCount = count) } }
+        }
     }
 
     private fun loadUserData() {
@@ -51,4 +57,9 @@ class UserViewModel @Inject constructor(
     }
 }
 
-data class UserUiState(val name: String = "", val lastName: String = "", val email: String = "")
+data class UserUiState(
+    val name: String = "",
+    val lastName: String = "",
+    val email: String = "",
+    val unsyncedCount: Int = 0,
+)

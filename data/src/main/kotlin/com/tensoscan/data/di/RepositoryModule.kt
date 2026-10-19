@@ -2,11 +2,11 @@ package com.tensoscan.data.di
 
 import com.tensoscan.data.feature.chatbot.repository.ChatbotRepositoryImpl
 import com.tensoscan.data.feature.login.repository.LoginRepositoryImpl
+import com.tensoscan.data.feature.measurements.repository.MeasurementReportRepositoryImpl
 import com.tensoscan.data.feature.measurements.repository.MeasurementRepositoryImpl
-import com.tensoscan.data.feature.measurements.repository.MeasurementsRepositoryImpl
 import com.tensoscan.domain.feature.chatbot.repository.ChatbotRepository
 import com.tensoscan.domain.feature.login.repository.LoginRepository
-import com.tensoscan.domain.feature.measurements.repository.MeasurementsRepository
+import com.tensoscan.domain.measurement.repository.MeasurementReportRepository
 import com.tensoscan.domain.measurement.repository.MeasurementRepository
 import dagger.Binds
 import dagger.Module
@@ -22,11 +22,10 @@ internal abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun measurementsRepository(impl: MeasurementsRepositoryImpl): MeasurementsRepository
+    abstract fun measurementRepository(impl: MeasurementRepositoryImpl): MeasurementRepository
 
     @Binds
-    @Singleton
-    abstract fun measurementRepository(impl: MeasurementRepositoryImpl): MeasurementRepository
+    abstract fun measurementReportRepository(impl: MeasurementReportRepositoryImpl): MeasurementReportRepository
 
     @Binds
     abstract fun chatbotRepository(impl: ChatbotRepositoryImpl): ChatbotRepository

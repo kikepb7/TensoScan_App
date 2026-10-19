@@ -8,12 +8,10 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.FileProvider
-import com.tensoscan.ui.model.PredictionUiModel
 import com.tensoscan.ui.theme.BackgroundGreenPressureState
 import com.tensoscan.ui.theme.BackgroundRedPressureState
 import com.tensoscan.ui.theme.BackgroundYellowPressureState
 import java.io.File
-import java.util.Locale
 
 @Composable
 fun getStatusColor(highPressure: Int): Color = when {
@@ -27,10 +25,6 @@ fun getStatusLabel(highPressure: Int): String = when {
     highPressure in 120..139 -> "Alerta"
     else -> "Peligro"
 }
-
-fun PredictionUiModel.formattedConfidence(): String = confidence.toFloatOrNull()?.let {
-    String.format(Locale.US, "%.2f", it)
-} ?: confidence
 
 fun savePdfToStorage(context: Context, pdfData: ByteArray) {
     try {

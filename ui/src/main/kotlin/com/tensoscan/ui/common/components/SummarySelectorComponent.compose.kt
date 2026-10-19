@@ -38,11 +38,7 @@ import androidx.compose.ui.graphics.Color as CustomColor
 import com.tensoscan.ui.R.string as RString
 
 @Composable
-fun SummaryActionBar(
-    modifier: Modifier = Modifier,
-    onNewMeasurementClicked: () -> Unit,
-    showMeasurementHistory: () -> Unit,
-) {
+fun SummaryActionBar(modifier: Modifier = Modifier, onNewMeasurementClicked: () -> Unit) {
     Row(
         modifier =
         Modifier
@@ -57,14 +53,6 @@ fun SummaryActionBar(
             color = ButtonUploadPhotoColor,
             modifier = Modifier.weight(weight = 1f),
             onClick = onNewMeasurementClicked,
-        )
-        SummarySelectorUploadPhoto(
-            text = RString.show_measurement_history_button,
-            icon = Icons.Default.History,
-            contentDescription = RString.show_measurement_history_button,
-            color = ButtonGetReportsColor,
-            modifier = Modifier.weight(weight = 1f),
-            onClick = showMeasurementHistory,
         )
     }
 }
@@ -114,5 +102,5 @@ fun SummarySelectorUploadPhoto(
 @Composable
 @Preview(showBackground = true)
 fun SummaryActionBarPreview() {
-    SummaryActionBar(modifier = Modifier, {}, {})
+    SummaryActionBar(modifier = Modifier, onNewMeasurementClicked = {})
 }

@@ -1,7 +1,6 @@
 package com.tensoscan.data.feature.measurements.utils
 
 import com.tensoscan.data.feature.measurements.database.entities.MeasurementEntity
-import com.tensoscan.domain.feature.measurements.model.MeasurementModel
 import com.tensoscan.domain.measurement.model.BloodPressureReading
 import com.tensoscan.domain.measurement.model.Measurement
 import com.tensoscan.domain.measurement.model.MeasurementId
@@ -66,14 +65,3 @@ private fun SyncStatus.toColumn(): String = when (this) {
 
 private fun String.toFieldSet(): Set<ReadingField> =
     split(FIELD_SEPARATOR).filter { it.isNotBlank() }.mapTo(mutableSetOf()) { ReadingField.valueOf(it) }
-
-/** Temporary adapter so the legacy history screen can show local measurements until it is rewritten (A-002 fase D). */
-internal fun Measurement.toLegacyModel(): MeasurementModel = MeasurementModel(
-    id = id.value,
-    filename = "",
-    highPressure = reading.systolic.toString(),
-    lowPressure = reading.diastolic.toString(),
-    pulse = reading.pulse.toString(),
-    confidence = recognition?.confidence?.toString().orEmpty(),
-    timestamp = measuredAt.toString(),
-)

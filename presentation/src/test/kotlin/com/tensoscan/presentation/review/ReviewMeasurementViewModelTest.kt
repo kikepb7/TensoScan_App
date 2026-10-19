@@ -151,7 +151,9 @@ class ReviewMeasurementViewModelTest {
     fun `When the reading is dangerously high then saving waits for the user to acknowledge`() =
         runTest(mainDispatcher.dispatcher) {
             keepHot()
-            sut.onAction(ReviewMeasurementUiAction.SystolicChanged("190"))
+            // 175/122 trips only the "very high" rule (diastolic >= 120): the pulse pressure stays normal.
+            sut.onAction(ReviewMeasurementUiAction.SystolicChanged("175"))
+            sut.onAction(ReviewMeasurementUiAction.DiastolicChanged("122"))
 
             sut.onAction(ReviewMeasurementUiAction.ConfirmClicked)
 
@@ -166,14 +168,15 @@ class ReviewMeasurementViewModelTest {
 
                 assertEquals(expected = ReviewMeasurementUiEvent.NavigateToHistoryAfterSave, actual = awaitItem())
             }
-            assertEquals(expected = 190, actual = repository.saved.single().reading.systolic)
+            assertEquals(expected = 175, actual = repository.saved.single().reading.systolic)
         }
 
     @Test
     fun `When the user chooses to review the warnings then the dialog closes and nothing is saved`() =
         runTest(mainDispatcher.dispatcher) {
             keepHot()
-            sut.onAction(ReviewMeasurementUiAction.SystolicChanged("190"))
+            sut.onAction(ReviewMeasurementUiAction.SystolicChanged("175"))
+            sut.onAction(ReviewMeasurementUiAction.DiastolicChanged("122"))
             sut.onAction(ReviewMeasurementUiAction.ConfirmClicked)
 
             sut.onAction(ReviewMeasurementUiAction.ReviewWarningsClicked)

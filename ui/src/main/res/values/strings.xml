@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">TensoScan</string>
     <string name="scan_display_text_button">Escanear dispositivo</string>
-    <string name="show_measurement_history_button">Ver histórico</string>
     <string name="button_scan_display_content_description">Botón para escanear dispositivo de medida</string>
     <string name="button_write_manually_content_description">Botón para escanear dispositivo de medida</string>
     <string name="remove_card_icon_content_description">Remove card icon</string>
@@ -121,4 +120,28 @@
     <string name="review_save_retry">Reintentar</string>
     <string name="review_date_picker_confirm">Aceptar</string>
     <string name="review_date_picker_cancel">Cancelar</string>
+
+    <!-- History -->
+    <string name="summary_sync_pending">Pendiente de subir</string>
+    <string name="summary_sync_failed">El servidor no aceptó esta medición</string>
+    <string name="summary_sync_retry">Reintentar</string>
+    <plurals name="summary_unsynced_count">
+        <item quantity="one">%1$d medición sin subir</item>
+        <item quantity="other">%1$d mediciones sin subir</item>
+    </plurals>
+    <string name="summary_error_session_expired">Tu sesión ha caducado. Inicia sesión de nuevo para sincronizar: tus mediciones están a salvo en el móvil.</string>
+    <string name="summary_error_refresh_failed">No se pudo actualizar el historial</string>
+    <string name="summary_error_delete_failed">No se pudo eliminar la medición</string>
+    <string name="summary_error_delete_needs_network">Necesitas conexión para eliminar una medición que ya está en el servidor</string>
+    <string name="summary_error_report_failed">No se pudo generar el informe</string>
+    <string name="summary_error_report_empty">Aún no hay mediciones para el informe</string>
+    <string name="summary_error_report_needs_network">Necesitas conexión para descargar el informe</string>
+    <string name="summary_report_loading_content_description">Descargando informe</string>
+    <string name="user_logout_unsynced_title">Hay mediciones sin subir</string>
+    <plurals name="user_logout_unsynced_message">
+        <item quantity="one">Tienes %1$d medición que todavía no está en el servidor. Si cierras sesión ahora, se perderá.</item>
+        <item quantity="other">Tienes %1$d mediciones que todavía no están en el servidor. Si cierras sesión ahora, se perderán.</item>
+    </plurals>
+    <string name="user_logout_unsynced_confirm">Cerrar sesión igualmente</string>
+    <string name="user_logout_unsynced_cancel">Cancelar</string>
 </resources>

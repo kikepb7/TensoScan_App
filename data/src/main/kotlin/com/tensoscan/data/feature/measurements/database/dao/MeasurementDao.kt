@@ -30,6 +30,19 @@ internal interface MeasurementDao {
     )
     suspend fun updateSyncStatus(clientId: String, status: String, remoteId: String?, error: String?)
 
+    @Query("SELECT * FROM measurements WHERE client_id = :clientId")
+    suspend fun findByClientId(clientId: String): MeasurementEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(measurements: List<MeasurementEntity>)
+
+    /** Removes synchronised rows the server no longer has (deleted from another device). */
+    @Query("DELETE FROM measurements WHERE sync_status = 'SYNCED' AND client_id NOT IN (:keepClientIds)")
+    suspend fun deleteSyncedNotIn(keepClientIds: List<String>)
+
+    @Query("DELETE FROM measurements WHERE sync_status = 'SYNCED'")
+    suspend fun deleteAllSynced()
+
     @Query("DELETE FROM measurements WHERE client_id = :clientId")
     suspend fun deleteByClientId(clientId: String)
 

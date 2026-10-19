@@ -7,7 +7,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.tensoscan.presentation.navigation.ReviewMeasurementRoute
 import com.tensoscan.presentation.navigation.ScanRoute
-import com.tensoscan.ui.common.components.MeasurementsWebViewScreen
 import com.tensoscan.ui.common.navigation.Routes.Chatbot
 import com.tensoscan.ui.common.navigation.Routes.Login
 import com.tensoscan.ui.common.navigation.Routes.Register
@@ -61,10 +60,6 @@ fun NavigationWrapper() {
         }
         composable(route = Chatbot.route) {
             ChatbotScreenView(mainNavController = mainNavController)
-        }
-        composable("webview/{htmlContent}") { backStackEntry ->
-            val htmlContent = backStackEntry.arguments?.getString("htmlContent") ?: ""
-            MeasurementsWebViewScreen(url = htmlContent)
         }
         composable(route = Summary.route) {
             SummaryScreenView(mainNavController = mainNavController)
