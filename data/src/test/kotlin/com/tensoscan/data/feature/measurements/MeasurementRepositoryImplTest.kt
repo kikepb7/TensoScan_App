@@ -96,7 +96,7 @@ class MeasurementRepositoryImplTest {
         sut.save(measurement("a"))
         sut.save(measurement("b"))
 
-        sut.delete("a").getOrThrow()
+        sut.delete(MeasurementId("a")).getOrThrow()
 
         assertEquals(expected = listOf("b"), actual = rows.value.map { it.clientId })
     }
