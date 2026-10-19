@@ -163,7 +163,7 @@ private fun InfoItem(label: String, value: String, icon: ImageVector, iconTint: 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = icon,
-                contentDescription = label,
+                contentDescription = null,
                 tint = iconTint,
                 modifier = Modifier.size(Size20),
             )

@@ -30,9 +30,9 @@ En paralelo, se refactorizan ambos repositorios para seguir las buenas práctica
 | ID | Spec | Tipo | Depende de | Estado |
 |----|------|------|-----------|--------|
 | 000 | [Auditoría del estado actual](000-baseline-audit/audit.md) | Análisis | — | ✅ Redactada |
-| 001 | [Fundación de plataforma](001-platform-foundation/requirements.md) | Refactor | 000 | 👀 En revisión |
-| 002 | [Captura de medición en tiempo real](002-realtime-measurement-capture/requirements.md) | Feature | 001 · Backend 002 (sync) · Backend 003 (modelo final) | 👀 En revisión |
-| 003 | [Migración de features existentes](003-legacy-features-migration/requirements.md) | Refactor | 001 | 👀 En revisión |
+| 001 | [Fundación de plataforma](001-platform-foundation/requirements.md) | Refactor | 000 | 🚧 En implementación |
+| 002 | [Captura de medición en tiempo real](002-realtime-measurement-capture/requirements.md) | Feature | 001 · Backend 002 (sync) · Backend 003 (modelo final) | 🚧 En implementación |
+| 003 | [Migración de features existentes](003-legacy-features-migration/requirements.md) | Refactor | 001 | 🚧 En implementación |
 
 Cada spec contiene:
 
