@@ -127,7 +127,11 @@
 - [ ] **T-A002-32 · Borrado *offline-aware* + aviso de logout con pendientes**
   - Req.: REQ-A002-41, 43.
 
-## Fase E — Modelo propio (requiere un artefacto de B-003 ≥ 1.0.0)
+## Fase E — Modelo propio
+
+> **Reparto por etapas** (`implementation-plan.md`): T-A002-33, 34 y 36 pertenecen a la **etapa 1** y
+> se completan contra el modelo *dummy* de B-003 (T-B003-10b). T-A002-35 y T-A002-39 pertenecen a la
+> **etapa 2** y requieren el modelo entrenado.
 
 - [ ] **T-A002-33 · `LiteRtDigitDetector`**
   - Dependencias LiteRT, `ModelAssetLoader` (sha256 y versión de contrato),
@@ -136,7 +140,7 @@
   - Hallazgos: AUD-A-31 · Req.: REQ-A002-13, 24.
 - [ ] **T-A002-34 · `DetectionDecoder`** (umbral, NMS y deshacer letterbox), con tests de tensores
   sintéticos.
-- [ ] **T-A002-35 · Cambiar el primario a `litert`**
+- [ ] **T-A002-35 · (Etapa 2) Cambiar el primario a `litert`**
   - El respaldo pasa a ser `MlKitDigitDetector`.
   - Re-ejecutar la matriz de validación de campo.
 - [ ] **T-A002-36 · Benchmark instrumentado** (`LiteRtDigitDetectorBenchmark`)
@@ -151,7 +155,7 @@
   - fps efectivos, memoria, tamaño de APK y tiempo de arranque del detector en el dispositivo de
     referencia y en gama baja. Anotarlo en `validation-report.md`.
   - Req.: RNF-A002-01…08.
-- [ ] **T-A002-39 · Validación de campo** (design §12.3) y `validation-report.md`, con la decisión
+- [ ] **T-A002-39 · (Etapa 2) Validación de campo** (design §12.3) y `validation-report.md`, con la decisión
   documentada sobre ADR-A002-04.
 - [ ] **T-A002-40 · Documentación**
   - README (flujo nuevo, reconocimiento en el dispositivo y privacidad) y capturas.

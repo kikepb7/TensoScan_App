@@ -75,6 +75,13 @@ en un argumento de navegación (AUD-A-17) con JS activado (AUD-A-46).
   («El asistente no sustituye el consejo médico»), un indicador de escritura, y errores con
   reintento del último mensaje. El historial enviado DEBERÁ limitarse a los últimos 20 mensajes.
 
+### Supresión de cuenta y privacidad
+- **REQ-A003-22**: Perfil DEBERÁ ofrecer «Eliminar mi cuenta» con confirmación, solicitud de
+  contraseña y llamada a `DELETE /v1/users/me`. Al terminar con éxito, DEBERÁ borrar la sesión y todos los
+  datos locales (Room y DataStore) y navegar al login.
+- **REQ-A003-23**: El registro DEBERÁ exigir la aceptación explícita de la política de privacidad
+  (casilla desmarcada por defecto, con enlace). El registro NO DEBERÁ poder enviarse sin ella.
+
 ### Calidad transversal
 - **REQ-A003-18**: Todas las pantallas DEBERÁN seguir C-PAT-01…08 (Screen y Content, `UiState`,
   `UiAction`, `UiEvent` y previews).
@@ -96,6 +103,8 @@ en un argumento de navegación (AUD-A-17) con JS activado (AUD-A-46).
 | CA-A003-05 | Dado 135/82, cuando veo el historial, entonces la clasificación corresponde a la tabla del ADR (y no solo a la sistólica) | 12 |
 | CA-A003-06 | Dado el historial, cuando pulso «Exportar PDF», entonces se abre el *share sheet* con `tensoscan-report-*.pdf` | 14 |
 | CA-A003-07 | Dado el código, cuando busco `WebView`, `Either` o `CoroutineScope(Dispatchers`, entonces no hay resultados | 13, 18, 21 |
+| CA-A003-09 | Dado un usuario con datos, cuando elimina su cuenta con la contraseña correcta, entonces vuelve al login, el servidor no conserva sus datos y Room queda vacía | 22 |
+| CA-A003-10 | Dado el registro, cuando no marco la casilla de privacidad, entonces «Registrarse» está deshabilitado | 23 |
 | CA-A003-08 | Dado TalkBack, cuando recorro la barra inferior, entonces cada icono se anuncia correctamente | 19 |
 
 ## 5. Fuera de alcance
@@ -108,4 +117,6 @@ en un argumento de navegación (AUD-A-17) con JS activado (AUD-A-46).
 | ID | Pregunta | Propuesta por defecto |
 |----|----------|------------------------|
 | Q-SAFE-02 | ¿Qué guía clínica usa la clasificación? | ESC 2024 con umbrales **domiciliarios** (ver design ADR-A003-01), validado por un profesional |
+| Q-LEGAL-01 | ¿Valoración regulatoria (producto sanitario, RGPD) antes del lanzamiento? | Imprescindible antes de publicar; no bloquea el desarrollo |
+| Q-LEGAL-02 | URLs de política de privacidad y términos | Pendiente; `BuildConfig` con placeholder |
 | Q-A003-01 | ¿Se mantiene el asistente (chatbot)? Tiene implicaciones de coste y de seguridad clínica | Mantener, con aviso y límites |

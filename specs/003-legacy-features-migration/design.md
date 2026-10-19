@@ -102,7 +102,7 @@ internal data class MeasurementItemUiState(
 ### 4.4 Exportación PDF (T-A003-06)
 - `ExportMeasurementsReportUseCase.export(range): Result<ReportFile>` (`ReportFile(path,
   mimeType)` es un modelo de dominio y el *path* es una cadena opaca).
-- `:data` descarga en `cacheDir/reports/` con `@Streaming` y escritura en `IoDispatcher`.
+- `:data` descarga en `cacheDir/reports/` con `@Streaming` y escritura en `AppDispatchers.io`.
 - `:ui` recibe `HistoryUiEvent.ShareReport(path)` y construye el `Intent.ACTION_SEND` con
   `FileProvider` (`file_paths.xml` → `cache-path name="reports"`).
 - Se eliminan `savePdfToStorage` y `openPdfFile` (`filesDir` fijo y `Toast` literal).
@@ -114,6 +114,17 @@ internal data class MeasurementItemUiState(
 - Asistente: `AssistantViewModel` con la lista de mensajes `(id, role, text, status)`. El
   indicador de escritura es un **estado** (no un mensaje falso `"..."`) y un error marca el
   último mensaje del usuario como fallido con «Reintentar». Se corrige `conntent` → `content`.
+
+## 5 bis. Supresión de cuenta y privacidad (T-A003-13)
+
+- Perfil → «Eliminar mi cuenta». Diálogo que explica qué se borra (cuenta, mediciones en el
+  servidor y datos locales) y que es irreversible; pide la **contraseña** y llama a
+  `DELETE /v1/users/me`. Si hay mediciones `PENDING`/`SYNC_FAILED`, se avisa de que se perderán.
+- Éxito → se limpia la sesión, Room y DataStore y se navega al login con un mensaje.
+- Errores: contraseña incorrecta (`INVALID_CREDENTIALS`), sin conexión y servidor.
+- Registro: casilla obligatoria de aceptación de la política de privacidad (consentimiento
+  explícito de datos de salud) con enlace; en Perfil, un enlace a la política y a los términos. Las
+  URL son configurables por `BuildConfig` (Q-LEGAL-02).
 
 ## 6. Barridos transversales (T-A003-10…12)
 - **Textos**: `strings.xml` (es) para todos los literales de `BottomBarItem`,

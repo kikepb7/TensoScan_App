@@ -78,8 +78,8 @@ aquí es la DI de *todo* el proyecto, porque Koin y Hilt no deben convivir (ver 
 - **REQ-A001-16**: `:data` DEBERÁ traducir las respuestas HTTP con un único `HttpErrorMapper`:
   400 y 422 → `Validation`, 401 → `Unauthorized` o `SessionExpired` según
   `error.code`, 404 → `NotFound`, 409 → `Conflict`, 5xx → `Server`, `IOException` → `Network`.
-- **REQ-A001-17**: Los dispatchers DEBERÁN inyectarse con los calificadores `@IoDispatcher` y
-  `@DefaultDispatcher`.
+- **REQ-A001-17**: Los dispatchers DEBERÁN inyectarse mediante la interfaz `AppDispatchers` de
+  `:domain` (sin anotaciones de DI), con una implementación proporcionada por Hilt en `app/di`.
 
 ### Red y sesión
 - **REQ-A001-18**: La URL base DEBERÁ venir de `BuildConfig.API_BASE_URL`, configurable por
@@ -113,6 +113,9 @@ aquí es la DI de *todo* el proyecto, porque Koin y Hilt no deben convivir (ver 
 - **REQ-A001-28**: DEBERÁ existir un workflow de GitHub Actions que, en cada PR, ejecute
   `detekt`, `testDebugUnitTest` y `assembleDebug`. `.github` DEBERÁ dejar de estar en
   `.gitignore`.
+- **REQ-A001-30**: El paquete raíz DEBERÁ ser `com.tensoscan` y `applicationId`/`namespace` DEBERÁN
+  ser `com.tensoscan` (módulos: `com.tensoscan.domain`, `.data`, `.presentation`, `.ui`). El
+  renombrado DEBERÁ hacerse antes de crear código nuevo, con `git mv`, para conservar el historial.
 - **REQ-A001-29**: El comportamiento visible de las features existentes (login, registro,
   historial, usuario y chatbot) NO DEBERÁ cambiar en esta spec, salvo las correcciones de bugs
   enumeradas (mapeo de 400 y cabecera `Bearer null`).
@@ -150,6 +153,6 @@ aquí es la DI de *todo* el proyecto, porque Koin y Hilt no deben convivir (ver 
 
 | ID | Pregunta | Propuesta por defecto |
 |----|----------|------------------------|
-| Q-A001-01 | ¿Cambiamos `applicationId`/namespace de `com.example.tensoscan` a uno propio (por ejemplo `dev.enriquepalma.tensoscan`)? Google Play no admite `com.example`. Cambiarlo más tarde implica una app nueva en Play | Cambiarlo ahora (T-A001-13). **Necesita el nombre definitivo** |
-| Q-A001-02 | ¿Cuál es la URL del backend de producción (HTTPS)? | `BuildConfig` con un placeholder hasta tenerla |
+| ~~Q-A001-01~~ | ✅ **Resuelta**: `applicationId = com.tensoscan` (T-A001-13, se ejecuta justo después de T-A001-01) | — |
+| Q-A001-02 | ¿Cuál es la URL del backend de producción (HTTPS)? | Pendiente. `BuildConfig` con un placeholder y se rellena antes de publicar; no bloquea el desarrollo |
 | Q-A001-03 | ¿Mantenemos minSdk 28? | Sí: cubre ~95 % de dispositivos activos y LiteRT y ML Kit lo soportan |

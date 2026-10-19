@@ -4,6 +4,11 @@
 > commit atómico que cumple la Definition of Done de la constitución (§7).
 > Formato de commit: `T-A001-xx | <descripción en inglés>`.
 
+> **Orden de ejecución real**: T-A001-09 *(solo el workflow mínimo de CI, para verificar todo lo
+> demás)* → T-A001-01 → **T-A001-13** → T-A001-02 → T-A001-09 *(resto)* → T-A001-03 →
+> T-A001-11 → T-A001-04 → T-A001-05 → T-A001-06 → T-A001-07 → T-A001-08 → T-A001-10 →
+> T-A001-12 → T-A001-14. (Los números no reflejan el orden.)
+
 ## Fase 1 — Toolchain
 
 - [ ] **T-A001-01 · Subir el toolchain a versiones estables**
@@ -21,11 +26,18 @@
   - Requisitos: REQ-A001-02 · Hallazgos: AUD-A-49.
   - DoD: `data/schemas/.../1.json` versionado y build en verde.
 
+- [ ] **T-A001-13 · Renombrar `com.example.*` → `com.tensoscan.*`** (decisión del usuario)
+  - Design §5.4. Se ejecuta justo después de T-A001-01 y antes de T-A001-03.
+  - Requisitos: REQ-A001-30 · Hallazgos: AUD-A-10.
+  - DoD: `grep -r "com.example"` sin resultados y `assembleDebug` en verde.
+
 ## Fase 2 — Calidad (va pronto para dar red de seguridad al resto)
 
 - [ ] **T-A001-09 · Infraestructura de tests, detekt y CI**
   - Plugin `android-junit5`, JUnit Jupiter, MockK, Turbine y coroutines-test en todos los módulos.
   - Crear `:core:testing` con `MainDispatcherExtension`.
+  - *Orden*: esta tarea cubre los módulos que existen en este momento (`:domain`, `:data`, `:ui`,
+    `:app`). `:presentation` recibe la misma configuración al crearse en T-A001-03.
   - Borrar `ExampleUnitTest` y `ExampleInstrumentedTest`.
   - Configurar detekt + formatting (`config/detekt/detekt.yml`) y generar el *baseline*.
   - Quitar `.github` de `.gitignore` y crear `.github/workflows/android-ci.yml` y
@@ -63,13 +75,9 @@
   - Requisitos: REQ-A001-08, 13 · Hallazgos: AUD-A-01, 02.
   - DoD: CA-A001-02 y CA-A001-04; smoke test completo.
 - [ ] **T-A001-11 · Dispatchers inyectados**
-  - Calificadores `@IoDispatcher` y `@DefaultDispatcher` en `:domain` (anotación Kotlin pura,
-    **no** `javax.inject.Qualifier`; ver nota) y `DispatcherModule`. Sustituir cada
-    `Dispatchers.IO` del código de producción.
-  - *Nota*: `@Qualifier` es de `javax.inject`, que `:domain` no puede usar. Los calificadores se
-    declaran en `:data` (`data/di/qualifier/`) y `:presentation` los recibe ya resueltos a través
-    de los casos de uso. Si un ViewModel necesitara un dispatcher, el calificador se declararía
-    en `:presentation`.
+  - Interfaz `AppDispatchers` en `:domain` (`io`, `default`, `main`), `DispatcherModule` en
+    `app/di` y `TestAppDispatchers` en `:core:testing`. Sustituir cada `Dispatchers.IO` /
+    `Dispatchers.Default` del código de producción.
   - Requisitos: REQ-A001-17.
 
 ## Fase 4 — Errores, red y sesión
@@ -121,9 +129,6 @@
     `NavHost` con `composable<LoginRoute>`, etc. Las rutas del WebView y de `Summary` con
     argumentos JSON se mantienen sin cambios (se rehacen en A-003).
   - Requisitos: REQ-A001-05.
-- [ ] **T-A001-13 · (Bloqueada por Q-A001-01) Renombrar `applicationId` y `namespace`**
-  - Cambiar `com.example.*` por el identificador elegido en todos los módulos y paquetes.
-  - Hallazgos: AUD-A-10.
 - [ ] **T-A001-14 · Release hardening**
   - `isMinifyEnabled` e `isShrinkResources` en release y reglas R8.
   - Smoke test sobre el APK release.
@@ -132,5 +137,5 @@
 ## Cierre de la spec
 
 - [ ] Todos los CA-A001-xx verificados y anotados en el PR final.
-- [ ] Hallazgos resueltos: AUD-A-01, 02, 03, 05, 06, 12, 37, 38, 39, 40, 48, 49, 50, 51, 52, 53,
-  54 (y AUD-A-10 si se resuelve Q-A001-01).
+- [ ] Hallazgos resueltos: AUD-A-01, 02, 03, 05, 06, 10, 12, 37, 38, 39, 40, 48, 49, 50, 51, 52,
+  53, 54.

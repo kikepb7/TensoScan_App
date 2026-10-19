@@ -41,7 +41,7 @@ viola la constitución) · 🟡 Medio (mantenibilidad o UX) · ⚪ Bajo (estilo 
 | AUD-A-07 | 🟡 | `ui/.../utils/`, `ui/.../common/extensions/` | Carpetas `utils` y `extensions` como cajón de sastre (permisos, PDF, colores, ficheros) | Incumple C-ARCH-04 | A-003 |
 | AUD-A-08 | ⚪ | `*.compose.kt` | Los nombres de fichero no coinciden con la clase y los composables se llaman `*View`/`*ScreenView` | Incumple las convenciones de nombre | A-003 |
 | AUD-A-09 | ⚪ | Todo el proyecto | Visibilidad `public` en todo | Incumple C-ARCH-05 | Transversal |
-| AUD-A-10 | 🟡 | `app/build.gradle.kts:10,14` | `namespace` y `applicationId` `com.example.tensoscan`: Google Play rechaza `com.example` | No se puede publicar | Pregunta abierta A-001 |
+| AUD-A-10 | 🟡 | `app/build.gradle.kts:10,14` | `namespace` y `applicationId` `com.example.tensoscan`: Google Play rechaza `com.example` | No se puede publicar | A-001 · T-A001-13 (decidido: `com.tensoscan`) |
 
 ### 2.2 Patrones, estado y errores
 

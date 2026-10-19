@@ -38,6 +38,9 @@
 - [ ] **T-A003-12 · Eliminar el código muerto y vaciar el *baseline* de detekt**
   - Req.: REQ-A003-21 · Hallazgos: AUD-A-11 (cierre).
 
+- [ ] **T-A003-13 · Eliminar cuenta + consentimiento de privacidad en el registro**
+  - Req.: REQ-A003-22, 23 · Requiere `DELETE /v1/users/me` (B-001 T-B001-14).
+
 ## Cierre de la spec
 - [ ] CA-A003-01…08 verificados.
 - [ ] Coordinar con el backend la retirada de las rutas legacy (contrato api-v1 §6).

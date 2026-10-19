@@ -13,9 +13,12 @@ justificación explícita.
 |---------------|-----------|-------------------|
 | `:domain` | Kotlin/JVM puro: modelos, interfaces de repositorio y detector, casos de uso, reglas (validador, parser, estabilizador, clasificador) | `kotlinx-coroutines-core` |
 | `:data` | Retrofit, Room, DataStore, WorkManager, LiteRT, ML Kit, implementaciones de repositorio, DTO y mappers | `:domain` |
-| `:presentation` | ViewModels, `*ScreenUiState`, `*UiState`, `*UiAction`, `*UiEvent`, mappers y parsers de pantalla | `:domain`, AndroidX Lifecycle |
+| `:presentation` | ViewModels, `*ScreenUiState`, `*UiState`, `*UiAction`, `*UiEvent`, mappers y parsers de pantalla, rutas de navegación tipadas | `:domain`, AndroidX Lifecycle, `hilt-android` (`@HiltViewModel`), `navigation-common` |
 | `:ui` | Composables (Screen y Content), componentes, tema, previews, integración de CameraX | `:presentation` |
 | `:app` | `Application`, `MainActivity`, navegación raíz y `di/` con todos los módulos Hilt | todos |
+| `:core:testing` | `MainDispatcherExtension`, `TestAppDispatchers` y *builders* de fixtures. Solo `testImplementation` | `:domain` |
+
+Paquete raíz: **`com.tensoscan`** (`com.tensoscan.domain`, `.data`, `.presentation`, `.ui`). `applicationId = com.tensoscan`.
 
 **C-ARCH-02.** `:domain` no importa Android, Compose, Retrofit, Room, Hilt, Koin ni `javax.inject`.
 Los casos de uso se proporcionan con `@Provides` en `app/di/UseCaseModule.kt`.
@@ -82,8 +85,10 @@ dorados de `contracts/reading-rules.md` se ejecutan como tests dinámicos.
 ViewModel nuevo o modificado tiene tests unitarios. Los ViewModels se prueban a través de
 `onAction`, `uiState` y `uiEvents`.
 
-**C-TEST-05.** Los dispatchers se inyectan (`@IoDispatcher` y `@DefaultDispatcher`) y no se escribe
-`Dispatchers.IO` directamente en el código de producción.
+**C-TEST-05.** Los dispatchers se inyectan mediante la interfaz `AppDispatchers` (`io`, `default`,
+`main`), definida en `:domain` y sin anotaciones de DI. En test se sustituye por
+`TestAppDispatchers`. No se escribe `Dispatchers.IO` ni `Dispatchers.Default` directamente en el
+código de producción.
 
 ## 4. Seguridad del paciente y producto sanitario
 
@@ -115,6 +120,26 @@ autoriza `10.0.2.2` en *debug*.
 
 **C-PRIV-05.** Solo se piden los permisos estrictamente necesarios: `CAMERA` (se elimina
 `RECORD_AUDIO`).
+
+## 5 bis. Cumplimiento (producto comercial en España y la UE)
+
+**C-LEGAL-01.** Las mediciones de tensión son **datos de salud** (categoría especial, art. 9 RGPD).
+Requisitos mínimos antes de publicar: política de privacidad accesible en la app y en la ficha de
+Play, base legal (consentimiento explícito en el registro), alojamiento del backend en la UE,
+contrato de encargado de tratamiento con los proveedores, y derecho de supresión.
+
+**C-LEGAL-02.** Supresión de cuenta: la app DEBE permitir borrar la cuenta y todos sus datos desde
+dentro (`DELETE /v1/users/me`), requisito además de Google Play.
+
+**C-LEGAL-03.** Producto sanitario: si el software ofrece funciones de diagnóstico, prevención o
+monitorización con finalidad médica, puede ser **producto sanitario** (Reglamento (UE) 2017/745) y
+exigir marcado CE. Para evitarlo en v1, la finalidad declarada es **registro personal de lecturas
+del usuario**; las clasificaciones son orientativas, citan su fuente y no emiten diagnóstico. Antes
+del lanzamiento comercial hay que obtener una **valoración regulatoria** (Q-LEGAL-01).
+
+**C-LEGAL-04.** El asistente (chatbot) envía texto a un tercero (proveedor de LLM). Debe constar en
+la política de privacidad, no debe recibir las mediciones del usuario salvo que él las escriba, y
+debe mostrar el aviso de que no sustituye el consejo médico.
 
 ## 6. Rendimiento y accesibilidad
 

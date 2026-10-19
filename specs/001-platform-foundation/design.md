@@ -84,15 +84,19 @@ se registra en el PR. Restricciones:
 - **Contexto**: la constitución C-ARCH-02 prohíbe APIs de DI en `:domain`, y `javax.inject` es una
   API de DI aunque sea un estándar.
 - **Decisión**: los casos de uso son clases Kotlin puras y se proporcionan con `@Provides` en
-  `UseCaseModule` (`@InstallIn(ViewModelComponent::class)` y sin *scope*). Las reglas puras
-  (validador, parser, etc.) se proporcionan igual.
+  `UseCaseModule` (`@InstallIn(SingletonComponent::class)` y **sin** *scope*, es decir, una
+  instancia nueva en cada inyección). Se instalan en `SingletonComponent` y no en
+  `ViewModelComponent` porque algunos casos de uso los necesitan también los `Worker` de
+  WorkManager y el `Application`, que no ven el grafo de ViewModel. Las reglas puras
+  (validador, parser, etc.) se proporcionan igual. Solo lo que tiene estado por pantalla
+  (`ScanSession`, el detector) usa `ViewModelComponent` + `@ViewModelScoped` (A-002).
 - **Coste**: unas pocas líneas de boilerplate por caso de uso. **Beneficio**: el dominio es
   portable y su `build.gradle.kts` lo garantiza.
 
 ### 3.1 Módulos Hilt
 
 ```kotlin
-// app/src/main/kotlin/<pkg>/di/
+// app/src/main/kotlin/com/tensoscan/di/
 @Module @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
     @Provides @Singleton fun json(): Json = Json { ignoreUnknownKeys = true; explicitNulls = false }
@@ -106,10 +110,16 @@ internal object NetworkModule {
     @Binds abstract fun measurementRepository(impl: MeasurementRepositoryImpl): MeasurementRepository
     // ...
 }
+// :domain  →  interface AppDispatchers { val io: CoroutineDispatcher; val default: CoroutineDispatcher; val main: CoroutineDispatcher }
 @Module @InstallIn(SingletonComponent::class) internal object DispatcherModule {
-    @Provides @IoDispatcher fun io(): CoroutineDispatcher = Dispatchers.IO
-    @Provides @DefaultDispatcher fun default(): CoroutineDispatcher = Dispatchers.Default
+    @Provides @Singleton fun dispatchers(): AppDispatchers = object : AppDispatchers {
+        override val io = Dispatchers.IO
+        override val default = Dispatchers.Default
+        override val main = Dispatchers.Main
+    }
 }
+// Tests: TestAppDispatchers(StandardTestDispatcher()) en :core:testing. Sin calificadores, así que
+// :domain, :presentation y :data comparten el mismo tipo sin duplicar anotaciones.
 ```
 
 Las implementaciones de `:data` llevan `@Inject constructor`. `:data` puede depender de
@@ -212,6 +222,16 @@ Backup: `android:allowBackup="true"` se mantiene para las mediciones locales (ú
 usuario), pero `data_extraction_rules.xml` y `backup_rules.xml` **excluyen** el fichero DataStore
 de sesión. Las claves del Keystore no se respaldan nunca, así que un token cifrado restaurado sería
 indescifrable de todos modos: la exclusión evita un estado incoherente.
+
+## 5.4 Renombrado de paquetes (T-A001-13)
+
+`com.example.{app→tensoscan,domain,data,ui}` → `com.tensoscan.*`. Pasos: `git mv` de los
+directorios de fuentes, sustitución de `package` e `import`, `namespace`/`applicationId` en cada
+`build.gradle.kts`, `android:name` del manifiesto, `FileProvider` authorities (se derivan de
+`${applicationId}`), nombre del tema y reglas de ProGuard. Se hace **antes** de crear
+`:presentation` para no mover dos veces. Verificación: `grep -r "com.example"` sin resultados.
+La sesión guardada en el dispositivo se pierde al cambiar de `applicationId` (es otra app para el
+sistema); como todavía no hay usuarios en producción, no hace falta migrarla.
 
 ## 6. Testing (T-A001-09)
 

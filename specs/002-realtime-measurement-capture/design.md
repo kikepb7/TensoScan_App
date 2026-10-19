@@ -137,7 +137,7 @@ Tras la captura: `ReviewMeasurementScreen` → `SaveMeasurementUseCase` → Room
 ## 3. Estructura de paquetes
 
 ```
-domain/src/main/kotlin/<pkg>/domain/
+domain/src/main/kotlin/com/tensoscan/domain/
 ├── measurement/
 │   ├── model/        BloodPressureReading, Measurement, MeasurementId, MeasurementSource,
 │   │                 SyncStatus, RecognitionMetadata, ReadingField, MeasurementDraft
@@ -161,7 +161,7 @@ domain/src/main/kotlin/<pkg>/domain/
 │   └── usecase/      RecognizeFrameUseCase, PrepareDetectorUseCase
 └── time/             Clock (interfaz; el ScanSession usa timestamps de frame, no el reloj)
 
-data/src/main/kotlin/<pkg>/data/
+data/src/main/kotlin/com/tensoscan/data/
 ├── scan/
 │   ├── mlkit/        MlKitDigitDetector, MlKitSymbolMapper
 │   ├── litert/       LiteRtDigitDetector, ModelAssetLoader, ModelSidecar (DTO), LetterboxPreprocessor,
@@ -176,7 +176,7 @@ data/src/main/kotlin/<pkg>/data/
 │   │                 WorkManagerMeasurementSyncScheduler
 │   └── MeasurementRepositoryImpl
 
-presentation/src/main/kotlin/<pkg>/presentation/
+presentation/src/main/kotlin/com/tensoscan/presentation/
 ├── navigation/       ScanRoute, ReviewMeasurementRoute
 ├── scan/             ScanViewModel, ScanScreenUiState, ScanUiState, ScanUiAction, ScanUiEvent,
 │                     mapper/ScanUiStateMapper, model/*
@@ -185,7 +185,7 @@ presentation/src/main/kotlin/<pkg>/presentation/
                       ReviewMeasurementUiEvent, parser/ReadingInputParser,
                       mapper/ReviewMeasurementUiStateMapper
 
-ui/src/main/kotlin/<pkg>/ui/
+ui/src/main/kotlin/com/tensoscan/ui/
 ├── scan/             ScanScreen, ScanContent, camera/ScanCameraPreview,
 │                     camera/ImageProxyFrameConverter, camera/RoiGeometry,
 │                     components/ScanOverlay, components/LiveReadingPanel,
@@ -438,7 +438,7 @@ internal sealed interface ScanUiEvent {
 
 `ScanViewModel` (`@HiltViewModel internal`):
 - Dependencias: `PrepareDetectorUseCase`, `RecognizeFrameUseCase`, `ScanSession` (instancia
-  nueva por ViewModel), `ScanUiStateMapper` y `@DefaultDispatcher` para `prepare`.
+  nueva por ViewModel), `ScanUiStateMapper` y `AppDispatchers` (`default`) para `prepare`.
 - `init`: no hace nada pesado. `prepare()` se lanza al recibir `PermissionResult(granted=true)`, en
   paralelo con el arranque de la cámara (RNF-A002-07).
 - `onFrame(frame)`: es público, **no** es una acción de usuario (C-PAT-02 aplica a acciones de
@@ -599,10 +599,13 @@ internal sealed interface ReviewMeasurementUiEvent {
   La confianza es la `confidence` del símbolo si ML Kit la da, y 0,80 en caso contrario. Las cajas
   se normalizan por el tamaño del frame.
 - `DetectorInfo("mlkit-text", "v2")` → `model_version = "mlkit-text-v2"`.
+- **A verificar en T-A002-12**: que la versión estable de `text-recognition` expone `Text.Symbol` con
+  caja (y `confidence`). Si no, se usa el nivel `Element` y se reparte la caja por caracteres
+  proporcionalmente a su anchura. La decisión se anota aquí.
 
 ### 9.2 `LiteRtDigitDetector`
 - Dependencias: LiteRT (`com.google.ai.edge.litert`) y su delegate GPU, en sus versiones estables.
-- `prepare()` (en `@DefaultDispatcher`):
+- `prepare()` (en `AppDispatchers.default`):
   1. `ModelAssetLoader` lee `assets/models/digits-<v>.tflite` y su `.json`;
   2. verifica `sha256` y que `contract_version` tenga el mismo *major*;
   3. crea el `Interpreter`: GPU delegate si está soportado y, si falla al inicializar, CPU
@@ -749,9 +752,9 @@ interface MeasurementSyncScheduler { fun schedule() }   // :domain
 | `ImageProxyFrameConverter`, `RecognizeFrameUseCase`, `ScanSession`, `DigitDetector.detect` | Hilo `scan-analysis` (único) | Confinamiento: sin locks |
 | Comandos al `ScanSession` (reset, pausa, reanudación) | Principal → `ConcurrentLinkedQueue` | Se drena al inicio de `onFrame` |
 | `_sessionState` | Escritura en análisis, lectura en principal | `MutableStateFlow` es seguro entre hilos |
-| `DigitDetector.prepare` | `@DefaultDispatcher` en `viewModelScope` | Se cancela con el ViewModel |
+| `DigitDetector.prepare` | `AppDispatchers.default` en `viewModelScope` | Se cancela con el ViewModel |
 | `DigitDetector.release` | `onCleared` | Se encola en el executor de análisis para no liberar durante una inferencia |
-| Room, Retrofit | `@IoDispatcher` (Room y Retrofit gestionan sus hilos) | — |
+| Room, Retrofit | `AppDispatchers.io` (Room y Retrofit gestionan sus hilos) | — |
 | Sincronización | WorkManager | Sobrevive al proceso |
 
 ## 12. Estrategia de pruebas
