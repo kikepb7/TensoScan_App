@@ -45,8 +45,7 @@ internal data class ModelSidecarDto(
             sha256 = sha256,
         )
     }
-
-    private companion object {
-        const val SUPPORTED_DTYPE = "float32"
-    }
 }
+
+// Top level on purpose: a private companion would hide the serializer the plugin generates for the class.
+private const val SUPPORTED_DTYPE = "float32"
