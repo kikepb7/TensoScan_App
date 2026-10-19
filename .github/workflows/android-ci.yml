@@ -24,7 +24,10 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: android-actions/setup-android@v3
+      # The runner image already ships the Android SDK; only make sure its licences are accepted so AGP can
+      # download any missing platform or build-tools component.
+      - name: Accept Android SDK licences
+        run: yes | "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager --licenses > /dev/null || true
 
       - uses: gradle/actions/setup-gradle@v4
 
