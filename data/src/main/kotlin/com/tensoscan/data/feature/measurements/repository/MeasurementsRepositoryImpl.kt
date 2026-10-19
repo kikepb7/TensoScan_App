@@ -1,41 +1,28 @@
 package com.tensoscan.data.feature.measurements.repository
 
-import com.tensoscan.data.common.networkBoundResource
 import com.tensoscan.data.common.toFailureDomain
-import com.tensoscan.data.feature.measurements.datasource.MeasurementDatabaseDatasource
 import com.tensoscan.data.feature.measurements.datasource.MeasurementRemoteDataSource
-import com.tensoscan.data.feature.measurements.utils.toDomain
-import com.tensoscan.data.feature.measurements.utils.toEntity
+import com.tensoscan.data.feature.measurements.utils.toLegacyModel
 import com.tensoscan.domain.common.Either
 import com.tensoscan.domain.error.FailureDomain
 import com.tensoscan.domain.feature.measurements.model.MeasurementModel
 import com.tensoscan.domain.feature.measurements.repository.MeasurementsRepository
+import com.tensoscan.domain.measurement.repository.MeasurementRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import kotlin.coroutines.cancellation.CancellationException
 
+/**
+ * Legacy history repository. The list now comes from the local database (where confirmed measurements are saved); the
+ * report downloads still use the server. It is removed when the history is migrated to the new measurement model.
+ */
 internal class MeasurementsRepositoryImpl @Inject constructor(
     private val remoteDataSource: MeasurementRemoteDataSource,
-    private val databaseDatasource: MeasurementDatabaseDatasource,
+    private val localRepository: MeasurementRepositoryImpl,
 ) : MeasurementsRepository {
-    override fun getUserMeasurements(): Flow<Either<FailureDomain, List<MeasurementModel>>> = networkBoundResource(
-        query = { databaseDatasource.findMeasurementFromDatabase() },
-        fetch = {
-            when (val response = remoteDataSource.fetchMeasurementsFromApi()) {
-                is Either.Success -> response.data.map { it.toDomain() }
-                is Either.Error -> error("Remote fetch failed with HTTP ${response.error.code}")
-            }
-        },
-        saveFetchResult = { remoteList ->
-            databaseDatasource.clearMeasurementList()
-            databaseDatasource.insertMeasurementToDatabase(remoteList.map { it.toEntity() })
-        },
-    ).map<List<MeasurementModel>, Either<FailureDomain, List<MeasurementModel>>> { Either.Success(it) }
-        .catch { error ->
-            if (error is CancellationException) throw error
-            emit(Either.Error(FailureDomain.ApiError))
+    override fun getUserMeasurements(): Flow<Either<FailureDomain, List<MeasurementModel>>> =
+        localRepository.observe().map { list ->
+            Either.Success(list.map { it.toLegacyModel() })
         }
 
     override suspend fun getMeasurementHistoryHtml(): Either<FailureDomain, String> =
@@ -51,10 +38,12 @@ internal class MeasurementsRepositoryImpl @Inject constructor(
         }
 
     override suspend fun deleteMeasurement(measurementId: String): Either<FailureDomain, Unit> =
-        when (val response = remoteDataSource.deleteMeasurementFromApi(measurementId = measurementId)) {
-            is Either.Error -> Either.Error(error = response.error.toFailureDomain())
-            is Either.Success -> Either.Success(Unit)
-        }
+        localRepository.delete(measurementId).fold(
+            onSuccess = { Either.Success(Unit) },
+            onFailure = { Either.Error(FailureDomain.ApiError) },
+        )
 
-    override suspend fun clearLocalData() = databaseDatasource.clearMeasurementList()
+    override suspend fun clearLocalData() {
+        localRepository.clearLocal()
+    }
 }

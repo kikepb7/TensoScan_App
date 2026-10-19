@@ -12,11 +12,20 @@ import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementHistoryHt
 import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementHistoryPdfUseCase
 import com.tensoscan.domain.feature.measurements.usecase.GetMeasurementsUseCase
 import com.tensoscan.domain.feature.session.usecase.LogoutUseCase
+import com.tensoscan.domain.measurement.model.MeasurementId
+import com.tensoscan.domain.measurement.repository.MeasurementRepository
+import com.tensoscan.domain.measurement.repository.MeasurementSyncScheduler
+import com.tensoscan.domain.measurement.usecase.CheckDuplicateMeasurementUseCase
+import com.tensoscan.domain.measurement.usecase.SaveMeasurementUseCase
+import com.tensoscan.domain.measurement.usecase.ValidateReadingUseCase
+import com.tensoscan.domain.measurement.validation.ReadingValidator
 import com.tensoscan.domain.session.SessionRepository
+import com.tensoscan.domain.time.AppClock
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.util.UUID
 
 /**
  * Exposes the domain use cases to the dependency graph. `:domain` is pure Kotlin and carries no injection
@@ -52,6 +61,30 @@ internal object UseCaseModule {
     @Provides
     fun logoutUseCase(sessionRepository: SessionRepository, measurementsRepository: MeasurementsRepository) =
         LogoutUseCase(sessionRepository, measurementsRepository)
+
+    @Provides
+    fun readingValidator(clock: AppClock) = ReadingValidator(clock)
+
+    @Provides
+    fun validateReadingUseCase(validator: ReadingValidator) = ValidateReadingUseCase(validator)
+
+    @Provides
+    fun checkDuplicateMeasurementUseCase(repository: MeasurementRepository) =
+        CheckDuplicateMeasurementUseCase(repository)
+
+    @Provides
+    fun saveMeasurementUseCase(
+        validator: ReadingValidator,
+        repository: MeasurementRepository,
+        syncScheduler: MeasurementSyncScheduler,
+        clock: AppClock,
+    ) = SaveMeasurementUseCase(
+        validator = validator,
+        repository = repository,
+        syncScheduler = syncScheduler,
+        clock = clock,
+        idGenerator = { MeasurementId(UUID.randomUUID().toString()) },
+    )
 
     @Provides
     fun chatbotUseCase(repository: ChatbotRepository) = ChatbotUseCase(repository)

@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.tensoscan.data.feature.measurements.database.dao.MeasurementDao
 import com.tensoscan.data.feature.measurements.database.entities.MeasurementEntity
 
-@Database(entities = [MeasurementEntity::class], version = 1, exportSchema = true)
+@Database(entities = [MeasurementEntity::class], version = 2, exportSchema = true)
 internal abstract class MeasurementsDatabase : RoomDatabase() {
     abstract fun getMeasurementDao(): MeasurementDao
 }
